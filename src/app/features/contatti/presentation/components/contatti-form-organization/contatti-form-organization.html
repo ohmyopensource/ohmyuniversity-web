@@ -1,0 +1,119 @@
+<div class="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900">Entra in contatto con il team commerciale</h2>
+  <p class="mt-1 text-sm text-gray-500">
+    Sei un'azienda, una startup o un collettivo studentesco? Raccontaci chi sei - ti ricontatteremo
+    entro 2 giorni lavorativi per una chiamata conoscitiva gratuita.
+  </p>
+
+  <!-- Callout prova gratuita -->
+  <div class="mt-5 flex items-start gap-3 rounded-xl border border-amber-100 bg-amber-50 p-4">
+    <span class="text-lg">🎁</span>
+    <p class="text-xs leading-relaxed text-amber-700">
+      Tutte le nuove organizzazioni iniziano con <strong>14 giorni di prova gratuita</strong>
+      sul piano Professional. Nessuna carta di credito richiesta.
+    </p>
+  </div>
+
+  <form class="mt-6 space-y-5" (ngSubmit)="submitOrg()">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-name">
+          Nome organizzazione
+        </label>
+        <input
+          id="org-name"
+          type="text"
+          [(ngModel)]="orgForm.orgName"
+          name="orgName"
+          placeholder="Es. Acme S.r.l."
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-type">
+          Tipo di organizzazione
+        </label>
+        <select
+          id="org-type"
+          [(ngModel)]="orgForm.orgType"
+          name="orgType"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <option value="" disabled selected>Seleziona</option>
+          @for (type of orgTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-contact">
+          Nome del referente
+        </label>
+        <input
+          id="org-contact"
+          type="text"
+          [(ngModel)]="orgForm.contactName"
+          name="orgContact"
+          placeholder="Nome e cognome"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-email">
+          Email aziendale
+        </label>
+        <input
+          id="org-email"
+          type="email"
+          [(ngModel)]="orgForm.email"
+          name="orgEmail"
+          placeholder="info@azienda.it"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-phone">
+        Telefono <span class="font-normal text-gray-400">(opzionale)</span>
+      </label>
+      <input
+        id="org-phone"
+        type="tel"
+        [(ngModel)]="orgForm.phone"
+        name="orgPhone"
+        placeholder="+39 02 1234567"
+        class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+    </div>
+
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700" for="org-message">
+        Raccontaci brevemente cosa fate e cosa cercate
+      </label>
+      <textarea
+        id="org-message"
+        [(ngModel)]="orgForm.message"
+        name="orgMessage"
+        rows="5"
+        placeholder="Es. Siamo una startup fintech che cerca stagisti in ambito sviluppo e vorremmo raggiungere studenti di Ingegneria Informatica..."
+        required
+        class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white transition hover:bg-blue-700">
+      Invia richiesta - ti richiamiamo noi
+    </button>
+  </form>
+
+  <p class="mt-5 text-center text-xs text-gray-400">
+    Preferisci l'email diretta?
+    <a href="mailto:business@ohmyuniversity.it" class="text-blue-600 hover:underline">
+      business@ohmyuniversity.it
+    </a>
+  </p>
+</div>

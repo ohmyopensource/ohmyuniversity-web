@@ -1,0 +1,114 @@
+<div class="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900">Scrivi al team OhMyUniversity</h2>
+  <p class="mt-1 text-sm text-gray-500">
+    Sei studente, docente o staff di ateneo? Usa questo form per segnalare problemi, chiedere
+    l'integrazione del tuo ateneo o semplicemente inviarci un feedback.
+  </p>
+
+  <form class="mt-6 space-y-5" (ngSubmit)="submitAcademic()">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-name">
+          Nome e cognome
+        </label>
+        <input
+          id="ac-name"
+          type="text"
+          [(ngModel)]="academicForm.name"
+          name="acName"
+          placeholder="Mario Rossi"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-email">
+          Email istituzionale
+        </label>
+        <input
+          id="ac-email"
+          type="email"
+          [(ngModel)]="academicForm.email"
+          name="acEmail"
+          placeholder="m.rossi@studenti.unimol.it"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-role">
+          Il tuo ruolo
+        </label>
+        <select
+          id="ac-role"
+          [(ngModel)]="academicForm.role"
+          name="acRole"
+          required
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <option value="" disabled selected>Seleziona</option>
+          @for (role of academicRoles; track role) {
+            <option [value]="role">{{ role }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-ateneo">
+          Ateneo di appartenenza
+        </label>
+        <input
+          id="ac-ateneo"
+          type="text"
+          [(ngModel)]="academicForm.ateneo"
+          name="acAteneo"
+          placeholder="Es. Università del Molise"
+          class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-subject">
+        Oggetto
+      </label>
+      <select
+        id="ac-subject"
+        [(ngModel)]="academicForm.subject"
+        name="acSubject"
+        required
+        class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+        <option value="" disabled selected>Di cosa hai bisogno?</option>
+        @for (s of academicSubjects; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700" for="ac-message">
+        Messaggio
+      </label>
+      <textarea
+        id="ac-message"
+        [(ngModel)]="academicForm.message"
+        name="acMessage"
+        rows="5"
+        placeholder="Descrivici nel dettaglio la tua richiesta..."
+        required
+        class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white transition hover:bg-blue-700">
+      Invia messaggio
+    </button>
+  </form>
+
+  <!-- Alternativa email diretta -->
+  <p class="mt-5 text-center text-xs text-gray-400">
+    Preferisci l'email diretta?
+    <a href="mailto:hello@ohmyuniversity.it" class="text-blue-600 hover:underline">
+      hello@ohmyuniversity.it
+    </a>
+  </p>
+</div>
