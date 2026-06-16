@@ -74,12 +74,12 @@
         <tbody class="divide-y divide-gray-100">
           @for (voce of vitaFuorisede; track voce.voce; let last = $last) {
             <tr [class.bg-blue-50]="last" [class.font-semibold]="last">
-              <td class="px-4 py-3">
+              <th class="px-4 py-3" scope="row">
                 <span appText variant="body-sm">{{ voce.voce }}</span>
-              </td>
-              <td class="px-4 py-3 text-right">
+              </th>
+              <th class="px-4 py-3 text-right">
                 <span appText variant="body-sm" weight="semibold">{{ voce.importo }}</span>
-              </td>
+              </th>
             </tr>
           }
         </tbody>
