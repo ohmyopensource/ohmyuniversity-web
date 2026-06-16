@@ -26,6 +26,7 @@
             @if (type.isExternal) {
               <a
                 [href]="type.actionLink"
+                [attr.aria-label]="type.action + ' (link esterno)'"
                 class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700">
                 {{ type.action }}
                 <svg
@@ -43,6 +44,7 @@
             } @else {
               <a
                 [routerLink]="type.actionLink"
+                [attr.aria-label]="type.action + ' (link interno)'"
                 class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
                 {{ type.action }}
                 <svg
