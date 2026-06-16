@@ -39,7 +39,8 @@ jump-to-page input.
   }
 
   <!-- Navigation controls -->
-  <div class="pagination__controls" role="group" aria-label="Controlli pagina">
+  <fieldset class="pagination__controls">
+    <legend class="sr-only">Controlli pagina</legend>
     <!-- First page -->
     @if (showFirstLast) {
       <button
@@ -63,27 +64,28 @@ jump-to-page input.
     </button>
 
     <!-- Page list -->
-    <div class="pagination__pages" role="list">
+    <ol class="pagination__pages" aria-label="Pagine">
       @for (item of pageItems; track trackByItem($index, item)) {
         @if (isPageItem(item)) {
-          <button
-            class="pagination__btn pagination__btn--page"
-            [class.pagination__btn--active]="item.value === currentPage"
-            type="button"
-            role="listitem"
-            [disabled]="disabled"
-            [attr.aria-label]="'Pagina ' + item.value"
-            [attr.aria-current]="item.value === currentPage ? 'page' : null"
-            (click)="goTo(item.value)">
-            {{ item.value }}
-          </button>
+          <li>
+            <button
+              class="pagination__btn pagination__btn--page"
+              [class.pagination__btn--active]="item.value === currentPage"
+              type="button"
+              [disabled]="disabled"
+              [attr.aria-label]="'Pagina ' + item.value"
+              [attr.aria-current]="item.value === currentPage ? 'page' : null"
+              (click)="goTo(item.value)">
+              {{ item.value }}
+            </button>
+          </li>
         }
 
         @if (isEllipsis(item)) {
-          <span class="pagination__ellipsis" role="listitem" aria-hidden="true"> &hellip; </span>
+          <li aria-hidden="true"><span class="pagination__ellipsis">&hellip;</span></li>
         }
       }
-    </div>
+    </ol>
 
     <!-- Mobile page indicator -->
     <span class="pagination__mobile-info" aria-live="polite">
@@ -111,7 +113,7 @@ jump-to-page input.
         <svg [lucideIcon]="iconLast" [size]="iconSize"></svg>
       </button>
     }
-  </div>
+  </fieldset>
 
   <!-- Jump to page -->
   @if (showJumpToPage) {

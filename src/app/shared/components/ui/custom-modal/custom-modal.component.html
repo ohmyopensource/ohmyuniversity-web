@@ -6,14 +6,17 @@ container layout, header, body and footer projection areas.
 
 @if (isOpen) {
   <!-- Backdrop -->
-  <div [class]="backdropClasses" (click)="onBackdropClick()" aria-hidden="true"></div>
+  <div
+    [class]="backdropClasses"
+    (click)="onBackdropClick()"
+    (keydown)="onBackdropClick()"
+    aria-hidden="true"></div>
 
   <!-- Modal container -->
-  <div
+  <dialog
     [class]="containerClasses"
     [style.--drawer-size]="drawerSizeStyle"
     [style.--sheet-size]="sheetSizeStyle"
-    role="dialog"
     aria-modal="true"
     [attr.aria-label]="title || 'Finestra di dialogo'">
     <!-- Header -->
@@ -48,5 +51,5 @@ container layout, header, body and footer projection areas.
     <div class="modal-footer">
       <ng-content select="[footer]"></ng-content>
     </div>
-  </div>
+  </dialog>
 }

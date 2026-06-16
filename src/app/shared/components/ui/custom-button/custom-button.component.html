@@ -21,36 +21,32 @@ modes, interactive states, icon support, and accessibility features.
 
 <!-- Internal Router Link -->
 @if (mode === 'link-internal') {
-  <a
-    role="button"
-    [routerLink]="isInert ? null : href"
+  <button
+    type="button"
     [ngClass]="btnClasses"
+    [disabled]="isInert"
     [attr.aria-label]="ariaLabel || displayLabel || null"
     [attr.aria-busy]="loading ? 'true' : null"
     [attr.aria-disabled]="isInert ? 'true' : null"
     [attr.aria-pressed]="succeeded ? 'true' : null"
-    [attr.tabindex]="isInert ? -1 : 0"
     (click)="onButtonClick($event); onRipple($event)">
     <ng-container *ngTemplateOutlet="btnContent" />
-  </a>
+  </button>
 }
 
 <!-- External Link -->
 @if (mode === 'link-external') {
-  <a
-    role="button"
-    [href]="isInert ? null : href"
-    [target]="target"
-    [rel]="externalRel"
+  <button
+    type="button"
     [ngClass]="btnClasses"
+    [disabled]="isInert"
     [attr.aria-label]="ariaLabel || displayLabel || null"
     [attr.aria-busy]="loading ? 'true' : null"
     [attr.aria-disabled]="isInert ? 'true' : null"
     [attr.aria-pressed]="succeeded ? 'true' : null"
-    [attr.tabindex]="isInert ? -1 : 0"
     (click)="onButtonClick($event); onRipple($event)">
     <ng-container *ngTemplateOutlet="btnContent" />
-  </a>
+  </button>
 }
 
 <!-- Shared Button Content -->

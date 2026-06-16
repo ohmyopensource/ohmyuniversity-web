@@ -99,7 +99,7 @@ export type SucceededStyle = 'filled' | 'ghost';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomButtonComponent {
-  private renderer = inject(Renderer2);
+  private readonly renderer = inject(Renderer2);
 
   readonly loaderIcon = LucideLoaderCircle;
   readonly succeededIcon = LucideCircleCheck;

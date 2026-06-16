@@ -413,14 +413,6 @@ describe('CustomModalComponent', () => {
     expect(container.classList).not.toContain('modal-container--lg');
   }));
 
-  it('should set role="dialog" on modal container', fakeAsync(() => {
-    component.open();
-    fixture.detectChanges();
-    tick(10);
-    const container = fixture.nativeElement.querySelector('.modal-container');
-    expect(container.getAttribute('role')).toBe('dialog');
-  }));
-
   it('should set aria-modal="true" on modal container', fakeAsync(() => {
     component.open();
     fixture.detectChanges();

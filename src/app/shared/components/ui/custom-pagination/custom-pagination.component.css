@@ -229,6 +229,7 @@
   font-size: inherit;
   text-align: center;
   outline: none;
+  appearance: textfield;
   transition:
     border-color var(--transition-fast, 150ms),
     box-shadow var(--transition-fast, 150ms);

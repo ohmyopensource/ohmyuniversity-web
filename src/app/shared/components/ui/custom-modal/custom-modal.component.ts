@@ -53,7 +53,7 @@ export type CloseReason = 'backdrop' | 'esc' | 'button' | 'programmatic';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomModalComponent implements OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly iconClose = LucideX;
 

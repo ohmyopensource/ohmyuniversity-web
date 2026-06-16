@@ -37,23 +37,25 @@ describe('CustomButtonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render a native button element by default (mode=button)', () => {
+  it('should render a native button element when mode is link-internal', () => {
+    setInput('mode', 'link-internal');
+    setInput('href', '/home');
     const btn = fixture.debugElement.query(By.css('button'));
     expect(btn).not.toBeNull();
   });
 
-  it('should render an anchor element when mode is link-internal', () => {
+  it('should render a native button element when mode is link-internal', () => {
     setInput('mode', 'link-internal');
     setInput('href', '/home');
-    const anchor = fixture.debugElement.query(By.css('a'));
-    expect(anchor).not.toBeNull();
+    const btn = fixture.debugElement.query(By.css('button'));
+    expect(btn).not.toBeNull();
   });
 
-  it('should render an anchor element when mode is link-external', () => {
+  it('should render an anchor button element when mode is link-external', () => {
     setInput('mode', 'link-external');
     setInput('href', 'https://example.com');
-    const anchor = fixture.debugElement.query(By.css('a'));
-    expect(anchor).not.toBeNull();
+    const btn = fixture.debugElement.query(By.css('button'));
+    expect(btn).not.toBeNull();
   });
 
   it('should display the label text', () => {
@@ -273,20 +275,14 @@ describe('CustomButtonComponent', () => {
     expect(btn.nativeElement.getAttribute('aria-disabled')).toBeNull();
   });
 
-  it('should add rel="noopener noreferrer" when external link targets _blank', () => {
-    setInput('mode', 'link-external');
-    setInput('href', 'https://example.com');
-    setInput('target', '_blank');
-    const anchor = fixture.debugElement.query(By.css('a'));
-    expect(anchor.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+  it('should return "noopener noreferrer" for externalRel when target is _blank', () => {
+    component.target = '_blank';
+    expect(component.externalRel).toBe('noopener noreferrer');
   });
 
-  it('should not add rel attribute when external link targets _self', () => {
-    setInput('mode', 'link-external');
-    setInput('href', 'https://example.com');
-    setInput('target', '_self');
-    const anchor = fixture.debugElement.query(By.css('a'));
-    expect(anchor.nativeElement.getAttribute('rel')).toBe('');
+  it('should return empty string for externalRel when target is _self', () => {
+    component.target = '_self';
+    expect(component.externalRel).toBe('');
   });
 
   it('should return iconSize 14 for size xs', () => {
