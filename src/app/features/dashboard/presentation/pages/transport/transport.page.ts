@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { PageHeaderComponent } from '@ui/page-header/page-header.component';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
@@ -57,7 +57,7 @@ export class TransportPage {
 
   activeTab = signal<string>('public');
   fromValue = signal<string>('');
-  mapUrl = signal<SafeResourceUrl | null>(null);
+  mapUrl = signal<string | null>(null);
   searching = signal<boolean>(false);
 
   // @TODO
@@ -91,7 +91,7 @@ export class TransportPage {
 
     // @TODO
     const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(this.universityAddress)}&output=embed`;
-    this.mapUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(mapsUrl));
+    this.mapUrl.set(mapsUrl);
     this.searching.set(false);
   }
 
