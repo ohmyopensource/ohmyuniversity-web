@@ -252,7 +252,7 @@ export const MOCK_FEES: Fee[] = [
   {
     id: 'f1',
     name: 'Prima rata — A.A. 2024/2025',
-    amount: 450.0,
+    amount: 450,
     dueDate: '31 ottobre 2024',
     paidAt: '15 ottobre 2024',
     status: 'paid',
@@ -261,7 +261,7 @@ export const MOCK_FEES: Fee[] = [
   {
     id: 'f2',
     name: 'Seconda rata — A.A. 2024/2025',
-    amount: 380.0,
+    amount: 380,
     dueDate: '28 febbraio 2025',
     paidAt: '20 febbraio 2025',
     status: 'paid',
@@ -270,7 +270,7 @@ export const MOCK_FEES: Fee[] = [
   {
     id: 'f3',
     name: 'Terza rata — A.A. 2024/2025',
-    amount: 380.0,
+    amount: 380,
     dueDate: '30 aprile 2025',
     status: 'overdue',
     payUrl: 'https://esse3.unimol.it/pagamenti',
@@ -278,7 +278,7 @@ export const MOCK_FEES: Fee[] = [
   {
     id: 'f4',
     name: 'Contributo servizi — A.A. 2024/2025',
-    amount: 80.0,
+    amount: 80,
     dueDate: '31 ottobre 2024',
     paidAt: '15 ottobre 2024',
     status: 'paid',
@@ -287,7 +287,7 @@ export const MOCK_FEES: Fee[] = [
   {
     id: 'f5',
     name: 'Prima rata — A.A. 2025/2026',
-    amount: 450.0,
+    amount: 450,
     dueDate: '31 ottobre 2025',
     status: 'pending',
     payUrl: 'https://esse3.unimol.it/pagamenti',
