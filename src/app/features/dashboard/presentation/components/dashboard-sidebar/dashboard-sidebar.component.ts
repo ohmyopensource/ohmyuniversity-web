@@ -10,7 +10,7 @@ import {
 } from '@lucide/angular';
 import { APP_LOGO, APP_NAME, SIDEBAR_ITEMS, SIDEBAR_BOTTOM_ITEMS } from '@constants';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
-import { CustomAvatarComponent } from '@ui/custom-avatar/custom-avatar.component';
+import { CustomAvatarComponent, AvatarVariant } from '@ui/custom-avatar/custom-avatar.component';
 import {
   AvatarProfilePanelComponent,
   AccountEntry,
@@ -18,7 +18,6 @@ import {
   RING_COLORS,
   STATUS_VARIANT,
 } from '@ui/avatar-profile-panel/avatar-profile-panel.component';
-import { AvatarVariant } from '@ui/custom-avatar/custom-avatar.component';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -77,7 +76,7 @@ export class DashboardSidebarComponent {
   readonly APP_NAME = APP_NAME;
   readonly APP_LOGO = APP_LOGO;
 
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   readonly open = input.required<boolean>();
   readonly toggleSidebar = output<void>();

@@ -55,7 +55,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   templateUrl: './dashboard-topbar.component.html',
 })
 export class DashboardTopbarComponent implements OnInit, OnDestroy {
-  private router = inject(Router);
+  private readonly router = inject(Router);
   private sub!: Subscription;
 
   readonly iconBell = LucideBell;

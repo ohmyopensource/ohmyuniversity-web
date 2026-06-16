@@ -109,8 +109,8 @@ export const RING_COLORS: Record<AccountStatus, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarProfilePanelComponent {
-  private elRef = inject(ElementRef);
-  private cdr = inject(ChangeDetectorRef);
+  private readonly elRef = inject(ElementRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly iconLogout = LucideLogOut;
   readonly iconSettings = LucideSettings;

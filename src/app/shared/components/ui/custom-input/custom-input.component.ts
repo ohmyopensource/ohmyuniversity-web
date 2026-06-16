@@ -107,7 +107,7 @@ export interface SelectOption {
   ],
 })
 export class CustomInputComponent implements ControlValueAccessor {
-  private cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly iconEye = LucideEye;
   readonly iconEyeOff = LucideEyeOff;

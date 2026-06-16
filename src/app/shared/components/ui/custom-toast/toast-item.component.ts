@@ -49,8 +49,8 @@ import { Toast, ToastService } from './toast.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastItemComponent implements OnInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
-  private toastService = inject(ToastService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly toastService = inject(ToastService);
 
   readonly iconClose = LucideX;
   readonly iconSuccess = LucideCircleCheck;
