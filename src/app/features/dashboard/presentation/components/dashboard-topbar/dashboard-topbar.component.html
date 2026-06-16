@@ -64,7 +64,8 @@
         [iconOnly]="true"
         [icon]="iconBell"
         [attr.aria-label]="notificationCount + ' notifiche non lette'"
-        (click)="notifModal.open()" />
+        (click)="notifModal.open()"
+        (keydown.enter)="notifModal.open()" />
 
       @if (notificationCount > 0) {
         <span class="absolute top-0.5 right-0.5 pointer-events-none">

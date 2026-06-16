@@ -31,6 +31,7 @@
       [icon]="open() ? iconPanelClose : iconPanelOpen"
       [attr.aria-label]="open() ? 'Chiudi menu' : 'Apri menu'"
       (click)="toggleSidebar.emit()"
+      (keydown.enter)="toggleSidebar.emit()"
       class="w-full rounded-none" />
   </div>
 
@@ -93,12 +94,10 @@
       <!-- Sidebar Open -->
       <div class="flex items-stretch">
         <!-- Left: avatar panel + info -->
-        <div
-          class="flex items-center gap-2.5 flex-1 min-w-0 px-3 py-2.5 transition-colors duration-150 cursor-pointer profile-zone"
+        <button
+          type="button"
+          class="flex items-center gap-2.5 flex-1 min-w-0 px-3 py-2.5 transition-colors duration-150 cursor-pointer profile-zone border-none bg-transparent text-left"
           (click)="goToProfile()"
-          role="button"
-          tabindex="0"
-          (keydown.enter)="goToProfile()"
           [attr.aria-label]="'Apri profilo di ' + currentAccount.name">
           <!-- Avatar -->
           <app-custom-avatar
@@ -124,7 +123,7 @@
               {{ currentAccount.courseAcronym }} · {{ currentAccount.universityLabel }}
             </span>
           </div>
-        </div>
+        </button>
 
         <!-- Divider -->
         <div class="w-px self-stretch my-2" style="background: var(--color-neutral-200)"></div>
