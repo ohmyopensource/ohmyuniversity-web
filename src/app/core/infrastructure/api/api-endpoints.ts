@@ -34,6 +34,9 @@ export const API = {
     invoices: `${BASE}/v1/fees/invoices`,
     refunds: `${BASE}/v1/fees/refunds`,
   },
+  internships: {
+    applications: `${BASE}/v1/internships/applications`,
+  },
   agenda: {
     events: `${BASE}/v1/agenda/events`,
     universityEvents: `${BASE}/v1/agenda/university-events`,

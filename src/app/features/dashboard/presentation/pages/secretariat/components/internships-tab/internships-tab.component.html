@@ -1,0 +1,133 @@
+@if (!hasCarriera()) {
+  <app-card-status
+    statusVariant="info"
+    [icon]="iconInfo"
+    title="Sezione non disponibile"
+    description="I tirocini sono disponibili solo per gli studenti iscritti." />
+} @else if (loading()) {
+  <div class="flex justify-center py-12">
+    <svg
+      [lucideIcon]="iconClock"
+      [size]="28"
+      style="color: var(--color-neutral-300)"
+      aria-hidden="true"></svg>
+  </div>
+} @else if (error()) {
+  <app-card-status
+    statusVariant="error"
+    [icon]="iconTriangle"
+    title="Errore nel caricamento"
+    description="Impossibile recuperare i tirocini. Riprova più tardi." />
+} @else if (applications().length === 0) {
+  <app-card-status
+    statusVariant="info"
+    [icon]="iconBriefcase"
+    title="Nessun tirocinio"
+    description="Non hai ancora presentato domande di tirocinio." />
+} @else {
+  <div class="flex flex-col gap-3">
+    @for (app of applications(); track app.domTiroId) {
+      <app-custom-card
+        [variant]="app.statusCode === 'RIF' || app.statusCode === 'ANN' ? 'neutral' : 'default'"
+        padding="md"
+        shadow="none"
+        [bordered]="true"
+        radius="lg">
+        <div class="flex flex-col gap-3">
+          <!-- Header -->
+          <div class="flex items-start gap-3">
+            <div
+              class="flex items-center justify-center w-10 h-10 rounded-lg shrink-0"
+              [style.background]="statusIconBg(app.statusCode)">
+              <svg
+                [lucideIcon]="statusIcon(app.statusCode)"
+                [size]="16"
+                [style.color]="statusIconColor(app.statusCode)"
+                aria-hidden="true"></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 appText variant="h6" class="m-0" style="font-size: 0.9rem">
+                  {{
+                    app.opportunityTitle ||
+                      app.internshipTypeDescription ||
+                      'Tirocinio #' + app.domTiroPrg
+                  }}
+                </h3>
+                <app-custom-badge
+                  [label]="app.statusDescription || app.statusCode"
+                  [variant]="statusVariant(app.statusCode)"
+                  size="xs"
+                  shape="pill"
+                  [dot]="true" />
+              </div>
+              @if (app.organizationName) {
+                <p class="text-[0.78rem] m-0 mt-0.5" style="color: var(--color-neutral-500)">
+                  {{ app.organizationName }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            @if (app.academicYear) {
+              <div class="flex flex-col gap-0.5">
+                <span
+                  class="text-[0.65rem] font-semibold uppercase tracking-wide"
+                  style="color: var(--color-neutral-400)"
+                  >Anno acc.</span
+                >
+                <span class="text-[0.8rem]" style="color: var(--color-neutral-700)">{{
+                  formatAcademicYear(app.academicYear)
+                }}</span>
+              </div>
+            }
+            @if (app.startDate) {
+              <div class="flex flex-col gap-0.5">
+                <span
+                  class="text-[0.65rem] font-semibold uppercase tracking-wide"
+                  style="color: var(--color-neutral-400)"
+                  >Inizio</span
+                >
+                <span class="text-[0.8rem]" style="color: var(--color-neutral-700)">{{
+                  app.startDate
+                }}</span>
+              </div>
+            }
+            @if (app.durationMonths) {
+              <div class="flex flex-col gap-0.5">
+                <span
+                  class="text-[0.65rem] font-semibold uppercase tracking-wide"
+                  style="color: var(--color-neutral-400)"
+                  >Durata</span
+                >
+                <span class="text-[0.8rem]" style="color: var(--color-neutral-700)"
+                  >{{ app.durationMonths }} mesi</span
+                >
+              </div>
+            }
+            @if (app.cfuRecognitionEnabled === 1) {
+              <div class="flex flex-col gap-0.5">
+                <span
+                  class="text-[0.65rem] font-semibold uppercase tracking-wide"
+                  style="color: var(--color-neutral-400)"
+                  >CFU</span
+                >
+                <span class="text-[0.8rem]" style="color: var(--color-success-dark)"
+                  >Riconoscimento abilitato</span
+                >
+              </div>
+            }
+          </div>
+
+          @if (app.opportunityDescription) {
+            <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-500); line-height: 1.5">
+              {{ app.opportunityDescription }}
+            </p>
+          }
+        </div>
+      </app-custom-card>
+    }
+  </div>
+}

@@ -1,8 +1,4 @@
 <div class="flex flex-col gap-5">
-  @if (forms().length === 0) {
-    <ng-content />
-  }
-
   @for (category of categories(); track category) {
     <div class="flex flex-col gap-3">
       <div class="flex items-center gap-2">
@@ -14,48 +10,48 @@
       </div>
       <div class="flex flex-col gap-2">
         @for (form of formsForCategory(category); track form.id) {
-          <app-custom-card
-            variant="default"
-            padding="sm"
-            shadow="none"
-            [bordered]="true"
-            radius="lg">
-            <div class="flex items-center gap-4">
+          <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-start justify-between gap-3 flex-wrap">
+                <div class="flex-1 min-w-0">
+                  <h3 appText variant="h6" class="m-0">{{ form.name }}</h3>
+                  <p class="text-[0.75rem] m-0 mt-0.5" style="color: var(--color-neutral-400)">
+                    {{ form.description }}
+                  </p>
+                </div>
+              </div>
+
               <div
-                class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
-                style="background: var(--color-primary-light)">
-                <svg
-                  [lucideIcon]="iconFile"
-                  [size]="15"
-                  style="color: var(--color-primary-dark)"
-                  aria-hidden="true"></svg>
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3"
+                style="border-top: 1px solid var(--color-neutral-200)">
+                <div class="flex items-center gap-1.5">
+                  <svg
+                    [lucideIcon]="iconCalendar"
+                    [size]="13"
+                    style="color: var(--color-neutral-400)"
+                    aria-hidden="true"></svg>
+                  <span class="text-[0.75rem]" style="color: var(--color-neutral-500)">
+                    Aggiornato: {{ form.updatedAt }}
+                  </span>
+                </div>
+                <app-custom-button
+                  variant="primary"
+                  size="sm"
+                  label="Apri"
+                  [icon]="iconExternalLink"
+                  iconPosition="right"
+                  mode="link-external"
+                  [href]="form.url"
+                  target="_blank" />
               </div>
-              <div class="flex-1 min-w-0">
-                <h3 appText variant="h6" class="m-0 truncate" style="font-size: 0.85rem">
-                  {{ form.name }}
-                </h3>
-                <p
-                  class="text-[0.72rem] m-0 mt-0.5 truncate"
-                  style="color: var(--color-neutral-400)">
-                  {{ form.description }}
-                </p>
-                <span class="text-[0.65rem]" style="color: var(--color-neutral-400)"
-                  >Aggiornato: {{ form.updatedAt }}</span
-                >
-              </div>
-              <app-custom-button
-                variant="ghost"
-                size="sm"
-                label="Apri"
-                [icon]="iconExternalLink"
-                iconPosition="right"
-                mode="link-external"
-                [href]="form.url"
-                target="_blank" />
             </div>
           </app-custom-card>
         }
       </div>
     </div>
+  }
+
+  @if (forms().length === 0) {
+    <ng-content />
   }
 </div>

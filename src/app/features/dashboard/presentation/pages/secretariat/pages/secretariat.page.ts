@@ -9,6 +9,7 @@ import {
   LucideMegaphone,
   LucideCreditCard,
   LucideTriangleAlert,
+  LucideBriefcase,
 } from '@lucide/angular';
 import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
 import {
@@ -25,8 +26,11 @@ import { ScholarshipsTabComponent } from '../components/scholarships-tab/scholar
 import { FormsTabComponent } from '../components/forms-tab/forms-tab.component';
 import { BandiTabComponent } from '../components/bandi-tab/bandi-tab.component';
 import { FeesTabComponent } from '../components/fees-tab/fees-tab.component';
+import { InternshipsTabComponent } from '../components/internships-tab/internships-tab.component';
 import { FeeStatusResponse } from 'src/app/core/domain/models/career/fees-status.model';
+import { InternshipApplication } from 'src/app/core/domain/models/career/internship.model';
 import { FeesFacade } from 'src/app/core/application/facades/fees.facade';
+import { InternshipsFacade } from 'src/app/core/application/facades/internships.facade';
 
 @Component({
   selector: 'app-secretariat',
@@ -41,6 +45,7 @@ import { FeesFacade } from 'src/app/core/application/facades/fees.facade';
     FormsTabComponent,
     BandiTabComponent,
     FeesTabComponent,
+    InternshipsTabComponent,
   ],
   templateUrl: './secretariat.page.html',
 })
@@ -50,6 +55,7 @@ export class SecretariatPage implements OnInit {
 
   private readonly toast = inject(ToastService);
   private readonly fees = inject(FeesFacade);
+  private readonly internships = inject(InternshipsFacade);
   private readonly auth = inject(AuthFacade);
 
   readonly hasCarriera = this.auth.hasCarriera();
@@ -57,6 +63,10 @@ export class SecretariatPage implements OnInit {
   tasse = signal<FeeStatusResponse | null>(null);
   tasseLoading = signal(true);
   tasseError = signal(false);
+
+  internshipApplications = signal<InternshipApplication[]>([]);
+  internshipsLoading = signal(true);
+  internshipsError = signal(false);
 
   readonly iconSearch = LucideSearch;
 
@@ -67,6 +77,7 @@ export class SecretariatPage implements OnInit {
     { id: 'scholarships', label: 'Borse di studio', icon: LucideWallet },
     { id: 'forms', label: 'Modulistica', icon: LucideFileText },
     { id: 'bandi', label: 'Bandi e concorsi', icon: LucideMegaphone },
+    { id: 'internships', label: 'Tirocini', icon: LucideBriefcase },
     { id: 'fees', label: 'Tasse', icon: LucideCreditCard },
   ];
 
@@ -135,6 +146,17 @@ export class SecretariatPage implements OnInit {
       error: () => {
         this.tasseError.set(true);
         this.tasseLoading.set(false);
+      },
+    });
+
+    this.internships.getApplications().subscribe({
+      next: data => {
+        this.internshipApplications.set(data.applications ?? []);
+        this.internshipsLoading.set(false);
+      },
+      error: () => {
+        this.internshipsError.set(true);
+        this.internshipsLoading.set(false);
       },
     });
   }

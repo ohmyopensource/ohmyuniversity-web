@@ -21,11 +21,14 @@ import { ProfileApiRepository } from './core/infrastructure/api/profile-api.repo
 import { CareerApiRepository } from './core/infrastructure/api/career-api.repository';
 import { ExamsApiRepository } from './core/infrastructure/api/exams-api.repository';
 import { FeesApiRepository } from './core/infrastructure/api/fees-api.repository';
+import { InternshipsRepository } from './core/domain/repositories/internships.repository';
+import { InternshipsApiRepository } from './core/infrastructure/api/internships-api.repository';
 
 // Facades
 import { AuthFacade } from './core/application/facades/auth.facade';
 import { CareerFacade } from './core/application/facades/career.facade';
 import { FeesFacade } from './core/application/facades/fees.facade';
+import { InternshipsFacade } from './core/application/facades/internships.facade';
 import { CalendarFacade } from './core/application/facades/calendar.facade';
 import { TimetableFacade } from './core/application/facades/timetable.facade';
 
@@ -56,6 +59,11 @@ import { GetSurveysUseCase } from './core/application/usecases/exams/get-surveys
 
 // Fees usecases
 import { GetFeesStatusUseCase } from './core/application/usecases/fees/get-fees-status.usecase';
+import { GetInvoicesUseCase } from './core/application/usecases/fees/get-invoices.usecase';
+import { GetRefundsUseCase } from './core/application/usecases/fees/get-refunds.usecase';
+
+// Internships usecases
+import { GetInternshipApplicationsUseCase } from './core/application/usecases/internships/get-internship-applications.usecase';
 
 import {
   provideLucideIcons,
@@ -151,6 +159,7 @@ export const appConfig: ApplicationConfig = {
     { provide: CareerRepository, useClass: CareerApiRepository },
     { provide: ExamsRepository, useClass: ExamsApiRepository },
     { provide: FeesRepository, useClass: FeesApiRepository },
+    { provide: InternshipsRepository, useClass: InternshipsApiRepository },
 
     // Facades
     AuthFacade,
@@ -186,6 +195,12 @@ export const appConfig: ApplicationConfig = {
 
     // Fees
     GetFeesStatusUseCase,
+    GetInvoicesUseCase,
+    GetRefundsUseCase,
+
+    // Internships
+    InternshipsFacade,
+    GetInternshipApplicationsUseCase,
 
     provideLucideIcons(
       LucideLayoutDashboard,

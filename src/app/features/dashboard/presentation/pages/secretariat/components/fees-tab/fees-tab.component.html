@@ -19,7 +19,8 @@
     title="Errore nel caricamento"
     description="Impossibile recuperare le tasse. Riprova più tardi." />
 } @else {
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-6">
+    <!-- Semaforo -->
     @if (tasse()?.semaforo) {
       <app-custom-card
         [variant]="
@@ -66,6 +67,7 @@
       </app-custom-card>
     }
 
+    <!-- Riepilogo -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <app-custom-card variant="success" padding="md" shadow="none" [bordered]="true" radius="lg">
         <div class="flex flex-col gap-1">
@@ -105,6 +107,7 @@
       </app-custom-card>
     </div>
 
+    <!-- Dettaglio rate -->
     <div class="flex flex-col gap-2">
       <h2 appText variant="h6" class="m-0">Dettaglio rate</h2>
       @for (a of tasse()?.addebiti ?? []; track a.fattId) {
@@ -174,6 +177,179 @@
       }
     </div>
 
+    <!-- Fatture emesse -->
+    <div class="flex flex-col gap-2">
+      <h2 appText variant="h6" class="m-0">Fatture emesse</h2>
+      @if (invoicesLoading()) {
+        <div class="flex justify-center py-6">
+          <svg
+            [lucideIcon]="iconClock"
+            [size]="22"
+            style="color: var(--color-neutral-300)"
+            aria-hidden="true"></svg>
+        </div>
+      } @else if (invoicesError()) {
+        <app-card-status
+          statusVariant="error"
+          [icon]="iconTriangle"
+          title="Errore"
+          description="Impossibile recuperare le fatture." />
+      } @else if (invoices().length === 0) {
+        <app-card-status
+          statusVariant="info"
+          [icon]="iconReceipt"
+          title="Nessuna fattura"
+          description="Non sono presenti fatture emesse per il tuo account." />
+      } @else {
+        @for (inv of invoices(); track inv.fattId) {
+          <app-custom-card
+            [variant]="
+              inv.cancelledFlg === 1 ? 'neutral' : inv.paidFlg === 1 ? 'neutral' : 'default'
+            "
+            padding="md"
+            shadow="none"
+            [bordered]="true"
+            radius="lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3 flex-1 min-w-0">
+                <div
+                  class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+                  [style.background]="
+                    inv.paidFlg === 1 ? 'var(--color-success-light)' : 'var(--color-primary-light)'
+                  ">
+                  <svg
+                    [lucideIcon]="inv.paidFlg === 1 ? iconCheck : iconClock"
+                    [size]="15"
+                    [style.color]="
+                      inv.paidFlg === 1 ? 'var(--color-success-dark)' : 'var(--color-primary-dark)'
+                    "
+                    aria-hidden="true"></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 appText variant="h6" class="m-0" style="font-size: 0.85rem">
+                      {{ inv.description || 'Fattura #' + inv.fattId }}
+                    </h3>
+                    <app-custom-badge
+                      [label]="invoiceStatusLabel(inv)"
+                      [variant]="invoiceStatusVariant(inv)"
+                      size="xs"
+                      shape="pill"
+                      [dot]="true" />
+                  </div>
+                  <div class="flex items-center gap-3 mt-0.5 flex-wrap">
+                    @if (inv.academicYear) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >A.A. {{ inv.academicYear }}/{{ inv.academicYear + 1 }}</span
+                      >
+                    }
+                    @if (inv.paidFlg === 1 && inv.paymentDate) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >Pagata il {{ inv.paymentDate }}</span
+                      >
+                    } @else if (inv.deadline) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >Scadenza: {{ inv.deadline }}</span
+                      >
+                    }
+                    @if (inv.iuv) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >IUV: {{ inv.iuv }}</span
+                      >
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <span class="text-[1.1rem] font-bold" style="color: var(--color-neutral-900)">{{
+                  formatAmount(inv.amount)
+                }}</span>
+                @if (
+                  inv.paidAmount != null && inv.paidAmount > 0 && inv.paidAmount !== inv.amount
+                ) {
+                  <span class="text-[0.72rem]" style="color: var(--color-success-dark)"
+                    >Pagato: {{ formatAmount(inv.paidAmount) }}</span
+                  >
+                }
+              </div>
+            </div>
+          </app-custom-card>
+        }
+      }
+    </div>
+
+    <!-- Rimborsi -->
+    <div class="flex flex-col gap-2">
+      <h2 appText variant="h6" class="m-0">Rimborsi</h2>
+      @if (refundsLoading()) {
+        <div class="flex justify-center py-6">
+          <svg
+            [lucideIcon]="iconClock"
+            [size]="22"
+            style="color: var(--color-neutral-300)"
+            aria-hidden="true"></svg>
+        </div>
+      } @else if (refundsError()) {
+        <app-card-status
+          statusVariant="error"
+          [icon]="iconTriangle"
+          title="Errore"
+          description="Impossibile recuperare i rimborsi." />
+      } @else if (refunds().length === 0) {
+        <app-card-status
+          statusVariant="info"
+          [icon]="iconRefund"
+          title="Nessun rimborso"
+          description="Non sono presenti rimborsi per il tuo account." />
+      } @else {
+        @for (r of refunds(); track r.fattId) {
+          <app-custom-card
+            variant="success"
+            padding="md"
+            shadow="none"
+            [bordered]="true"
+            radius="lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3 flex-1 min-w-0">
+                <div
+                  class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+                  style="background: var(--color-success-light)">
+                  <svg
+                    [lucideIcon]="iconRefund"
+                    [size]="15"
+                    style="color: var(--color-success-dark)"
+                    aria-hidden="true"></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 appText variant="h6" class="m-0" style="font-size: 0.85rem">
+                    {{ r.feeDes || 'Rimborso #' + r.fattId }}
+                  </h3>
+                  <div class="flex items-center gap-3 mt-0.5 flex-wrap">
+                    @if (r.refundDate) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >Data: {{ r.refundDate }}</span
+                      >
+                    }
+                    @if (r.refundStatus) {
+                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                        >Stato: {{ r.refundStatus }}</span
+                      >
+                    }
+                  </div>
+                </div>
+              </div>
+              <span
+                class="text-[1.1rem] font-bold shrink-0"
+                style="color: var(--color-success-dark)">
+                + {{ r.refundAmount }}
+              </span>
+            </div>
+          </app-custom-card>
+        }
+      }
+    </div>
+
+    <!-- Nota PagoPA -->
     <div class="flex items-start gap-2 px-1">
       <svg
         [lucideIcon]="iconInfo"
