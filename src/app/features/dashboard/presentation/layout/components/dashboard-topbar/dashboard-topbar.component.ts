@@ -1,5 +1,6 @@
 import { Component, ViewChild, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { filter, Subscription } from 'rxjs';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
@@ -17,7 +18,12 @@ import {
   LucideSearch,
   LucideHeart,
   LucideMail,
+  LucideBookOpen,
+  LucideLibrary,
+  LucideExternalLink,
 } from '@lucide/angular';
+import { API } from 'src/app/core/infrastructure/api/api-endpoints';
+import { UniversityConfigResponse } from 'src/app/core/domain/models/career/university-config.model';
 
 export interface Notification {
   id: string;
@@ -61,6 +67,7 @@ const SEGMENT_LABELS: Record<string, string> = {
 export class DashboardTopbarComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly http = inject(HttpClient);
   private sub!: Subscription;
 
   readonly iconBell = LucideBell;
@@ -69,10 +76,16 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   readonly iconSearch = LucideSearch;
   readonly iconHeart = LucideHeart;
   readonly iconMail = LucideMail;
+  readonly iconMoodle = LucideBookOpen;
+  readonly iconLibrary = LucideLibrary;
+  readonly iconEsse3 = LucideExternalLink;
 
   rootHovered = false;
-
   breadcrumbs = signal<BreadcrumbItem[]>([]);
+
+  private moodleUrl: string | null = null;
+  private libraryUrl: string | null = null;
+  private esse3PortalUrl: string | null = null;
 
   readonly notificationCount = 3;
   readonly notifications: Notification[] = [
@@ -121,6 +134,15 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
     this.sub = this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => this.updateBreadcrumbs(e.urlAfterRedirects));
+
+    this.http.get<UniversityConfigResponse>(API.university.externalServices).subscribe({
+      next: config => {
+        this.moodleUrl = config.moodleUrl;
+        this.libraryUrl = config.libraryUrl;
+        this.esse3PortalUrl = config.esse3PortalUrl;
+      },
+      error: () => {},
+    });
   }
 
   ngOnDestroy(): void {
@@ -132,7 +154,34 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   }
 
   onMailClick(): void {
-    this.toast.info('Funzione non ancora disponibile');
+    this.http.get(API.email.authUrl, { responseType: 'text' }).subscribe({
+      next: url => window.open(url, '_blank'),
+      error: () => this.toast.error('Impossibile aprire la mail universitaria.'),
+    });
+  }
+
+  onMoodleClick(): void {
+    if (this.moodleUrl) {
+      window.open(this.moodleUrl, '_blank');
+    } else {
+      this.toast.info('Moodle non disponibile per questa università.');
+    }
+  }
+
+  onLibraryClick(): void {
+    if (this.libraryUrl) {
+      window.open(this.libraryUrl, '_blank');
+    } else {
+      this.toast.info('Biblioteca non disponibile per questa università.');
+    }
+  }
+
+  onEsse3Click(): void {
+    if (this.esse3PortalUrl) {
+      window.open(this.esse3PortalUrl, '_blank');
+    } else {
+      this.toast.info('Portale ESSE3 non disponibile.');
+    }
   }
 
   onFavoritesClick(): void {
@@ -142,12 +191,9 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   private updateBreadcrumbs(url: string): void {
     const clean = url.split('?')[0].split('#')[0];
     const segments = clean.split('/').filter(Boolean);
-
     const rest = segments.slice(1);
-
     const crumbs: BreadcrumbItem[] = [];
     let accumulated = '/dashboard';
-
     for (const seg of rest) {
       accumulated += '/' + seg;
       crumbs.push({
@@ -156,7 +202,6 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
         hovered: false,
       });
     }
-
     this.breadcrumbs.set(crumbs);
   }
 

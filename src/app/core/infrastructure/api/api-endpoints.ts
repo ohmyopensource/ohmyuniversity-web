@@ -37,6 +37,13 @@ export const API = {
   internships: {
     applications: `${BASE}/v1/internships/applications`,
   },
+  university: {
+    externalServices: `${BASE}/v1/university/external-services`,
+  },
+  email: {
+    authUrl: `${BASE}/v1/email/auth/url`,
+    inbox: `${BASE}/v1/email/inbox`,
+  },
   agenda: {
     events: `${BASE}/v1/agenda/events`,
     universityEvents: `${BASE}/v1/agenda/university-events`,

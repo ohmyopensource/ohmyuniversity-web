@@ -143,6 +143,7 @@ import {
   LucideSparkles,
   LucideCalculator,
   LucideHourglass,
+  LucideLibrary,
 } from '@lucide/angular';
 
 export const appConfig: ApplicationConfig = {
@@ -279,6 +280,7 @@ export const appConfig: ApplicationConfig = {
       LucideSparkles,
       LucideCalculator,
       LucideHourglass,
+      LucideLibrary,
     ),
   ],
 };
