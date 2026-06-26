@@ -14,7 +14,19 @@
     [universityName]="universityName"
     [universityAddress]="universityAddress" />
 
-  <div class="p-4 flex">
+  <!-- Mobile Tabs -->
+  <div class="flex sm:hidden py-4">
+    <app-custom-tabs
+      [tabs]="tabs"
+      [activeTab]="activeTab()"
+      tabStyle="pill"
+      size="sm"
+      [fullWidth]="true"
+      (tabChange)="onTabChange($event)" />
+  </div>
+
+  <!-- Desktop Tabs -->
+  <div class="hidden sm:flex py-4">
     <app-custom-tabs
       [tabs]="tabs"
       [activeTab]="activeTab()"

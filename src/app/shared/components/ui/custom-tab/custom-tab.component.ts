@@ -106,6 +106,9 @@ export class CustomTabsComponent {
    */
   @Input() darkTheme: boolean = false;
 
+  /** Renders tabs stacked vertically instead of horizontally */
+  @Input() vertical: boolean = false;
+
   /**
    * Emitted when the active tab changes.
    * Contains the identifier of the selected tab.
@@ -158,6 +161,7 @@ export class CustomTabsComponent {
       `tabs--${this.variant}`,
       `tabs--${this.size}`,
       this.fullWidth ? 'tabs--full' : '',
+      this.vertical ? 'tabs--vertical' : '',
       this.darkTheme ? 'tabs--dark' : '',
     ]
       .filter(Boolean)
@@ -178,7 +182,7 @@ export class CustomTabsComponent {
       'tabs__tab',
       this.isActive(tab) ? 'tabs__tab--active' : '',
       tab.disabled ? 'tabs__tab--disabled' : '',
-      this.fullWidth ? 'tabs__tab--full' : '',
+      this.fullWidth || this.vertical ? 'tabs__tab--full' : '',
     ]
       .filter(Boolean)
       .join(' ');

@@ -369,6 +369,50 @@
   background: var(--color-info-dark);
 }
 
+/* Style: Vertical */
+.tabs--vertical {
+  flex-direction: column;
+  border-bottom: none;
+  align-items: stretch;
+  overflow-x: visible;
+}
+
+/* Vertical + pill */
+.tabs--vertical.tabs--pill {
+  border-radius: var(--radius-lg, 16px);
+  padding: 4px;
+  gap: 2px;
+}
+
+.tabs--vertical.tabs--pill .tabs__tab {
+  justify-content: flex-start;
+  text-align: left;
+  border-radius: var(--radius-md, 10px);
+}
+
+/* Vertical + line */
+.tabs--vertical.tabs--line {
+  border-bottom: none;
+  border-left: 2px solid var(--color-neutral-200);
+  gap: 0;
+}
+
+.tabs--vertical.tabs--line .tabs__tab {
+  margin-bottom: 0;
+  margin-left: -2px;
+  justify-content: flex-start;
+}
+
+.tabs--vertical.tabs--line .tabs__indicator {
+  bottom: auto;
+  top: 0;
+  left: -2px;
+  right: auto;
+  width: 2px;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+}
+
 /* Dark theme overrides */
 .tabs--dark.tabs--line,
 .tabs--dark.tabs--underline {
