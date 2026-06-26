@@ -12,6 +12,7 @@ import {
   LucideScale,
   LucideGraduationCap,
   LucideSparkles,
+  LucideInfo,
 } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
@@ -28,6 +29,7 @@ export class CareerStatsComponent {
   readonly iconScale = LucideScale;
   readonly iconGraduation = LucideGraduationCap;
   readonly iconSparkles = LucideSparkles;
+  readonly iconInfo = LucideInfo;
 
   readonly arithmeticAverage = input.required<number>();
   readonly weightedAverage = input.required<number>();

@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="flex flex-col gap-6">
   <!-- Global Popup -->
   @if (activePopup) {
     <app-grade-simulator-popup
@@ -15,66 +15,87 @@
       (close)="closeSimulator()" />
   }
 
-  <!-- Study Plan -->
-  <app-custom-card padding="lg" shadow="sm" radius="md">
-    <div class="flex flex-wrap items-center justify-between gap-3">
-      <h2 appText class="text-lg font-semibold text-gray-900">Piano di Studi</h2>
-      <div class="flex flex-wrap items-center gap-3">
+  <!-- Piano di Studi -->
+  <app-custom-card padding="md" shadow="sm" radius="md">
+    <!-- Filters -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <h2 class="m-0 font-bold text-[0.95rem]" style="color: var(--color-neutral-800)">
+        Piano di Studi
+      </h2>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
         <app-custom-input
           type="select"
           [options]="yearFilterOptions()"
           [(ngModel)]="selectedYearModel"
-          name="yearFilter" />
+          name="yearFilter"
+          size="sm" />
         <app-custom-tabs
           [tabs]="filterOptions()"
           [activeTab]="activeFilter()"
           tabStyle="pill"
           variant="primary"
+          size="sm"
           (tabChange)="onFilterChange($event)" />
       </div>
     </div>
 
-    <div class="mt-5 space-y-6">
+    <!-- Exam groups -->
+    <div class="mt-4 flex flex-col gap-5">
       @for (group of mandatoryGroups(); track group.year) {
-        <div>
-          <p appText class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <div class="flex flex-col gap-2">
+          <!-- Year label -->
+          <span
+            class="text-[0.68rem] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md self-start"
+            style="background: var(--color-neutral-200); color: var(--color-neutral-500)">
             {{ group.yearLabel }}
-          </p>
-          <div class="flex flex-col gap-3">
+            <span style="color: var(--color-neutral-400)">
+              · {{ group.passedCount }}/{{ group.exams.length }} superati
+            </span>
+          </span>
+
+          <div class="flex flex-col gap-2">
             @for (exam of group.exams; track exam.courseCode) {
-              <div class="overflow-hidden rounded-xl border border-gray-200">
-                <div class="flex w-full items-center gap-2 px-4 py-3.5">
-                  <!-- Accordion -->
-                  <div
-                    class="flex min-w-0 flex-1 cursor-pointer items-center gap-3"
-                    role="button"
-                    tabindex="0"
+              <div
+                class="rounded-xl overflow-hidden"
+                style="border: 1px solid var(--color-neutral-200)">
+                <!-- Exam row -->
+                <div class="flex items-center gap-2 px-3 py-3">
+                  <!-- Expand toggle -->
+                  <button
+                    type="button"
+                    class="flex min-w-0 flex-1 items-center gap-2.5 text-left"
                     (click)="toggleExam(exam.courseCode)"
                     (keydown.enter)="toggleExam(exam.courseCode)"
                     (keydown.space)="toggleExam(exam.courseCode)">
                     <svg
                       [lucideIcon]="iconChevron"
-                      [size]="16"
-                      class="shrink-0 text-gray-400 transition-transform duration-200"
-                      [class.rotate-180]="isOpen(exam.courseCode)"></svg>
+                      [size]="15"
+                      class="shrink-0 transition-transform duration-200"
+                      [class.rotate-180]="isOpen(exam.courseCode)"
+                      style="color: var(--color-neutral-400)"
+                      aria-hidden="true"></svg>
                     <div class="min-w-0">
-                      <p appText class="truncate text-sm font-semibold text-gray-900">
+                      <p
+                        class="m-0 truncate font-semibold text-[0.85rem]"
+                        style="color: var(--color-neutral-900)">
                         {{ exam.courseName }}
                       </p>
-                      <p appText class="font-mono text-xs text-gray-400">
+                      <p
+                        class="m-0 text-[0.72rem] font-mono"
+                        style="color: var(--color-neutral-400)">
                         {{ exam.courseCode }} · {{ exam.cfu }} CFU
                       </p>
                     </div>
-                  </div>
+                  </button>
 
-                  <!-- Badge + Simulation -->
-                  <div class="flex shrink-0 flex-wrap items-center gap-2">
+                  <!-- Status badges -->
+                  <div class="flex shrink-0 flex-wrap items-center gap-1.5">
                     @if (exam.prerequisites.length > 0) {
                       <app-custom-badge
                         label="Propedeutico"
                         variant="info"
                         shape="rounded"
-                        size="sm"
+                        size="xs"
                         [icon]="iconLock" />
                     }
                     @if (exam.status === 'PASSED') {
@@ -90,18 +111,23 @@
                           [label]="'~' + exam.simulatedGrade"
                           variant="secondary"
                           shape="rounded"
-                          size="sm" />
+                          size="xs" />
                       }
                       <button
                         type="button"
                         (click)="openSimulator($event, exam.courseCode)"
-                        class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors"
-                        [class]="
+                        class="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[0.72rem] font-medium transition-colors"
+                        [style.background]="
                           exam.simulatedGrade !== undefined
-                            ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                            : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                            ? 'var(--color-secondary-light)'
+                            : 'var(--color-neutral-100)'
+                        "
+                        [style.color]="
+                          exam.simulatedGrade !== undefined
+                            ? 'var(--color-secondary-dark)'
+                            : 'var(--color-neutral-500)'
                         ">
-                        <svg [lucideIcon]="iconPencil" [size]="12"></svg>
+                        <svg [lucideIcon]="iconPencil" [size]="11" aria-hidden="true"></svg>
                         <span class="hidden sm:inline">
                           {{ exam.simulatedGrade !== undefined ? 'Modifica' : 'Simula' }}
                         </span>
@@ -110,71 +136,127 @@
                   </div>
                 </div>
 
+                <!-- Expanded detail -->
                 @if (isOpen(exam.courseCode)) {
-                  <div class="border-t border-gray-100 bg-gray-50 px-4 py-4">
+                  <div
+                    class="px-4 py-4 border-t"
+                    style="
+                      background: var(--color-neutral-50);
+                      border-color: var(--color-neutral-100);
+                    ">
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
                       <div>
-                        <p appText class="text-xs text-gray-400">Lingua</p>
-                        <p appText class="text-sm font-medium text-gray-700">{{ exam.language }}</p>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Lingua
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ exam.language }}
+                        </p>
                       </div>
                       <div>
-                        <p appText class="text-xs text-gray-400">Periodo didattico</p>
-                        <p appText class="text-sm font-medium text-gray-700">
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Periodo
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
                           {{ periodLabel(exam.period) }}
                         </p>
                       </div>
                       <div>
-                        <p appText class="text-xs text-gray-400">Durata</p>
-                        <p appText class="text-sm font-medium text-gray-700">
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Durata
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
                           {{ exam.durationHours }} ore
                         </p>
                       </div>
                       <div>
-                        <p appText class="text-xs text-gray-400">Frequenza</p>
-                        <p appText class="text-sm font-medium text-gray-700">
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Frequenza
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
                           {{ attendanceLabel(exam.attendance) }}
                         </p>
                       </div>
                       <div>
-                        <p appText class="text-xs text-gray-400">Settore disciplinare</p>
-                        <p appText class="text-sm font-medium text-gray-700">
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Settore
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
                           {{ exam.scientificSector }}
                         </p>
                       </div>
                       <div>
-                        <p appText class="text-xs text-gray-400">Sede</p>
-                        <p appText class="text-sm font-medium text-gray-700">{{ exam.location }}</p>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Sede
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ exam.location }}
+                        </p>
                       </div>
                     </div>
 
                     @if (exam.prerequisites.length > 0) {
-                      <div class="mt-4 rounded-lg bg-blue-50 px-3 py-2.5">
-                        <p appText class="text-xs font-semibold text-blue-700">
+                      <div
+                        class="mt-3 rounded-lg px-3 py-2.5"
+                        style="background: var(--color-info-light)">
+                        <p
+                          class="text-[0.72rem] font-semibold m-0"
+                          style="color: var(--color-info-dark)">
                           Esami propedeutici richiesti
                         </p>
-                        <p appText class="mt-1 text-sm text-blue-800">
+                        <p class="text-[0.78rem] m-0 mt-0.5" style="color: var(--color-info-dark)">
                           {{ exam.prerequisites.join(', ') }}
                         </p>
                       </div>
                     }
 
-                    <div class="mt-4">
-                      <p
-                        appText
-                        class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                        Programma per CFU
-                      </p>
-                      <div class="flex flex-col gap-2">
-                        @for (item of exam.cfuBreakdown; track item.cfuNumber) {
-                          <div class="flex gap-3 text-sm">
-                            <span class="shrink-0 font-semibold text-gray-500">
-                              CFU {{ item.cfuNumber }}
-                            </span>
-                            <span appText class="text-gray-600">{{ item.description }}</span>
-                          </div>
-                        }
+                    @if (exam.cfuBreakdown.length > 0) {
+                      <div class="mt-3">
+                        <p
+                          class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-2"
+                          style="color: var(--color-neutral-400)">
+                          Programma per CFU
+                        </p>
+                        <div class="flex flex-col gap-1.5">
+                          @for (item of exam.cfuBreakdown; track item.cfuNumber) {
+                            <div class="flex gap-3 text-[0.78rem]">
+                              <span
+                                class="shrink-0 font-semibold"
+                                style="color: var(--color-neutral-500)">
+                                CFU {{ item.cfuNumber }}
+                              </span>
+                              <span style="color: var(--color-neutral-600)">{{
+                                item.description
+                              }}</span>
+                            </div>
+                          }
+                        </div>
                       </div>
-                    </div>
+                    }
 
                     @if (exam.status !== 'PASSED') {
                       <div class="mt-4">
@@ -194,158 +276,178 @@
           </div>
         </div>
       }
+
+      @if (mandatoryGroups().length === 0) {
+        <p class="text-[0.82rem] m-0 py-4 text-center" style="color: var(--color-neutral-400)">
+          Nessun esame trovato con i filtri selezionati.
+        </p>
+      }
     </div>
   </app-custom-card>
 
-  <!-- Elective Activities -->
+  <!-- Esami a scelta -->
   @if (electiveExams().length > 0) {
-    <div class="mt-6">
-      <app-custom-card padding="lg" shadow="sm" radius="md">
-        <h2 appText class="text-lg font-semibold text-gray-900">Esami a scelta</h2>
-        <p appText class="mt-1 text-sm text-gray-500">
-          Esami extra rispetto al piano obbligatorio. Non tutti gli esami a scelta sono prenotabili:
-          scegli quelli che intendi sostenere.
-        </p>
+    <app-custom-card padding="md" shadow="sm" radius="md">
+      <h2 class="m-0 font-bold text-[0.95rem]" style="color: var(--color-neutral-800)">
+        Esami a scelta
+      </h2>
+      <p class="text-[0.78rem] m-0 mt-1" style="color: var(--color-neutral-500)">
+        Esami extra rispetto al piano obbligatorio.
+      </p>
 
-        <div class="mt-5 flex flex-col gap-3">
-          @for (exam of electiveExams(); track exam.courseCode) {
-            <div class="overflow-hidden rounded-xl border border-gray-200">
-              <div class="flex w-full items-center gap-2 px-4 py-3.5">
-                <div
-                  class="flex min-w-0 flex-1 cursor-pointer items-center gap-3"
-                  role="button"
-                  tabindex="0"
-                  (click)="toggleExam(exam.courseCode)"
-                  (keydown.enter)="toggleExam(exam.courseCode)"
-                  (keydown.space)="toggleExam(exam.courseCode)">
-                  <svg
-                    [lucideIcon]="iconChevron"
-                    [size]="16"
-                    class="shrink-0 text-gray-400 transition-transform duration-200"
-                    [class.rotate-180]="isOpen(exam.courseCode)"></svg>
-                  <div class="min-w-0">
-                    <p appText class="truncate text-sm font-semibold text-gray-900">
-                      {{ exam.courseName }}
+      <div class="mt-4 flex flex-col gap-2">
+        @for (exam of electiveExams(); track exam.courseCode) {
+          <div
+            class="rounded-xl overflow-hidden"
+            style="border: 1px solid var(--color-neutral-200)">
+            <div class="flex items-center gap-2 px-3 py-3">
+              <button
+                type="button"
+                class="flex min-w-0 flex-1 items-center gap-2.5 text-left"
+                (click)="toggleExam(exam.courseCode)"
+                (keydown.enter)="toggleExam(exam.courseCode)"
+                (keydown.space)="toggleExam(exam.courseCode)">
+                <svg
+                  [lucideIcon]="iconChevron"
+                  [size]="15"
+                  class="shrink-0 transition-transform duration-200"
+                  [class.rotate-180]="isOpen(exam.courseCode)"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <div class="min-w-0">
+                  <p
+                    class="m-0 truncate font-semibold text-[0.85rem]"
+                    style="color: var(--color-neutral-900)">
+                    {{ exam.courseName }}
+                  </p>
+                  <p class="m-0 text-[0.72rem] font-mono" style="color: var(--color-neutral-400)">
+                    {{ exam.courseCode }} · {{ exam.cfu }} CFU
+                  </p>
+                </div>
+              </button>
+
+              <div class="flex shrink-0 flex-wrap items-center gap-1.5">
+                @if (exam.status === 'PASSED') {
+                  <app-custom-badge
+                    [label]="exam.grade"
+                    variant="success"
+                    shape="rounded"
+                    size="sm"
+                    [icon]="iconCheck" />
+                } @else {
+                  @if (exam.simulatedGrade !== undefined) {
+                    <app-custom-badge
+                      [label]="'~' + exam.simulatedGrade"
+                      variant="secondary"
+                      shape="rounded"
+                      size="xs" />
+                  }
+                  <button
+                    type="button"
+                    (click)="openSimulator($event, exam.courseCode)"
+                    class="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[0.72rem] font-medium transition-colors"
+                    [style.background]="
+                      exam.simulatedGrade !== undefined
+                        ? 'var(--color-secondary-light)'
+                        : 'var(--color-neutral-100)'
+                    "
+                    [style.color]="
+                      exam.simulatedGrade !== undefined
+                        ? 'var(--color-secondary-dark)'
+                        : 'var(--color-neutral-500)'
+                    ">
+                    <svg [lucideIcon]="iconPencil" [size]="11" aria-hidden="true"></svg>
+                    <span class="hidden sm:inline">
+                      {{ exam.simulatedGrade !== undefined ? 'Modifica' : 'Simula' }}
+                    </span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (isOpen(exam.courseCode)) {
+              <div
+                class="px-4 py-4 border-t"
+                style="background: var(--color-neutral-50); border-color: var(--color-neutral-100)">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Lingua
                     </p>
-                    <p appText class="font-mono text-xs text-gray-400">
-                      {{ exam.courseCode }} · {{ exam.cfu }} CFU
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ exam.language }}
                     </p>
                   </div>
-                </div>
-
-                <div class="flex shrink-0 flex-wrap items-center gap-2">
-                  @if (exam.prerequisites.length > 0) {
-                    <app-custom-badge
-                      label="Propedeutico"
-                      variant="info"
-                      shape="rounded"
-                      size="sm"
-                      [icon]="iconLock" />
-                  }
-                  @if (exam.status === 'PASSED') {
-                    <app-custom-badge
-                      [label]="exam.grade"
-                      variant="success"
-                      shape="rounded"
-                      size="sm"
-                      [icon]="iconCheck" />
-                  } @else {
-                    @if (exam.simulatedGrade !== undefined) {
-                      <app-custom-badge
-                        [label]="'~' + exam.simulatedGrade"
-                        variant="secondary"
-                        shape="rounded"
-                        size="sm" />
-                    }
-                    <button
-                      type="button"
-                      (click)="openSimulator($event, exam.courseCode)"
-                      class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors"
-                      [class]="
-                        exam.simulatedGrade !== undefined
-                          ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                      ">
-                      <svg [lucideIcon]="iconPencil" [size]="12"></svg>
-                      <span class="hidden sm:inline">
-                        {{ exam.simulatedGrade !== undefined ? 'Modifica' : 'Simula' }}
-                      </span>
-                    </button>
-                  }
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Periodo
+                    </p>
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ periodLabel(exam.period) }}
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Durata
+                    </p>
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ exam.durationHours }} ore
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Frequenza
+                    </p>
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ attendanceLabel(exam.attendance) }}
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Settore
+                    </p>
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ exam.scientificSector }}
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                      style="color: var(--color-neutral-400)">
+                      Sede
+                    </p>
+                    <p
+                      class="text-[0.82rem] font-medium m-0 mt-0.5"
+                      style="color: var(--color-neutral-700)">
+                      {{ exam.location }}
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              @if (isOpen(exam.courseCode)) {
-                <div class="border-t border-gray-100 bg-gray-50 px-4 py-4">
-                  <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    <div>
-                      <p appText class="text-xs text-gray-400">Lingua</p>
-                      <p appText class="text-sm font-medium text-gray-700">{{ exam.language }}</p>
-                    </div>
-                    <div>
-                      <p appText class="text-xs text-gray-400">Periodo didattico</p>
-                      <p appText class="text-sm font-medium text-gray-700">
-                        {{ periodLabel(exam.period) }}
-                      </p>
-                    </div>
-                    <div>
-                      <p appText class="text-xs text-gray-400">Durata</p>
-                      <p appText class="text-sm font-medium text-gray-700">
-                        {{ exam.durationHours }} ore
-                      </p>
-                    </div>
-                    <div>
-                      <p appText class="text-xs text-gray-400">Frequenza</p>
-                      <p appText class="text-sm font-medium text-gray-700">
-                        {{ attendanceLabel(exam.attendance) }}
-                      </p>
-                    </div>
-                    <div>
-                      <p appText class="text-xs text-gray-400">Settore disciplinare</p>
-                      <p appText class="text-sm font-medium text-gray-700">
-                        {{ exam.scientificSector }}
-                      </p>
-                    </div>
-                    <div>
-                      <p appText class="text-xs text-gray-400">Sede</p>
-                      <p appText class="text-sm font-medium text-gray-700">{{ exam.location }}</p>
-                    </div>
-                  </div>
-
-                  @if (exam.prerequisites.length > 0) {
-                    <div class="mt-4 rounded-lg bg-blue-50 px-3 py-2.5">
-                      <p appText class="text-xs font-semibold text-blue-700">
-                        Esami propedeutici richiesti
-                      </p>
-                      <p appText class="mt-1 text-sm text-blue-800">
-                        {{ exam.prerequisites.join(', ') }}
-                      </p>
-                    </div>
-                  }
-
-                  <div class="mt-4">
-                    <p
-                      appText
-                      class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                      Programma per CFU
-                    </p>
-                    <div class="flex flex-col gap-2">
-                      @for (item of exam.cfuBreakdown; track item.cfuNumber) {
-                        <div class="flex gap-3 text-sm">
-                          <span class="shrink-0 font-semibold text-gray-500">
-                            CFU {{ item.cfuNumber }}
-                          </span>
-                          <span appText class="text-gray-600">{{ item.description }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                </div>
-              }
-            </div>
-          }
-        </div>
-      </app-custom-card>
-    </div>
+            }
+          </div>
+        }
+      </div>
+    </app-custom-card>
   }
 </div>
