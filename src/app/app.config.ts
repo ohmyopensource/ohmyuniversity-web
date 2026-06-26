@@ -4,7 +4,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
-// Repositories — domain
+// Repositories - domain
 import { AuthRepository } from './core/domain/repositories/auth.repository';
 import { CalendarRepository } from './core/domain/repositories/calendar.repository';
 import { TimetableRepository } from './core/domain/repositories/timetable.repository';
@@ -13,7 +13,7 @@ import { CareerRepository } from './core/domain/repositories/career.repository';
 import { ExamsRepository } from './core/domain/repositories/exams.repository';
 import { FeesRepository } from './core/domain/repositories/fees.repository';
 
-// Repositories — infrastructure
+// Repositories - infrastructure
 import { AuthApiRepository } from './core/infrastructure/api/auth-api.repository';
 import { AgendaApiRepository } from './core/infrastructure/api/agenda-api.repository';
 import { TimetableApiRepository } from './core/infrastructure/api/timetable-api.repository';

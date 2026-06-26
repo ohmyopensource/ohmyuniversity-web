@@ -31,14 +31,14 @@ export class ProfileCourseComponent {
   readonly iconHash = LucideHash;
 
   formatData(s: string | null): string {
-    if (!s) return '—';
+    if (!s) return '-';
     const parts = s.split(' ')[0].split('/');
     if (parts.length !== 3) return s;
     return `${parts[0]}/${parts[1]}/${parts[2]}`;
   }
 
   val(s: string | number | null | undefined): string {
-    if (s === null || s === undefined || s === '') return '—';
+    if (s === null || s === undefined || s === '') return '-';
     return String(s);
   }
 

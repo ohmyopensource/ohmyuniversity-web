@@ -5,7 +5,7 @@
  * by year) and "Esami a scelta" (elective exams, flat list). Each exam is
  * an expandable card showing its full metadata and CFU-by-CFU breakdown
  * when opened. Mandatory exams not yet passed link to the booking page;
- * elective exams not yet passed show a simple "—" badge instead, since not
+ * elective exams not yet passed show a simple "-" badge instead, since not
  * every elective is meant to be booked.
  */
 

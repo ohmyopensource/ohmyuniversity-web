@@ -772,7 +772,7 @@ export const UNIVERSITIES: University[] = [
     emailDomains: ['unina.it', 'studenti.unina.it'],
     city: 'Napoli',
     type: 'statale',
-    // NOTE: l'ateneo conta oltre 60 sedi sparse a Napoli e provincia — qui sono elencati solo
+    // NOTE: l'ateneo conta oltre 60 sedi sparse a Napoli e provincia - qui sono elencati solo
     // i poli principali e più riconoscibili, non l'elenco esaustivo.
     campuses: [
       {
@@ -1551,7 +1551,7 @@ export const UNIVERSITIES: University[] = [
     type: 'statale',
     // NOTE: l'istituto (SUM) è stato disattivato nel 2013 e incorporato nella Scuola Normale
     // Superiore di Pisa, diventando il suo "Istituto di Scienze Umane e Sociali". Non esiste più
-    // come ente autonomo — valutare se rimuovere questa entry dal dataset.
+    // come ente autonomo - valutare se rimuovere questa entry dal dataset.
     campuses: [
       {
         id: 'isuf-strozzi',
@@ -1973,7 +1973,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -1986,7 +1986,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -1999,7 +1999,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2012,7 +2012,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2025,7 +2025,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2038,7 +2038,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2051,7 +2051,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2064,7 +2064,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2077,7 +2077,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },
@@ -2090,7 +2090,7 @@ export const UNIVERSITIES: University[] = [
     type: 'privata',
     // NOTE: l'ISEF è stato soppresso dal D.Lgs. 178/1998, che ha trasformato gli Istituti
     // Superiori di Educazione Fisica nelle facoltà/corsi di laurea in Scienze Motorie delle
-    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 — nessun campus
+    // università ospitanti. Non esiste più come ente autonomo dal 1998-1999 - nessun campus
     // attuale da indicare.
     campuses: [],
   },

@@ -131,7 +131,7 @@ export class CareerPage implements OnInit {
     this.yearFilter.set(year === 'ALL' ? 'ALL' : year === 'ELECTIVE' ? 'ELECTIVE' : Number(year));
   }
 
-  // Stats — usa media da API se disponibile, altrimenti calcola dal libretto
+  // Stats - usa media da API se disponibile, altrimenti calcola dal libretto
   readonly earnedCfu = computed(
     () =>
       this.media()?.cfu ??

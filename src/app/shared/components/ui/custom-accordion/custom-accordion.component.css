@@ -38,7 +38,7 @@
   border-radius: 20px;
 }
 
-/* Open State — Color Variants */
+/* Open State - Color Variants */
 .accordion-item--primary.accordion-item--open {
   border-color: var(--color-primary-dark);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary-dark) 18%, transparent);
@@ -82,7 +82,7 @@
   transition: color 220ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Header — Size Variants */
+/* Header - Size Variants */
 .accordion--sm .accordion-item__header {
   padding: 0.85rem 1.1rem;
   font-size: 0.85rem;
@@ -105,7 +105,7 @@
   outline-offset: -3px;
 }
 
-/* Header — Open State — Color Variants */
+/* Header - Open State - Color Variants */
 .accordion-item--primary.accordion-item--open .accordion-item__header {
   color: var(--color-primary-dark);
 }
@@ -150,7 +150,7 @@
   transform: rotate(180deg);
 }
 
-/* Chevron — Open State — Color Variants */
+/* Chevron - Open State - Color Variants */
 .accordion-item--primary .accordion-item__chevron-wrap--open {
   background: var(--color-primary-dark);
   color: white;
@@ -176,7 +176,7 @@
   display: block;
 }
 
-/* Panel — Expand/Collapse Animation */
+/* Panel - Expand/Collapse Animation */
 .accordion-item__body {
   max-height: 0;
   overflow: hidden;

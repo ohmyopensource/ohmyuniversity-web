@@ -30,7 +30,7 @@ export interface Requirement {
   forType: 'azienda' | 'collettivo' | 'entrambi';
 }
 
-/** Generic icon+content card — offer, differentiator, use case */
+/** Generic icon+content card - offer, differentiator, use case */
 export type OfferCard = IconContentBase;
 export type Differentiator = IconContentBase;
 export type UseCase = IconContentBase;

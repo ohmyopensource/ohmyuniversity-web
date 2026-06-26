@@ -121,7 +121,7 @@ describe('UniversitySearchSelectComponent', () => {
     expect(emitted[0]).toEqual(MOCK_UNIVERSITIES[0]);
   });
 
-  // Template — input
+  // Template - input
   it('should render the search input', () => {
     expect(fixture.nativeElement.querySelector('input[type="text"]')).not.toBeNull();
   });
@@ -130,7 +130,7 @@ describe('UniversitySearchSelectComponent', () => {
     expect(fixture.nativeElement.querySelector('button[type="button"]')).toBeNull();
   });
 
-  // Template — dropdown
+  // Template - dropdown
   it('should render one button per filtered university when open', () => {
     component.onFocus();
     fixture.detectChanges();

@@ -1,6 +1,6 @@
 /**
  * Shared formatting utility functions.
- * Pure functions — no side effects, no Angular dependencies.
+ * Pure functions - no side effects, no Angular dependencies.
  */
 
 /**

@@ -1,0 +1,83 @@
+<app-custom-card
+  variant="default"
+  padding="md"
+  shadow="sm"
+  [bordered]="true"
+  radius="lg"
+  [accentBar]="featured()"
+  [stretchHeight]="true">
+  <div class="flex flex-col gap-3 h-full">
+    <!-- Header -->
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex items-center gap-2.5 flex-1 min-w-0">
+        <div
+          class="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
+          [style.background]="categoryDef()?.bg ?? 'var(--color-neutral-100)'">
+          @if (categoryDef()?.icon) {
+            <svg
+              [lucideIcon]="categoryDef()!.icon"
+              [size]="14"
+              [style.color]="categoryDef()?.color ?? 'var(--color-neutral-500)'"
+              aria-hidden="true"></svg>
+          }
+        </div>
+        <h3
+          class="m-0 font-semibold truncate"
+          style="font-size: 0.88rem; color: var(--color-neutral-900)">
+          {{ portal().name }}
+        </h3>
+      </div>
+      @if (featured()) {
+        <svg
+          [lucideIcon]="iconStar"
+          [size]="13"
+          style="color: var(--color-warning-dark); flex-shrink: 0; margin-top: 2px"
+          aria-hidden="true"></svg>
+      }
+    </div>
+
+    <!-- Description -->
+    <p class="m-0 flex-1 text-[0.78rem] leading-relaxed" style="color: var(--color-neutral-500)">
+      {{ portal().description }}
+    </p>
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-1.5">
+      @for (tag of portal().tags.slice(0, 3); track tag) {
+        <span
+          class="text-[0.65rem] font-medium px-2 py-0.5 rounded-md"
+          style="
+            background: var(--color-neutral-100);
+            color: var(--color-neutral-500);
+            border: 1px solid var(--color-neutral-200);
+          ">
+          {{ tag }}
+        </span>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="flex items-center justify-between gap-2 pt-2"
+      style="border-top: 1px solid var(--color-neutral-200)">
+      <app-custom-badge
+        [label]="categoryDef()?.label ?? ''"
+        variant="ghost"
+        size="xs"
+        shape="rounded" />
+      @if (portal().url) {
+        <app-custom-button
+          variant="primary"
+          size="xs"
+          label="Apri"
+          [icon]="iconExternalLink"
+          iconPosition="right"
+          mode="link-external"
+          [href]="portal().url"
+          target="_blank" />
+      } @else {
+        <span class="text-[0.7rem]" style="color: var(--color-neutral-400)">Non disponibile</span>
+      }
+    </div>
+  </div>
+</app-custom-card>

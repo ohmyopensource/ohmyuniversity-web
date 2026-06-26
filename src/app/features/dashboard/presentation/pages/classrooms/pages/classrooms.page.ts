@@ -105,7 +105,7 @@ export class ClassroomsPage {
   }
 
   onBooking(): void {
-    this.toast.show('Funzione disponibile a breve — riservata a docenti e tecnici.', 'info', {
+    this.toast.show('Funzione disponibile a breve - riservata a docenti e tecnici.', 'info', {
       duration: 4000,
     });
   }

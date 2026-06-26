@@ -84,7 +84,7 @@ export const MOCK_SCHOLARSHIPS: Scholarship[] = [
   },
   {
     id: 'b6',
-    name: 'Borsa "150 ore" — Collaborazione Studentesca',
+    name: 'Borsa "150 ore" - Collaborazione Studentesca',
     provider: 'Università del Molise',
     amount: '€9/ora · max €1.350',
     deadline: '20 ottobre 2025',
@@ -256,7 +256,7 @@ export const MOCK_BANDI: Bando[] = [
 export const MOCK_FEES: Fee[] = [
   {
     id: 'f1',
-    name: 'Prima rata — A.A. 2024/2025',
+    name: 'Prima rata - A.A. 2024/2025',
     amount: 450,
     dueDate: '31 ottobre 2024',
     paidAt: '15 ottobre 2024',
@@ -265,7 +265,7 @@ export const MOCK_FEES: Fee[] = [
   },
   {
     id: 'f2',
-    name: 'Seconda rata — A.A. 2024/2025',
+    name: 'Seconda rata - A.A. 2024/2025',
     amount: 380,
     dueDate: '28 febbraio 2025',
     paidAt: '20 febbraio 2025',
@@ -274,7 +274,7 @@ export const MOCK_FEES: Fee[] = [
   },
   {
     id: 'f3',
-    name: 'Terza rata — A.A. 2024/2025',
+    name: 'Terza rata - A.A. 2024/2025',
     amount: 380,
     dueDate: '30 aprile 2025',
     status: 'overdue',
@@ -282,7 +282,7 @@ export const MOCK_FEES: Fee[] = [
   },
   {
     id: 'f4',
-    name: 'Contributo servizi — A.A. 2024/2025',
+    name: 'Contributo servizi - A.A. 2024/2025',
     amount: 80,
     dueDate: '31 ottobre 2024',
     paidAt: '15 ottobre 2024',
@@ -291,7 +291,7 @@ export const MOCK_FEES: Fee[] = [
   },
   {
     id: 'f5',
-    name: 'Prima rata — A.A. 2025/2026',
+    name: 'Prima rata - A.A. 2025/2026',
     amount: 450,
     dueDate: '31 ottobre 2025',
     status: 'pending',

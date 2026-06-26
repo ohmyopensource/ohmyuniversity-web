@@ -1,0 +1,25 @@
+<div class="flex flex-col gap-3 mt-4">
+  <!-- Category header -->
+  <div class="flex items-center gap-3">
+    <div
+      class="flex items-center justify-center w-7 h-7 rounded-lg shrink-0"
+      [style.background]="category().bg">
+      <svg
+        [lucideIcon]="category().icon"
+        [size]="14"
+        [style.color]="category().color"
+        aria-hidden="true"></svg>
+    </div>
+    <h2 class="m-0 font-bold" style="font-size: 0.95rem; color: var(--color-neutral-800)">
+      {{ category().label }}
+    </h2>
+    <app-custom-badge [label]="portals().length + ''" variant="neutral" size="xs" shape="pill" />
+  </div>
+
+  <!-- Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    @for (portal of portals(); track portal.id) {
+      <app-portal-card [portal]="portal" [categoryDef]="category()" [featured]="false" />
+    }
+  </div>
+</div>

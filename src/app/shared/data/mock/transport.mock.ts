@@ -62,7 +62,7 @@ export const MOCK_TRANSPORT_COMPANIES: TransportCompany[] = [
     id: 'c3',
     name: 'Italo',
     type: 'train',
-    coverage: 'Nazionale — Alta velocità',
+    coverage: 'Nazionale - Alta velocità',
     description:
       'Alta velocità italiana. Collegamento rapido tra le principali città con fermata a Bologna AV.',
     website: 'https://www.italotreno.it',
@@ -95,7 +95,7 @@ export const MOCK_TRANSPORT_COMPANIES: TransportCompany[] = [
     id: 'c6',
     name: 'Marconi Express',
     type: 'train',
-    coverage: 'Bologna — Aeroporto',
+    coverage: 'Bologna - Aeroporto',
     description:
       "Collegamento diretto tra l'aeroporto G. Marconi e la stazione centrale di Bologna.",
     website: 'https://www.marconiexpress.it',

@@ -19,7 +19,7 @@ export class AgendaViewHeaderComponent {
 
   readonly iconBack = LucideChevronLeft;
 
-  /** Whether a "go up one level" button should be shown — false at the root (year) view */
+  /** Whether a "go up one level" button should be shown - false at the root (year) view */
   readonly hasBackButton = computed(() => this.currentView() !== 'year');
 
   /** Label shown on the header: month name in day view, year number in month view, year in year view */

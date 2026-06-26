@@ -26,7 +26,7 @@ export const DEFAULT_DURATION_MINUTES = 60;
 
 export const MAX_VISIBLE_EVENTS_PER_CELL = 2;
 
-/** Max badge label length per breakpoint — narrower screens get a shorter truncation */
+/** Max badge label length per breakpoint - narrower screens get a shorter truncation */
 export const LABEL_LENGTH_MOBILE = 6;
 export const LABEL_LENGTH_TABLET = 10;
 export const LABEL_LENGTH_DESKTOP = 14;

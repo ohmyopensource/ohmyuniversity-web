@@ -213,7 +213,7 @@ describe('UniversityLoginFormComponent', () => {
     expect(spy).toHaveBeenCalledWith(expect.stringContaining('CIE'), 'warning');
   });
 
-  // Template — ateneo tab
+  // Template - ateneo tab
   it('should render the university search select on ateneo tab', () => {
     expect(fixture.nativeElement.querySelector('app-university-search-select')).not.toBeNull();
   });
@@ -230,7 +230,7 @@ describe('UniversityLoginFormComponent', () => {
     expect(fixture.nativeElement.textContent).not.toContain('Entra con SPID');
   });
 
-  // Template — spid tab
+  // Template - spid tab
   it('should render the SPID panel after switching to spid tab', () => {
     component.setTab('spid');
     fixture.detectChanges();
@@ -243,7 +243,7 @@ describe('UniversityLoginFormComponent', () => {
     expect(fixture.nativeElement.querySelector('app-university-search-select')).toBeNull();
   });
 
-  // Template — cie tab
+  // Template - cie tab
   it('should render the CIE panel after switching to cie tab', () => {
     component.setTab('cie');
     fixture.detectChanges();

@@ -87,6 +87,6 @@ export const MOCK_TAXES: SecretariatTax[] = [
 export const LATEST_RESOURCE = {
   type: 'Borsa di Studio',
   title: 'Borsa di Studio DSU',
-  description: 'Borsa per merito e reddito — scadenza 30 Set 2026',
+  description: 'Borsa per merito e reddito - scadenza 30 Set 2026',
   url: '#',
 };

@@ -1,15 +1,12 @@
-import { Component, signal, computed } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { DashboardHeaderComponent } from '@ui/dashboard-header/dashboard-header.component';
-import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
-import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
-import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
-import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
+import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
+import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-container.component';
 import {
   LucideDynamicIcon,
   LucideSearch,
-  LucideExternalLink,
   LucideGraduationCap,
   LucideMail,
   LucideBookOpen,
@@ -21,36 +18,36 @@ import {
   LucideStar,
   LucideTriangleAlert,
 } from '@lucide/angular';
-import { PortalCategory, Portal, PortalCategoryDef } from '@shared/types/features/portals.types';
-import { MOCK_PORTALS } from '@shared/data/mock/portals.mock';
-import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-container.component';
-import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
+import { Portal, PortalCategory, PortalCategoryDef } from '@shared/types/features/portals.types';
+import { STATIC_PORTALS } from '@shared/constants';
+import { PortalCardComponent } from '../components/portal-card/portal-card.component';
+import { PortalCategorySectionComponent } from '../components/portal-category-section/portal-category-section.component';
+import { API } from 'src/app/core/infrastructure/api/api-endpoints';
+import { UniversityConfigResponse } from 'src/app/core/domain/models/career/university-config.model';
 
 @Component({
   selector: 'app-portals',
   standalone: true,
   imports: [
-    NgTemplateOutlet,
     DashboardContainerComponent,
     DashboardHeaderComponent,
-    CustomCardComponent,
-    CustomBadgeComponent,
-    CustomButtonComponent,
     CustomInputComponent,
-    CustomTextComponent,
+    CustomBadgeComponent,
     LucideDynamicIcon,
-    CardStatusComponent,
+    PortalCardComponent,
+    PortalCategorySectionComponent,
   ],
   templateUrl: './portals.page.html',
 })
-export class PortalsPage {
-  readonly lucideAlertTriangle = LucideTriangleAlert;
+export class PortalsPage implements OnInit {
+  private readonly http = inject(HttpClient);
 
+  readonly lucideAlertTriangle = LucideTriangleAlert;
   readonly iconSearch = LucideSearch;
-  readonly iconExternalLink = LucideExternalLink;
   readonly iconStar = LucideStar;
 
   searchValue = signal<string>('');
+  private readonly portalsSignal = signal<Portal[]>([...STATIC_PORTALS]);
 
   readonly categories: PortalCategoryDef[] = [
     {
@@ -111,32 +108,50 @@ export class PortalsPage {
     },
   ];
 
-  readonly portals: Portal[] = MOCK_PORTALS;
+  ngOnInit(): void {
+    // Inject dynamic URLs from backend
+    this.http.get<UniversityConfigResponse>(API.university.externalServices).subscribe({
+      next: config => {
+        this.portalsSignal.update(portals =>
+          portals.map(p => {
+            if (p.id === 'esse3' && config.esse3PortalUrl) {
+              return { ...p, url: config.esse3PortalUrl };
+            }
+            if (p.id === 'moodle' && config.moodleUrl) {
+              return { ...p, url: config.moodleUrl };
+            }
+            if (p.id === 'biblioteca' && config.libraryUrl) {
+              return { ...p, url: config.libraryUrl };
+            }
+            return p;
+          }),
+        );
+      },
+      error: () => {},
+    });
+  }
 
-  readonly featuredPortals = computed(() => this.portals.filter(p => p.featured));
+  readonly featuredPortals = computed(() => this.portalsSignal().filter(p => p.featured && p.url));
 
   readonly filteredPortals = computed(() => {
     const q = this.searchValue().toLowerCase().trim();
-    if (!q) return this.portals;
-    return this.portals.filter(
+    if (!q) return this.portalsSignal();
+    return this.portalsSignal().filter(
       p =>
         p.name.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q) ||
-        p.tags.some(t => t.includes(q)) ||
+        p.tags.some(t => t.toLowerCase().includes(q)) ||
         this.categoryDef(p.category)?.label.toLowerCase().includes(q),
     );
   });
 
-  readonly filteredCategories = computed(() => {
-    const q = this.searchValue().toLowerCase().trim();
-    if (!q) return this.categories;
-    const visibleCatIds = new Set(this.filteredPortals().map(p => p.category));
-    return this.categories.filter(c => visibleCatIds.has(c.id));
-  });
-
   readonly isSearching = computed(() => this.searchValue().trim().length > 0);
-
   readonly totalCount = computed(() => this.filteredPortals().length);
+
+  readonly visibleCategories = computed(() => {
+    const ids = new Set(this.filteredPortals().map(p => p.category));
+    return this.categories.filter(c => ids.has(c.id));
+  });
 
   onSearchChange(val: string | number): void {
     this.searchValue.set(String(val));

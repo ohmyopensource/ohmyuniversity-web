@@ -110,7 +110,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
     {
       id: '3',
       title: 'Opportunità di stage',
-      body: 'TechCorp Italia cerca stagisti in area Data Science — scadenza 30 giugno.',
+      body: 'TechCorp Italia cerca stagisti in area Data Science - scadenza 30 giugno.',
       time: '3 ore fa',
       read: false,
       icon: LucideBriefcase,

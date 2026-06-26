@@ -3,7 +3,7 @@
  * @description Local searchable combobox for selecting a university from
  * a long list. Filters by name/short name as the user types, shows a
  * dropdown of matches, and emits the selected university on click.
- * Not part of the shared UI suite — scoped to the login feature for now.
+ * Not part of the shared UI suite - scoped to the login feature for now.
  */
 
 import {

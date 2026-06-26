@@ -33,7 +33,7 @@ export function calendarEventTypeIcon(type: CalendarEventType): any {
 }
 
 /**
- * The 3 variant values actually used to color an event by type — a subset shared by both
+ * The 3 variant values actually used to color an event by type - a subset shared by both
  * custom-card's CardVariant and custom-badge's BadgeVariant, so it's safely assignable to
  * either [variant] input without a type mismatch (BadgeVariant has members like 'ghost'
  * that don't exist on CardVariant, so the full BadgeVariant type isn't assignable to it).
@@ -176,12 +176,12 @@ interface ActiveLane {
  *
  * Events must be sorted by startDate ascending before calling this function. Each event gets
  * a 0-based lane index; `laneCount` is the max number of simultaneous lanes seen across the
- * whole overlap group the event belongs to, not just at the moment it starts — an event
+ * whole overlap group the event belongs to, not just at the moment it starts - an event
  * that begins alone but is later joined by two others must still report the resulting lane
  * count of 3, so all three render at one-third width.
  *
  * Events are tracked by their position in `sortedEvents`, not by object identity or `id`
- * (which can be `null` for an unsaved event) — safe even if the caller clones events between
+ * (which can be `null` for an unsaved event) - safe even if the caller clones events between
  * calls, as long as the array order matches the events passed in.
  */
 export function calculateEventLayouts(sortedEvents: CalendarEvent[]): CalendarEventLayout[] {
@@ -256,7 +256,7 @@ export function stepTime(value: string, direction: 1 | -1): string {
       ? Math.ceil(currentMinutes / TIME_STEP_MINUTES) * TIME_STEP_MINUTES
       : Math.floor(currentMinutes / TIME_STEP_MINUTES) * TIME_STEP_MINUTES;
 
-  // If already exactly on a 30-minute mark, snapping alone wouldn't move — step explicitly
+  // If already exactly on a 30-minute mark, snapping alone wouldn't move - step explicitly
   const stepped = snapped === currentMinutes ? snapped + direction * TIME_STEP_MINUTES : snapped;
 
   const clamped = Math.min(MAX_TIME_MINUTES, Math.max(MIN_TIME_MINUTES, stepped));
@@ -411,7 +411,7 @@ export function autoFormatDateInput(value: string): string {
 
 /**
  * Validates the date field as the user types, checking only the parts that are already
- * complete — never flags "incomplete" while the user is still mid-typing a segment. Returns
+ * complete - never flags "incomplete" while the user is still mid-typing a segment. Returns
  * an empty string when there's nothing wrong yet (including "still typing, looks fine so far").
  *
  * Runs against the raw value (before autoFormatDateInput strips/truncates it), so it can
@@ -457,7 +457,7 @@ export function validateDateLive(rawValue: string): string {
 }
 
 /**
- * Validates the time field as the user types, same incremental approach as validateDateLive —
+ * Validates the time field as the user types, same incremental approach as validateDateLive -
  * runs against the raw value to catch letters or excess digits before the formatter strips them.
  */
 export function validateTimeLive(rawValue: string): string {

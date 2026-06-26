@@ -77,7 +77,7 @@ describe('FooterComponent', () => {
     expect(component.currentYear).toBe(getCurrentYear());
   });
 
-  // isDashboard input — default false
+  // isDashboard input - default false
   it('should default isDashboard to false', () => {
     expect(component.isDashboard()).toBe(false);
   });
@@ -104,7 +104,7 @@ describe('FooterComponent', () => {
     expect(nativeEl.textContent).not.toContain('FAQ Studenti');
   });
 
-  // isDashboard input — true
+  // isDashboard input - true
   it('should NOT render the "Navigazione" section when isDashboard is true', () => {
     fixture.componentRef.setInput('isDashboard', true);
     fixture.detectChanges();

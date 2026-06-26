@@ -8,13 +8,13 @@ export const MOCK_CAMPUSES: Campus[] = [
     buildings: [
       {
         id: 'b-cb-1',
-        name: 'Edificio A — Rettoria',
+        name: 'Edificio A - Rettoria',
         address: 'Via Francesco De Sanctis 1, Campobasso',
         classrooms: [
           {
             id: 'cb-a-1',
             name: 'Aula Magna',
-            building: 'Edificio A — Rettoria',
+            building: 'Edificio A - Rettoria',
             floor: 'Piano terra',
             capacity: 300,
             features: ['projector', 'lim', 'wifi', 'power', 'ac'],
@@ -24,7 +24,7 @@ export const MOCK_CAMPUSES: Campus[] = [
           {
             id: 'cb-a-2',
             name: 'Aula A1',
-            building: 'Edificio A — Rettoria',
+            building: 'Edificio A - Rettoria',
             floor: '1° piano',
             capacity: 80,
             features: ['projector', 'wifi', 'power', 'ac'],
@@ -34,7 +34,7 @@ export const MOCK_CAMPUSES: Campus[] = [
           {
             id: 'cb-a-3',
             name: 'Aula A2',
-            building: 'Edificio A — Rettoria',
+            building: 'Edificio A - Rettoria',
             floor: '1° piano',
             capacity: 60,
             features: ['projector', 'wifi', 'ac'],
@@ -44,7 +44,7 @@ export const MOCK_CAMPUSES: Campus[] = [
           {
             id: 'cb-a-4',
             name: 'Sala Seminari',
-            building: 'Edificio A — Rettoria',
+            building: 'Edificio A - Rettoria',
             floor: '2° piano',
             capacity: 30,
             features: ['lim', 'wifi', 'power'],
@@ -55,13 +55,13 @@ export const MOCK_CAMPUSES: Campus[] = [
       },
       {
         id: 'b-cb-2',
-        name: 'Edificio B — Scienze',
+        name: 'Edificio B - Scienze',
         address: 'Via Francesco De Sanctis 5, Campobasso',
         classrooms: [
           {
             id: 'cb-b-1',
             name: 'Laboratorio Informatica 1',
-            building: 'Edificio B — Scienze',
+            building: 'Edificio B - Scienze',
             floor: 'Piano terra',
             capacity: 40,
             features: ['projector', 'lim', 'wifi', 'power', 'ac'],
@@ -71,7 +71,7 @@ export const MOCK_CAMPUSES: Campus[] = [
           {
             id: 'cb-b-2',
             name: 'Laboratorio Informatica 2',
-            building: 'Edificio B — Scienze',
+            building: 'Edificio B - Scienze',
             floor: 'Piano terra',
             capacity: 40,
             features: ['projector', 'wifi', 'power'],
@@ -81,7 +81,7 @@ export const MOCK_CAMPUSES: Campus[] = [
           {
             id: 'cb-b-3',
             name: 'Aula B1',
-            building: 'Edificio B — Scienze',
+            building: 'Edificio B - Scienze',
             floor: '1° piano',
             capacity: 100,
             features: ['projector', 'wifi', 'power', 'ac'],

@@ -1,7 +1,7 @@
 /**
  * Orientation UI utility functions for icon/variant CSS class mapping.
  * Used in all topic components that display colored icons with accordion behavior.
- * Pure functions — no side effects, no Angular dependencies.
+ * Pure functions - no side effects, no Angular dependencies.
  */
 
 /**

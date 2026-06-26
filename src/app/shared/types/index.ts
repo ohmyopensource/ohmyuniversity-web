@@ -20,6 +20,7 @@ export * from './features/legal.types';
 export * from './features/login.types';
 export * from './features/orientation.types';
 export * from './features/partner.types';
+export * from './features/portals.types';
 export * from './features/pricing.types';
 export * from './features/university.types';
 

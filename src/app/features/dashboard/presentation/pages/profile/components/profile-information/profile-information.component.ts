@@ -26,20 +26,20 @@ export class ProfileInformationComponent {
   readonly iconShield = LucideShield;
 
   formatData(s: string | null): string {
-    if (!s) return '—';
+    if (!s) return '-';
     const parts = s.split(' ')[0].split('/');
     if (parts.length !== 3) return s;
     return `${parts[0]}/${parts[1]}/${parts[2]}`;
   }
 
   val(s: string | null | undefined): string {
-    if (!s || s.trim() === '') return '—';
+    if (!s || s.trim() === '') return '-';
     return s;
   }
 
   sessoLabel(s: string): string {
     if (s === 'M') return 'Maschio';
     if (s === 'F') return 'Femmina';
-    return s || '—';
+    return s || '-';
   }
 }

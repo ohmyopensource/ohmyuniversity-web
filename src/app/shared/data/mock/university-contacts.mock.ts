@@ -7,7 +7,7 @@ import {
 export const MOCK_SECRETARIAT_CONTACTS: SecretariatContact[] = [
   {
     id: 's1',
-    office: 'Segreteria Studenti — Sportello Generale',
+    office: 'Segreteria Studenti - Sportello Generale',
     description:
       'Iscrizioni, immatricolazioni, tasse universitarie, piani di studio e certificati.',
     email: 'segreteria.studenti@unimol.it',
@@ -59,7 +59,7 @@ export const MOCK_SECRETARIAT_CONTACTS: SecretariatContact[] = [
   },
   {
     id: 's6',
-    office: 'Segreteria Studenti — Sede di Termoli',
+    office: 'Segreteria Studenti - Sede di Termoli',
     description: 'Punto di riferimento per gli studenti iscritti ai corsi della sede di Termoli.',
     email: 'segreteria.termoli@unimol.it',
     phone: '+39 0875 712100',
@@ -68,7 +68,7 @@ export const MOCK_SECRETARIAT_CONTACTS: SecretariatContact[] = [
   },
   {
     id: 's7',
-    office: 'Ufficio Didattica — Sede di Termoli',
+    office: 'Ufficio Didattica - Sede di Termoli',
     description:
       'Gestione piani di studio e pratiche didattiche per i corsi della sede di Termoli.',
     email: 'didattica.termoli@unimol.it',
@@ -77,7 +77,7 @@ export const MOCK_SECRETARIAT_CONTACTS: SecretariatContact[] = [
   },
   {
     id: 's8',
-    office: 'Segreteria — Centro Congressi Pesche',
+    office: 'Segreteria - Centro Congressi Pesche',
     description: 'Attività didattiche e organizzative legate alla sede distaccata di Pesche.',
     email: 'pesche@unimol.it',
     phone: '+39 0865 921100',
@@ -194,7 +194,7 @@ export const MOCK_INSTITUTIONAL_CONTACTS: InstitutionalContact[] = [
   },
   {
     id: 'i3',
-    name: 'Presidio di Sicurezza — Campobasso',
+    name: 'Presidio di Sicurezza - Campobasso',
     description: 'Portineria e sicurezza del campus. Attivo anche fuori orario per emergenze.',
     phone: '+39 0874 404500',
     hours: 'H24',
@@ -202,7 +202,7 @@ export const MOCK_INSTITUTIONAL_CONTACTS: InstitutionalContact[] = [
   },
   {
     id: 'i4',
-    name: 'CUS Molise — Centro Sportivo',
+    name: 'CUS Molise - Centro Sportivo',
     description: 'Prenotazioni strutture sportive, iscrizioni corsi e informazioni attività.',
     phone: '+39 0874 698001',
     email: 'cus@unimol.it',
@@ -231,7 +231,7 @@ export const MOCK_INSTITUTIONAL_CONTACTS: InstitutionalContact[] = [
   },
   {
     id: 'i7',
-    name: 'Presidio di Sicurezza — Termoli',
+    name: 'Presidio di Sicurezza - Termoli',
     description: 'Portineria della sede di Termoli.',
     phone: '+39 0875 712000',
     hours: 'Lun–Ven 07:30–20:00',
@@ -239,7 +239,7 @@ export const MOCK_INSTITUTIONAL_CONTACTS: InstitutionalContact[] = [
   },
   {
     id: 'i8',
-    name: 'Mensa Universitaria — Campobasso',
+    name: 'Mensa Universitaria - Campobasso',
     description: 'Informazioni su orari, menù e prenotazione pasti. Gestita da DSU Molise.',
     phone: '+39 0874 698200',
     hours: 'Lun–Ven 12:00–14:30 | 19:00–20:30',

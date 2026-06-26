@@ -57,7 +57,7 @@ describe('NavbarComponent', () => {
     expect(component.navLinks.some(l => l.path === '/contatti')).toBe(true);
   });
 
-  // Template — logo
+  // Template - logo
   it('should render the app logo', () => {
     const img = nativeEl.querySelector('nav img');
     expect(img).not.toBeNull();
@@ -72,7 +72,7 @@ describe('NavbarComponent', () => {
     expect(logoLink).not.toBeNull();
   });
 
-  // Template — desktop nav
+  // Template - desktop nav
   it('should render all nav link labels in the desktop menu', () => {
     const allText = nativeEl.textContent ?? '';
     component.navLinks.forEach(link => expect(allText).toContain(link.label));
@@ -83,7 +83,7 @@ describe('NavbarComponent', () => {
     expect(loginLink).not.toBeNull();
   });
 
-  // Template — mobile
+  // Template - mobile
   it('should render the mobile hamburger button', () => {
     const hamburger = nativeEl.querySelector('div.sm\\:hidden app-custom-button');
     expect(hamburger).not.toBeNull();

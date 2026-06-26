@@ -50,7 +50,7 @@ import { TransportPage } from './features/dashboard/presentation/pages/transport
 import { ClassroomsPage } from './features/dashboard/presentation/pages/classrooms/pages/classrooms.page';
 
 // =============================================
-import { PortalsPage } from './features/dashboard/presentation/pages/portals/portals.page';
+import { PortalsPage } from './features/dashboard/presentation/pages/portals/pages/portals.page';
 
 // =============================================
 import { UniversityPartnerPage } from './features/dashboard/presentation/pages/university-partner/university-partner.page';
@@ -223,7 +223,7 @@ export const routes: Routes = [
   },
 
   // =============================================
-  // Wildcard — 404
+  // Wildcard - 404
   // =============================================
   {
     path: '**',

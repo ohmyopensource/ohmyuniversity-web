@@ -39,7 +39,7 @@ const makeTranscriptRow = (overrides: Partial<TranscriptRow> = {}): TranscriptRo
 
 // ── Output shape ──────────────────────────────────────────────────────────────
 
-describe('mergeToExams — output shape', () => {
+describe('mergeToExams - output shape', () => {
   it('should return an empty array when both inputs are empty', () => {
     expect(mergeToExams([], [])).toEqual([]);
   });
@@ -81,7 +81,7 @@ describe('mergeToExams — output shape', () => {
 
 // ── Category mapping ──────────────────────────────────────────────────────────
 
-describe('mergeToExams — category', () => {
+describe('mergeToExams - category', () => {
   it('should set category to ELECTIVE when tipoInsCod is "S"', () => {
     const [exam] = mergeToExams([makePlanRow({ tipoInsCod: 'S' })], []);
     expect(exam.category).toBe('ELECTIVE');
@@ -100,7 +100,7 @@ describe('mergeToExams — category', () => {
 
 // ── Status mapping ────────────────────────────────────────────────────────────
 
-describe('mergeToExams — status', () => {
+describe('mergeToExams - status', () => {
   it('should set status to PASSED when plan row superata is true', () => {
     const [exam] = mergeToExams([makePlanRow({ superata: true })], []);
     expect(exam.status).toBe('PASSED');
@@ -135,7 +135,7 @@ describe('mergeToExams — status', () => {
 
 // ── Grade mapping ─────────────────────────────────────────────────────────────
 
-describe('mergeToExams — grade', () => {
+describe('mergeToExams - grade', () => {
   it('should set grade to empty string when no transcript row', () => {
     const [exam] = mergeToExams([makePlanRow()], []);
     expect(exam.grade).toBe('');
@@ -160,9 +160,9 @@ describe('mergeToExams — grade', () => {
   });
 });
 
-// ── Transcript matching — by adsceId ─────────────────────────────────────────
+// ── Transcript matching - by adsceId ─────────────────────────────────────────
 
-describe('mergeToExams — transcript matching by adsceId', () => {
+describe('mergeToExams - transcript matching by adsceId', () => {
   it('should match transcript by adsceId when available', () => {
     const plan = makePlanRow({ adCod: 'MAT001', adsceId: 99 });
     const transcript = makeTranscriptRow({ adCod: 'MAT001', adsceId: 99, voto: 27, lode: false });
@@ -172,7 +172,7 @@ describe('mergeToExams — transcript matching by adsceId', () => {
 
   it('should prefer adsceId match over adCod match', () => {
     const plan = makePlanRow({ adCod: 'MAT001', adsceId: 99 });
-    // Same adCod but different adsceId — should not match by adCod because adsceId lookup succeeds
+    // Same adCod but different adsceId - should not match by adCod because adsceId lookup succeeds
     const transcriptById = makeTranscriptRow({
       adCod: 'OTHER',
       adsceId: 99,
@@ -199,7 +199,7 @@ describe('mergeToExams — transcript matching by adsceId', () => {
 
 // ── Extra transcript rows (not in plan) ───────────────────────────────────────
 
-describe('mergeToExams — extra transcript rows', () => {
+describe('mergeToExams - extra transcript rows', () => {
   it('should include transcript rows not present in the study plan', () => {
     const plan = [makePlanRow({ adCod: 'MAT001' })];
     const transcript = [
@@ -253,7 +253,7 @@ describe('mergeToExams — extra transcript rows', () => {
 
 // ── Edge cases ────────────────────────────────────────────────────────────────
 
-describe('mergeToExams — edge cases', () => {
+describe('mergeToExams - edge cases', () => {
   it('should handle multiple plan rows correctly', () => {
     const plan = [
       makePlanRow({ adCod: 'A', adDes: 'Alpha' }),

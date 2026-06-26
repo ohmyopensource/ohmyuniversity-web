@@ -12,8 +12,8 @@ export interface LegalListItem extends LinkBase {
   isExternal?: boolean;
 }
 
-/** Legal labeled text item — alias of LabeledValue */
+/** Legal labeled text item - alias of LabeledValue */
 export type LegalLabeledItem = LabeledValue;
 
-/** Legal table row — alias of LabeledValue */
+/** Legal table row - alias of LabeledValue */
 export type LegalTableRow = LabeledValue;

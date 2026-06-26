@@ -1,6 +1,6 @@
 /**
  * Shared UI utility functions for badge/variant mapping.
- * Pure functions — no side effects, no Angular dependencies.
+ * Pure functions - no side effects, no Angular dependencies.
  */
 
 /**

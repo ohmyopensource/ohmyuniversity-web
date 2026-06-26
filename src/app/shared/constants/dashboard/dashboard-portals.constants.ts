@@ -1,13 +1,22 @@
-import { Portal } from '@shared/types/features/portals.types';
+import { Portal } from '@shared/types';
 
-export const MOCK_PORTALS: Portal[] = [
-  // SEGRETERIA
+/**
+ * Static portal definitions for OhMyUniversity.
+ *
+ * University-specific URLs (ESSE3, Moodle, library, email) are injected
+ * dynamically from the backend at runtime via ExternalServicesController.
+ * Everything else lives here.
+ *
+ * Links are grouped by category and should be kept up to date manually.
+ */
+export const STATIC_PORTALS: Portal[] = [
+  // Secretariat
   {
     id: 'esse3',
-    name: 'ESSE3 — Cineca',
+    name: 'ESSE3 - Cineca',
     description:
       'Portale ufficiale per iscrizioni, pagamento tasse, piano di studi e gestione carriera universitaria.',
-    url: 'https://esse3.unimol.it',
+    url: '', // injected at runtime from backend esse3PortalUrl
     category: 'segreteria',
     tags: ['iscrizione', 'tasse', 'carriera', 'libretto'],
     featured: true,
@@ -25,27 +34,27 @@ export const MOCK_PORTALS: Portal[] = [
     id: 'sportello',
     name: 'Sportello Online',
     description:
-      'Prenotazione appuntamenti con la segreteria studenti e invio pratiche amministrative.',
-    url: 'https://sportello.unimol.it',
+      'Servizi online per studenti: pratiche amministrative, certificati e richieste alla segreteria.',
+    url: 'https://www3.unimol.it/servizi/servizi-on-line/studenti',
     category: 'segreteria',
-    tags: ['appuntamenti', 'segreteria', 'pratiche'],
+    tags: ['appuntamenti', 'segreteria', 'pratiche', 'certificati'],
   },
   {
     id: 'pagopa',
-    name: 'PagoPA — Tasse universitarie',
+    name: 'PagoPA',
     description: 'Pagamento online delle tasse universitarie tramite il sistema PagoPA.',
     url: 'https://www.pagopa.gov.it',
     category: 'segreteria',
     tags: ['pagamento', 'tasse', 'bollettino'],
   },
 
-  // DIDATTICA
+  // Didactics
   {
     id: 'moodle',
     name: 'Moodle',
     description:
       'Piattaforma e-learning per accedere ai materiali didattici, consegna elaborati e forum dei corsi.',
-    url: 'https://moodle.unimol.it',
+    url: '', // injected at runtime from backend moodleUrl
     category: 'didattica',
     tags: ['materiali', 'corsi', 'esercizi', 'forum'],
     featured: true,
@@ -68,63 +77,71 @@ export const MOCK_PORTALS: Portal[] = [
     tags: ['compiti', 'classi virtuali', 'feedback'],
   },
   {
-    id: 'mediatheca',
+    id: 'biblioteca',
     name: 'Biblioteca Digitale',
     description:
       'Accesso a riviste scientifiche, libri digitali, banche dati e risorse accademiche.',
-    url: 'https://biblioteche.unimol.it',
+    url: '', // injected at runtime from backend libraryUrl
     category: 'didattica',
     tags: ['libri', 'riviste', 'banche dati', 'ricerca'],
   },
 
-  // EMAIL
-  {
-    id: 'gmail-uni',
-    name: 'Gmail Universitaria',
-    description:
-      'Casella email istituzionale su Google Workspace. Comunicazioni ufficiali da docenti e segreteria.',
-    url: 'https://mail.google.com',
-    category: 'email',
-    tags: ['email', 'posta', 'comunicazioni'],
-    featured: true,
-  },
+  // Email & Communication
   {
     id: 'outlook',
-    name: 'Outlook — Microsoft 365',
+    name: 'Outlook - Microsoft 365',
     description:
-      'Accesso alla suite Microsoft 365 con email, calendario, OneDrive e Office online.',
+      'Email istituzionale, calendario, OneDrive e suite Office online per studenti e docenti.',
     url: 'https://outlook.office.com',
     category: 'email',
     tags: ['email', 'calendario', 'office', 'onedrive'],
-  },
-
-  // BORSE & SERVIZI
-  {
-    id: 'dsu',
-    name: 'DSU Molise — Borse di Studio',
-    description:
-      'Portale per domande di borsa di studio, alloggi universitari e servizi per il diritto allo studio.',
-    url: 'https://www.dsumolise.it',
-    category: 'borse',
-    tags: ['borsa di studio', 'alloggio', 'mensa', 'diritto allo studio'],
     featured: true,
   },
   {
+    id: 'gmail',
+    name: 'Gmail',
+    description:
+      'Accesso rapido a Gmail per chi utilizza un account Google personale o istituzionale.',
+    url: 'https://mail.google.com',
+    category: 'email',
+    tags: ['email', 'google', 'posta'],
+  },
+  {
+    id: 'protonmail',
+    name: 'ProtonMail',
+    description: 'Provider email sicuro e privato, utile per comunicazioni riservate.',
+    url: 'https://proton.me/mail',
+    category: 'email',
+    tags: ['email', 'privacy', 'sicurezza'],
+  },
+
+  // Services
+  {
+    id: 'esu',
+    name: 'ESU Molise - Borse di Studio',
+    description:
+      'Portale per domande di borsa di studio, alloggi universitari e servizi per il diritto allo studio.',
+    url: 'https://www.esu.molise.it',
+    category: 'borse',
+    tags: ['borsa di studio', 'alloggio', 'diritto allo studio'],
+    featured: true,
+  },
+  {
+    id: 'mensa',
+    name: 'Servizio Mensa ESU',
+    description: 'Informazioni sul servizio mensa per studenti universitari in Molise.',
+    url: 'https://www.esu.molise.it/avvisi-per-gli-studenti/servizio-mensa.html',
+    category: 'borse',
+    tags: ['mensa', 'pasti', 'orari'],
+  },
+  {
     id: 'inps-studenti',
-    name: 'INPS — Bonus Studenti',
+    name: 'INPS - Bonus Studenti',
     description:
       'Portale INPS per accedere a bonus e agevolazioni dedicate agli studenti universitari.',
     url: 'https://www.inps.it',
     category: 'borse',
     tags: ['bonus', 'agevolazioni', 'inps'],
-  },
-  {
-    id: 'mensa',
-    name: 'Mensa Universitaria',
-    description: 'Consultazione menù, orari e prenotazione pasti nelle mense del DSU Molise.',
-    url: 'https://www.dsumolise.it/mensa',
-    category: 'borse',
-    tags: ['mensa', 'pasti', 'orari'],
   },
   {
     id: 'trasporti-agevolati',
@@ -136,16 +153,25 @@ export const MOCK_PORTALS: Portal[] = [
     tags: ['abbonamento', 'bus', 'agevolazione', 'trasporto'],
   },
 
-  // CARRIERA
+  // Career
   {
     id: 'almalaurea',
     name: 'AlmaLaurea',
     description:
-      'Consorzio interuniversitario per il profilo e curriculum dei laureati italiani. CV online e statistiche occupazionali.',
+      'CV online e statistiche occupazionali per laureati italiani. Profilo professionale interuniversitario.',
     url: 'https://www.almalaurea.it',
     category: 'carriera',
     tags: ['cv', 'lavoro', 'laureati', 'occupazione'],
     featured: true,
+  },
+  {
+    id: 'placement',
+    name: 'Placement Universitario',
+    description:
+      "Ufficio placement dell'ateneo per supporto alla ricerca del lavoro, orientamento e tirocini.",
+    url: 'https://www3.unimol.it/terza-missione/placement',
+    category: 'carriera',
+    tags: ['tirocinio', 'orientamento', 'placement'],
   },
   {
     id: 'linkedin',
@@ -165,17 +191,18 @@ export const MOCK_PORTALS: Portal[] = [
     category: 'carriera',
     tags: ['stage', 'tirocinio', 'lavoro', 'offerte'],
   },
-  {
-    id: 'placement',
-    name: 'Placement Universitario',
-    description:
-      "Ufficio placement dell'ateneo per supporto alla ricerca del lavoro, orientamento e tirocini.",
-    url: 'https://placement.unimol.it',
-    category: 'carriera',
-    tags: ['tirocinio', 'orientamento', 'placement'],
-  },
 
-  // COLLABORAZIONE
+  // Collabs
+  {
+    id: 'overleaf',
+    name: 'Overleaf - LaTeX',
+    description:
+      'Editor LaTeX collaborativo online per tesi, articoli scientifici e documenti accademici.',
+    url: 'https://www.overleaf.com',
+    category: 'collaborazione',
+    tags: ['latex', 'tesi', 'documenti', 'accademico'],
+    featured: false,
+  },
   {
     id: 'drive',
     name: 'Google Drive',
@@ -186,7 +213,7 @@ export const MOCK_PORTALS: Portal[] = [
   },
   {
     id: 'onedrive',
-    name: 'OneDrive — Microsoft',
+    name: 'OneDrive - Microsoft',
     description:
       'Archiviazione cloud Microsoft con integrazione Office 365 e accesso da qualsiasi dispositivo.',
     url: 'https://onedrive.live.com',
@@ -202,23 +229,14 @@ export const MOCK_PORTALS: Portal[] = [
     category: 'collaborazione',
     tags: ['appunti', 'produttività', 'progetti'],
   },
-  {
-    id: 'overleaf',
-    name: 'Overleaf — LaTeX',
-    description:
-      'Editor LaTeX collaborativo online per tesi, articoli scientifici e documenti accademici.',
-    url: 'https://www.overleaf.com',
-    category: 'collaborazione',
-    tags: ['latex', 'tesi', 'documenti', 'accademico'],
-  },
 
-  // BENESSERE
+  // Health & Support
   {
     id: 'cus',
-    name: 'CUS — Centro Universitario Sportivo',
+    name: 'CUS - Centro Universitario Sportivo',
     description:
       "Attività sportive, corsi e strutture del Centro Universitario Sportivo dell'ateneo.",
-    url: 'https://www.cusunimol.it',
+    url: 'https://cusmolise.unimol.it',
     category: 'benessere',
     tags: ['sport', 'palestra', 'corsi', 'attività'],
   },
@@ -227,7 +245,7 @@ export const MOCK_PORTALS: Portal[] = [
     name: 'Counseling Psicologico',
     description:
       'Servizio di supporto psicologico gratuito per studenti. Prenotazione colloqui con psicologi universitari.',
-    url: 'https://www.unimol.it/counseling',
+    url: 'https://www3.unimol.it/servizi/dettaglio/19',
     category: 'benessere',
     tags: ['supporto', 'psicologia', 'benessere', 'salute'],
   },
@@ -236,28 +254,28 @@ export const MOCK_PORTALS: Portal[] = [
     name: 'Ufficio Disabilità & DSA',
     description:
       "Servizi e supporto per studenti con disabilità, disturbi specifici dell'apprendimento e BES.",
-    url: 'https://www.unimol.it/disabilita',
+    url: 'https://disabiliabili.unimol.it/login',
     category: 'benessere',
     tags: ['disabilità', 'dsa', 'supporto', 'inclusione'],
   },
 
-  // INTERNAZIONALE
+  // International
   {
     id: 'erasmus',
-    name: 'Erasmus+ — Portale Ateneo',
+    name: 'Erasmus+ - Portale Ateneo',
     description:
       "Informazioni, bandi e candidature per programmi Erasmus+ di studio e tirocinio all'estero.",
-    url: 'https://www.unimol.it/erasmus',
+    url: 'https://www.unimol.it/english/erasmus-incoming/',
     category: 'internazionale',
     tags: ['erasmus', 'estero', 'mobilità', 'borse'],
     featured: true,
   },
   {
-    id: 'erasmus-portal',
+    id: 'erasmus-ewp',
     name: 'Erasmus Without Paper',
     description:
       'Portale ufficiale EU per la gestione digitale dei documenti Erasmus (OLA, LA, nominative).',
-    url: 'https://www.erasmus-ewp.eu',
+    url: 'https://ewp-dashboard.eu',
     category: 'internazionale',
     tags: ['erasmus', 'documenti', 'accordi', 'ola'],
   },

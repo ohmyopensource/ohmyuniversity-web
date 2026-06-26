@@ -1,0 +1,91 @@
+<app-dashboard-container>
+  <app-dashboard-header
+    title="Portali"
+    description="Tutti i portali e strumenti utili per la tua vita universitaria, raccolti in un unico posto." />
+
+  <!-- Search -->
+  <div class="pb-2">
+    <app-custom-input
+      placeholder="Cerca portale, categoria o parola chiave..."
+      [iconLeft]="iconSearch"
+      size="md"
+      [fullWidth]="true"
+      [clearable]="true"
+      (inputChange)="onSearchChange($event)" />
+  </div>
+
+  <!-- Search results -->
+  @if (isSearching()) {
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <span class="text-[0.85rem] font-semibold" style="color: var(--color-neutral-700)">
+          Risultati ricerca
+        </span>
+        <app-custom-badge
+          [label]="totalCount() + ' portali'"
+          variant="neutral"
+          size="sm"
+          shape="pill" />
+      </div>
+
+      @if (totalCount() === 0) {
+        <div
+          class="flex flex-col items-center justify-center gap-3 py-16"
+          style="border: 1px dashed var(--color-neutral-300); border-radius: 16px">
+          <svg
+            [lucideIcon]="iconSearch"
+            [size]="32"
+            style="color: var(--color-neutral-300)"
+            aria-hidden="true"></svg>
+          <p class="text-[0.82rem] m-0" style="color: var(--color-neutral-400)">
+            Nessun portale trovato per "{{ searchValue() }}".
+          </p>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          @for (portal of filteredPortals(); track portal.id) {
+            <app-portal-card
+              [portal]="portal"
+              [categoryDef]="categoryDef(portal.category)"
+              [featured]="false" />
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Spotlight -->
+  @if (!isSearching() && featuredPortals().length > 0) {
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center gap-2">
+        <svg
+          [lucideIcon]="iconStar"
+          [size]="14"
+          style="color: var(--color-warning-dark)"
+          aria-hidden="true"></svg>
+        <span class="text-[0.85rem] font-semibold" style="color: var(--color-neutral-700)">
+          In evidenza
+        </span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        @for (portal of featuredPortals(); track portal.id) {
+          <app-portal-card
+            [portal]="portal"
+            [categoryDef]="categoryDef(portal.category)"
+            [featured]="true" />
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Categories -->
+  @if (!isSearching()) {
+    @for (category of visibleCategories(); track category.id) {
+      @if (portalsForCategory(category.id).length > 0) {
+        <app-portal-category-section
+          [category]="category"
+          [portals]="portalsForCategory(category.id)" />
+      }
+    }
+  }
+</app-dashboard-container>
