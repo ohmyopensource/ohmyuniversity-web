@@ -1,38 +1,53 @@
-<div class="flex items-center gap-1 px-1 py-2">
+<div class="flex items-center gap-0.5 px-1 py-2">
+  <!-- Previous week -->
   <app-custom-button
     [icon]="iconPrevious"
     [iconOnly]="true"
     ariaLabel="Settimana precedente"
     variant="ghost"
-    size="md"
+    size="sm"
     rounded="full"
     (clicked)="goToPreviousWeek()" />
 
   @for (day of days(); track day.date.getTime()) {
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
       <app-custom-card
         [variant]="day.isSelected ? 'info' : 'default'"
-        padding="sm"
+        padding="none"
         shadow="none"
         radius="lg"
         [bordered]="false"
         [clickable]="true"
         (cardClick)="onSelect(day.date)">
-        <div class="flex h-20 flex-col items-center gap-1.5 pt-1">
-          <p appText variant="caption" [color]="day.weekdayColor" weight="bold">
+        <div class="flex flex-col items-center gap-1 py-2 px-0.5">
+          <!-- Weekday label -->
+          <p
+            appText
+            variant="caption"
+            [color]="day.weekdayColor"
+            weight="bold"
+            class="text-[0.6rem] sm:text-[0.72rem] leading-none">
             {{ day.weekdayLabel }}
           </p>
-          <p appText variant="body" [color]="day.dayNumberColor" weight="extrabold">
+          <!-- Day number -->
+          <p
+            appText
+            variant="body"
+            [color]="day.dayNumberColor"
+            weight="extrabold"
+            class="text-[0.9rem] sm:text-[1rem] leading-none">
             {{ day.date.getDate() }}
           </p>
+          <!-- Event dot -->
           <span
             class="h-1.5 w-1.5 rounded-full"
             [class.bg-red-500]="day.dotVariant === 'error'"
             [class.bg-purple-500]="day.dotVariant === 'secondary'"
             [class.bg-amber-500]="day.dotVariant === 'warning'"
             [class.bg-transparent]="!day.dotVariant"></span>
+          <!-- Today indicator -->
           <span
-            class="mt-auto block h-0.5 w-4/5 rounded-full"
+            class="block h-0.5 w-4/5 rounded-full"
             [class.bg-red-500]="day.isToday"
             [class.bg-transparent]="!day.isToday"></span>
         </div>
@@ -40,12 +55,13 @@
     </div>
   }
 
+  <!-- Next week -->
   <app-custom-button
     [icon]="iconNext"
     [iconOnly]="true"
     ariaLabel="Settimana successiva"
     variant="ghost"
-    size="md"
+    size="sm"
     rounded="full"
     (clicked)="goToNextWeek()" />
 </div>

@@ -1,9 +1,20 @@
 @if (hasBackButton()) {
-  <app-custom-button
-    [label]="label()"
-    [icon]="iconBack"
-    iconPosition="left"
-    variant="ghost"
-    size="lg"
-    (clicked)="onBackClick()" />
+  <div class="block sm:hidden">
+    <app-custom-button
+      [label]="label()"
+      [icon]="iconBack"
+      iconPosition="left"
+      variant="ghost"
+      size="sm"
+      (clicked)="onBackClick()" />
+  </div>
+  <div class="hidden sm:block">
+    <app-custom-button
+      [label]="label()"
+      [icon]="iconBack"
+      iconPosition="left"
+      variant="ghost"
+      size="lg"
+      (clicked)="onBackClick()" />
+  </div>
 }

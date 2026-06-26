@@ -1,11 +1,13 @@
 <div
   #scrollContainer
   class="overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-  style="height: calc(100vh - 280px)">
+  style="height: calc(100dvh - 320px); min-height: 300px">
   <div class="relative" [style.height.px]="totalHeight + 16" style="padding-top: 12px">
+    <!-- Hour lines -->
     @for (hour of hours; track hour) {
       <div
-        class="absolute left-0 right-0 border-t border-gray-100"
+        class="absolute left-0 right-0"
+        style="border-top: 1px solid var(--color-neutral-100)"
         [style.top.px]="hourTop(hour) + 12">
         <div
           class="absolute shrink-0 pl-1 text-center"
@@ -16,7 +18,7 @@
       </div>
     }
 
-    <!-- Red Line -->
+    <!-- Current time red line -->
     <div
       class="absolute left-0 right-0 z-10 flex items-center"
       [style.top.px]="currentTimePx() + 12">
@@ -29,24 +31,154 @@
       <div class="flex-1 h-px" style="background: var(--color-error-dark)"></div>
     </div>
 
+    <!-- Events area -->
     <div
       class="absolute top-0 bottom-0"
       [style.left.px]="leftGutter"
-      [style.right.px]="22"
+      [style.right.px]="8"
       style="top: 12px">
-      @for (positioned of positionedEvents(); track $index) {
-        <div
-          class="absolute"
-          [style.top.px]="positioned.top"
-          [style.height.px]="positioned.height"
-          [style.left]="positioned.leftExpr"
-          [style.width]="positioned.widthExpr">
-          <app-agenda-event-card
-            [event]="positioned.layout.event"
-            [compact]="positioned.compact"
-            (cardClick)="onEventClick(positioned.layout.event)" />
-        </div>
-      }
+      <!-- Desktop: lane layout (sm+) -->
+      <div class="hidden sm:block h-full">
+        @for (positioned of positionedEvents(); track $index) {
+          <div
+            class="absolute"
+            [style.top.px]="positioned.top"
+            [style.height.px]="positioned.height"
+            [style.left]="positioned.leftExpr"
+            [style.width]="positioned.widthExpr">
+            <app-agenda-event-card
+              [event]="positioned.layout.event"
+              [compact]="positioned.compact"
+              (cardClick)="onEventClick(positioned.layout.event)" />
+          </div>
+        }
+      </div>
+
+      <!-- Mobile: grouped layout (< sm) -->
+      <div class="sm:hidden h-full">
+        @for (group of eventGroups(); track $index) {
+          <!-- Div esterno: solo posizionamento assoluto, niente height -->
+          <div
+            class="absolute w-full cursor-pointer"
+            [style.top.px]="group.top"
+            (click)="onGroupClick(group)"
+            (keydown.enter)="onGroupClick(group)"
+            role="button"
+            tabindex="0">
+            <!-- Div interno: impone l'altezza reale alla card -->
+            <div [style.height.px]="group.height">
+              @if (group.events.length === 1) {
+                <!-- Single event — normal card -->
+                <app-agenda-event-card
+                  [event]="group.events[0]"
+                  [compact]="group.height < 72"
+                  (cardClick)="onEventClick(group.events[0])" />
+              } @else {
+                <!-- Grouped events card -->
+                <app-custom-card
+                  [variant]="group.variant"
+                  padding="none"
+                  shadow="sm"
+                  radius="lg"
+                  [bordered]="false"
+                  [clickable]="true">
+                  <div class="flex h-full flex-col justify-between px-3 py-2 gap-1">
+                    <!-- Count badge -->
+                    <div class="flex items-center gap-2">
+                      <svg
+                        [lucideIcon]="iconCalendar"
+                        [size]="13"
+                        aria-hidden="true"
+                        class="shrink-0"
+                        style="color: inherit; opacity: 0.7"></svg>
+                      <span class="text-[0.72rem] font-bold leading-none">
+                        {{ group.events.length }} eventi sovrapposti
+                      </span>
+                    </div>
+                    <!-- Preview of first 2 titles -->
+                    @for (event of group.events.slice(0, 2); track event.id) {
+                      <p class="text-[0.65rem] leading-tight truncate opacity-80 m-0">
+                        · {{ event.title }}
+                      </p>
+                    }
+                    @if (group.events.length > 2) {
+                      <p class="text-[0.65rem] leading-tight opacity-60 m-0">
+                        + {{ group.events.length - 2 }} altri
+                      </p>
+                    }
+                  </div>
+                </app-custom-card>
+              }
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Mobile group detail overlay -->
+@if (activeGroup()) {
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 z-40 sm:hidden"
+    style="background: rgba(0, 0, 0, 0.3)"
+    (click)="closeGroup()"
+    (keydown.escape)="closeGroup()"></div>
+
+  <!-- Bottom sheet -->
+  <div
+    class="fixed bottom-0 left-0 right-0 z-50 sm:hidden rounded-t-2xl shadow-2xl"
+    style="background: white; max-height: 60dvh; overflow-y: auto">
+    <!-- Handle -->
+    <div class="flex justify-center pt-3 pb-1">
+      <div class="w-10 h-1 rounded-full" style="background: var(--color-neutral-200)"></div>
+    </div>
+
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between px-5 py-3"
+      style="border-bottom: 1px solid var(--color-neutral-100)">
+      <span class="text-[0.88rem] font-bold" style="color: var(--color-neutral-900)">
+        {{ activeGroup()!.events.length }} eventi in questa fascia
+      </span>
+      <button
+        type="button"
+        (click)="closeGroup()"
+        class="p-1 rounded-lg"
+        style="color: var(--color-neutral-400)">
+        <svg [lucideIcon]="iconClose" [size]="18" aria-hidden="true"></svg>
+      </button>
+    </div>
+
+    <!-- Event list -->
+    <div class="flex flex-col gap-2 p-4">
+      @for (event of activeGroup()!.events; track event.id) {
+        <button
+          type="button"
+          class="flex items-center gap-3 w-full text-left rounded-xl px-4 py-3 transition-colors"
+          style="border: 1px solid var(--color-neutral-200); background: var(--color-neutral-50)"
+          (click)="onGroupEventClick(event)">
+          <div
+            class="w-2 h-2 rounded-full shrink-0"
+            [style.background]="'var(--color-' + eventVariant(event) + '-dark)'"></div>
+          <div class="min-w-0 flex-1">
+            <p
+              class="text-[0.85rem] font-semibold m-0 truncate"
+              style="color: var(--color-neutral-900)">
+              {{ event.title }}
+            </p>
+            <p class="text-[0.72rem] m-0 mt-0.5" style="color: var(--color-neutral-400)">
+              {{ eventTimeRange(event) }}
+            </p>
+          </div>
+          <svg
+            [lucideIcon]="iconCalendar"
+            [size]="14"
+            style="color: var(--color-neutral-300); flex-shrink: 0"
+            aria-hidden="true"></svg>
+        </button>
+      }
+    </div>
+  </div>
+}

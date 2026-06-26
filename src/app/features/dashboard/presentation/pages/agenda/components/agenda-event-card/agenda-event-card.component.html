@@ -7,44 +7,57 @@
   [clickable]="true"
   (cardClick)="onCardClick()">
   <div
-    class="flex h-full items-center gap-3"
-    [class.px-3]="compact()"
-    [class.py-2]="compact()"
-    [class.px-4]="!compact()"
-    [class.py-3]="!compact()">
+    class="flex h-full items-start gap-2 px-2 py-1.5 sm:gap-3 sm:px-3 sm:py-2"
+    [class.items-center]="compact()">
+    <!-- Icon -->
     <svg
       [lucideIcon]="icon()"
-      [size]="compact() ? 16 : 18"
-      [class]="'shrink-0 ' + titleColorClass()"
+      [size]="compact() ? 13 : 15"
+      [class]="'shrink-0 mt-0.5 ' + titleColorClass()"
+      [class.mt-0]="compact()"
       aria-hidden="true"></svg>
 
-    <div class="min-w-0 flex-1">
+    <div class="min-w-0 flex-1 overflow-hidden">
+      <!-- Title -->
       <p
         appText
-        variant="body-sm"
+        variant="caption"
         weight="semibold"
         [truncate]="true"
-        [extraClass]="titleColorClass()">
+        [extraClass]="titleColorClass() + ' text-[0.72rem] sm:text-[0.78rem]'">
         {{ event().title }}
       </p>
-      <p appText variant="caption" color="subtle" [truncate]="true">
+
+      <!-- Time range — always visible -->
+      <p
+        appText
+        variant="caption"
+        color="subtle"
+        class="text-[0.65rem] sm:text-[0.72rem] leading-tight truncate">
         {{ timeRange() }}
       </p>
+
+      <!-- Location — only when not compact and enough space -->
       @if (!compact() && event().location) {
-        <div class="flex items-center gap-1 mt-0.5">
+        <div class="hidden sm:flex items-center gap-1 mt-0.5">
           <svg
             [lucideIcon]="iconMapPin"
-            [size]="11"
+            [size]="10"
             class="shrink-0"
             style="color: var(--color-neutral-400)"
             aria-hidden="true"></svg>
-          <p appText variant="caption" color="subtle" [truncate]="true">
+          <p appText variant="caption" color="subtle" [truncate]="true" class="text-[0.65rem]">
             {{ event().location }}
           </p>
         </div>
       }
+
+      <!-- URL — only on desktop and not compact -->
       @if (!compact() && event().url) {
-        <div class="mt-0.5" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        <div
+          class="hidden sm:block mt-0.5"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()">
           <app-custom-link
             [href]="event().url!"
             [label]="event().url!"
@@ -55,8 +68,14 @@
       }
     </div>
 
-    @if (durationLabel()) {
-      <app-custom-badge [label]="durationLabel()" [variant]="variant()" shape="pill" size="sm" />
+    <!-- Duration badge — hidden on very compact cards -->
+    @if (durationLabel() && !compact()) {
+      <app-custom-badge
+        [label]="durationLabel()"
+        [variant]="variant()"
+        shape="pill"
+        size="sm"
+        class="hidden sm:flex shrink-0" />
     }
   </div>
 </app-custom-card>
