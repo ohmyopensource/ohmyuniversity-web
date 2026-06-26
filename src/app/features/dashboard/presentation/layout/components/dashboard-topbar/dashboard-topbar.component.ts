@@ -21,6 +21,7 @@ import {
   LucideBookOpen,
   LucideLibrary,
   LucideExternalLink,
+  LucideEllipsis,
 } from '@lucide/angular';
 import { API } from 'src/app/core/infrastructure/api/api-endpoints';
 import { UniversityConfigResponse } from 'src/app/core/domain/models/career/university-config.model';
@@ -79,8 +80,10 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   readonly iconMoodle = LucideBookOpen;
   readonly iconLibrary = LucideLibrary;
   readonly iconEsse3 = LucideExternalLink;
+  readonly iconMore = LucideEllipsis;
 
   rootHovered = false;
+  mobileMenuOpen = signal(false);
   breadcrumbs = signal<BreadcrumbItem[]>([]);
 
   private moodleUrl: string | null = null;
@@ -149,11 +152,21 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update(v => !v);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
   onSearchClick(): void {
+    this.closeMobileMenu();
     this.toast.info('Funzione non ancora disponibile');
   }
 
   onMailClick(): void {
+    this.closeMobileMenu();
     this.http.get(API.email.authUrl, { responseType: 'text' }).subscribe({
       next: url => window.open(url, '_blank'),
       error: () => this.toast.error('Impossibile aprire la mail universitaria.'),
@@ -161,6 +174,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   }
 
   onMoodleClick(): void {
+    this.closeMobileMenu();
     if (this.moodleUrl) {
       window.open(this.moodleUrl, '_blank');
     } else {
@@ -169,6 +183,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   }
 
   onLibraryClick(): void {
+    this.closeMobileMenu();
     if (this.libraryUrl) {
       window.open(this.libraryUrl, '_blank');
     } else {
@@ -177,6 +192,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   }
 
   onEsse3Click(): void {
+    this.closeMobileMenu();
     if (this.esse3PortalUrl) {
       window.open(this.esse3PortalUrl, '_blank');
     } else {
@@ -185,6 +201,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   }
 
   onFavoritesClick(): void {
+    this.closeMobileMenu();
     this.toast.info('Funzione non ancora disponibile');
   }
 

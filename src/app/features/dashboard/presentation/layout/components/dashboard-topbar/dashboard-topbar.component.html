@@ -1,9 +1,10 @@
 <header
   class="flex items-center justify-between h-13 px-5 shrink-0 z-5"
   style="background: white; border-bottom: 1px solid var(--color-neutral-200)">
-  <!-- Left - Breadcrumb -->
+  <!-- Left — Breadcrumb -->
   <nav aria-label="Breadcrumb">
     <ol class="flex items-center gap-1 list-none m-0 p-0">
+      <!-- Root -->
       <li class="flex items-center">
         <a
           routerLink="/dashboard"
@@ -14,16 +15,20 @@
           [style.color]="rootHovered ? 'var(--color-primary-dark)' : 'var(--color-neutral-400)'"
           aria-label="Dashboard">
           <svg [lucideIcon]="iconHome" [size]="14" aria-hidden="true"></svg>
-          <span>Dashboard</span>
+          <span class="hidden sm:inline">Dashboard</span>
         </a>
       </li>
 
+      <!-- Dynamic Segments -->
       @for (crumb of breadcrumbs(); track crumb.path; let last = $last) {
+        <!-- Divider -->
         <li class="flex items-center" aria-hidden="true">
           <svg [lucideIcon]="iconChevron" [size]="13" style="color: var(--color-neutral-300)"></svg>
         </li>
+
         <li class="flex items-center">
           @if (last) {
+            <!-- Last Segment -->
             <span
               class="text-[0.8rem] font-semibold"
               style="color: var(--color-neutral-700)"
@@ -31,9 +36,10 @@
               {{ crumb.label }}
             </span>
           } @else {
+            <!-- Mid Segments -->
             <a
               [routerLink]="crumb.path"
-              class="text-[0.8rem] font-medium no-underline transition-colors duration-150"
+              class="hidden sm:inline text-[0.8rem] font-medium no-underline transition-colors duration-150"
               style="color: var(--color-neutral-400)"
               (mouseenter)="crumb.hovered = true"
               (mouseleave)="crumb.hovered = false"
@@ -48,69 +54,182 @@
     </ol>
   </nav>
 
-  <!-- Right - actions -->
+  <!-- Right — actions -->
   <div class="flex items-center gap-1">
-    <!-- Search -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconSearch"
-      aria-label="Cerca"
-      (click)="onSearchClick()"
-      (keydown.enter)="onSearchClick()" />
+    <!-- Desktop: tutti i bottoni visibili (sm+) -->
+    <div class="hidden sm:flex items-center gap-1">
+      <!-- Search -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconSearch"
+        aria-label="Cerca"
+        (click)="onSearchClick()"
+        (keydown.enter)="onSearchClick()" />
 
-    <!-- ESSE3 -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconEsse3"
-      aria-label="ESSE3"
-      (click)="onEsse3Click()"
-      (keydown.enter)="onEsse3Click()" />
+      <!-- ESSE3 -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconEsse3"
+        aria-label="ESSE3"
+        (click)="onEsse3Click()"
+        (keydown.enter)="onEsse3Click()" />
 
-    <!-- Moodle -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconMoodle"
-      aria-label="Moodle"
-      (click)="onMoodleClick()"
-      (keydown.enter)="onMoodleClick()" />
+      <!-- Moodle -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconMoodle"
+        aria-label="Moodle"
+        (click)="onMoodleClick()"
+        (keydown.enter)="onMoodleClick()" />
 
-    <!-- Biblioteca -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconLibrary"
-      aria-label="Biblioteca"
-      (click)="onLibraryClick()"
-      (keydown.enter)="onLibraryClick()" />
+      <!-- Biblioteca -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconLibrary"
+        aria-label="Biblioteca"
+        (click)="onLibraryClick()"
+        (keydown.enter)="onLibraryClick()" />
 
-    <!-- Mail -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconMail"
-      aria-label="Mail"
-      (click)="onMailClick()"
-      (keydown.enter)="onMailClick()" />
+      <!-- Mail -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconMail"
+        aria-label="Mail"
+        (click)="onMailClick()"
+        (keydown.enter)="onMailClick()" />
 
-    <!-- Favorites -->
-    <app-custom-button
-      variant="ghost"
-      size="sm"
-      [iconOnly]="true"
-      [icon]="iconHeart"
-      aria-label="Preferiti"
-      (click)="onFavoritesClick()"
-      (keydown.enter)="onFavoritesClick()" />
+      <!-- Preferiti -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconHeart"
+        aria-label="Preferiti"
+        (click)="onFavoritesClick()"
+        (keydown.enter)="onFavoritesClick()" />
+    </div>
 
-    <!-- Notifications -->
+    <!-- Mobile: bottone "..." con dropdown (< sm) -->
+    <div class="relative sm:hidden">
+      <!-- Trigger -->
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        [icon]="iconMore"
+        aria-label="Altro"
+        (click)="toggleMobileMenu()"
+        (keydown.enter)="toggleMobileMenu()" />
+
+      @if (mobileMenuOpen()) {
+        <!-- Overlay per chiudere cliccando fuori -->
+        <div
+          class="fixed inset-0 z-40"
+          (click)="closeMobileMenu()"
+          (keydown.escape)="closeMobileMenu()"></div>
+
+        <!-- Dropdown -->
+        <div
+          class="absolute right-0 top-full mt-1 z-50 rounded-xl shadow-lg py-1"
+          style="background: white; border: 1px solid var(--color-neutral-200); min-width: 180px">
+          <!-- Cerca -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onSearchClick()">
+            <svg
+              [lucideIcon]="iconSearch"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            Cerca
+          </button>
+
+          <!-- ESSE3 -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onEsse3Click()">
+            <svg
+              [lucideIcon]="iconEsse3"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            ESSE3
+          </button>
+
+          <!-- Moodle -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onMoodleClick()">
+            <svg
+              [lucideIcon]="iconMoodle"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            Moodle
+          </button>
+
+          <!-- Biblioteca -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onLibraryClick()">
+            <svg
+              [lucideIcon]="iconLibrary"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            Biblioteca
+          </button>
+
+          <!-- Mail -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onMailClick()">
+            <svg
+              [lucideIcon]="iconMail"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            Mail
+          </button>
+
+          <!-- Preferiti -->
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
+            style="color: var(--color-neutral-700)"
+            (click)="onFavoritesClick()">
+            <svg
+              [lucideIcon]="iconHeart"
+              [size]="15"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
+            Preferiti
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Notifications — sempre visibili -->
     <div class="relative">
       <app-custom-button
         variant="ghost"
@@ -137,6 +256,7 @@
   [showCloseButton]="true"
   [closeOnBackdrop]="true"
   [closeOnEsc]="true">
+  <!-- Header drawer -->
   <div class="flex items-center justify-between mb-5">
     <div class="flex items-center gap-2">
       <svg
@@ -154,11 +274,13 @@
     <app-custom-badge [count]="notificationCount" variant="error" size="sm" shape="pill" />
   </div>
 
+  <!-- Notification list -->
   <ul class="list-none m-0 p-0 flex flex-col gap-2">
     @for (notif of notifications; track notif.id) {
       <li
         class="flex gap-3 p-3 rounded-xl transition-colors duration-150 cursor-pointer"
         style="background: var(--color-neutral-100); border: 1px solid var(--color-neutral-200)">
+        <!-- Read indicator -->
         <div class="shrink-0 pt-1.5">
           @if (!notif.read) {
             <span
@@ -170,6 +292,8 @@
               style="background: var(--color-neutral-300)"></span>
           }
         </div>
+
+        <!-- Content -->
         <div class="flex-1 min-w-0 flex flex-col gap-0.5">
           <span class="text-[0.82rem] font-semibold" style="color: var(--color-neutral-900)">{{
             notif.title
@@ -181,6 +305,8 @@
             notif.time
           }}</span>
         </div>
+
+        <!-- Category icon -->
         <div class="shrink-0 flex items-start pt-0.5">
           <svg
             [lucideIcon]="notif.icon"
@@ -192,6 +318,7 @@
     }
   </ul>
 
+  <!-- Footer -->
   <div class="mt-4 pt-4" style="border-top: 1px solid var(--color-neutral-200)">
     <app-custom-button variant="flat" size="sm" label="Segna tutte come lette" class="w-full" />
   </div>
