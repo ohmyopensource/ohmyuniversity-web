@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthRepository } from '../../../../core/domain/repositories/auth.repository';
-import { AuthTokens } from '../../../../core/domain/models/auth/auth-tokens.model';
+import { AuthTokens, ProfiloCarriera } from '../../../../core/domain/models/auth/auth-tokens.model';
 import { LoginRequest } from '../../../../core/domain/models/auth/login-request.model';
 
 const ACCESS_TOKEN_KEY = 'omu_access_token';
@@ -28,7 +28,22 @@ export class LoginUseCase {
         localStorage.setItem(UNIVERSITY_ID_KEY, request.universityId);
         localStorage.setItem(USER_NOME_KEY, tokens.nome);
         localStorage.setItem(USER_COGNOME_KEY, tokens.cognome);
-        localStorage.setItem(PROFILI_KEY, JSON.stringify(tokens.profili ?? []));
+
+        const nuovi = tokens.profili ?? [];
+        const esistenti: ProfiloCarriera[] = (() => {
+          try {
+            return JSON.parse(localStorage.getItem(PROFILI_KEY) ?? '[]');
+          } catch {
+            return [];
+          }
+        })();
+        const altriAtenei = esistenti.filter(p => p.universityId !== request.universityId);
+        const nuoviDedup = nuovi.filter(
+          (p, i, arr) => arr.findIndex(x => x.stuId === p.stuId) === i,
+        );
+        const merged = [...altriAtenei, ...nuoviDedup];
+        localStorage.setItem(PROFILI_KEY, JSON.stringify(merged));
+
         this.router.navigate(['/dashboard']);
       }),
     );

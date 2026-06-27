@@ -202,3 +202,67 @@
     }
   </div>
 </aside>
+
+<!-- Cross-university login modal -->
+@if (showLoginModal()) {
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 z-[100]"
+    style="background: rgba(0, 0, 0, 0.4)"
+    (click)="onLoginModalDismiss()"
+    (keydown.escape)="onLoginModalDismiss()"></div>
+
+  <!-- Modal -->
+  <div
+    class="fixed z-[101] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm rounded-2xl shadow-2xl p-6 flex flex-col gap-4"
+    style="background: white">
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+      <h2 class="text-[1rem] font-bold m-0" style="color: var(--color-neutral-900)">
+        Accedi a {{ pendingSwitch()?.universityName }}
+      </h2>
+      <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-500)">
+        La sessione per questo ateneo è scaduta. Inserisci le credenziali Cineca per continuare.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="flex flex-col gap-3">
+      <app-custom-input
+        label="Username Cineca"
+        placeholder="es. mario.rossi"
+        size="md"
+        [fullWidth]="true"
+        (inputChange)="crossLoginUsername = $any($event)" />
+
+      <app-custom-input
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        size="md"
+        [fullWidth]="true"
+        (inputChange)="crossLoginPassword = $any($event)" />
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-2 justify-end">
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        label="Annulla"
+        (clicked)="onLoginModalDismiss()" />
+      <app-custom-button
+        variant="primary"
+        size="sm"
+        label="Accedi"
+        [loading]="crossLoginLoading"
+        (clicked)="onCrossLogin()" />
+    </div>
+
+    @if (crossLoginError) {
+      <p class="text-[0.75rem] m-0 text-center" style="color: var(--color-error-dark)">
+        {{ crossLoginError }}
+      </p>
+    }
+  </div>
+}

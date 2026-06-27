@@ -8,6 +8,7 @@ export const API = {
     refresh: `${BASE}/v1/auth/refresh`,
     logout: `${BASE}/v1/auth/logout`,
     switchCarriera: `${BASE}/v1/auth/switch-carriera`,
+    switchUniversity: `${BASE}/v1/auth/switch-university`,
   },
   profile: {
     persona: `${BASE}/v1/profile/persona`,

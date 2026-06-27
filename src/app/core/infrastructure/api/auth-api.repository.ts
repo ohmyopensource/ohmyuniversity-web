@@ -27,4 +27,13 @@ export class AuthApiRepository extends AuthRepository {
       params: { refreshToken, universityId },
     });
   }
+
+  switchUniversity(
+    targetUniversityId: string,
+    refreshToken: string,
+  ): Observable<{ accessToken: string }> {
+    return this.http.post<{ accessToken: string }>(API.auth.switchUniversity, null, {
+      params: { targetUniversityId, refreshToken },
+    });
+  }
 }

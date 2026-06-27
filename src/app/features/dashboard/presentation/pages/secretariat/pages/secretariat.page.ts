@@ -10,7 +10,6 @@ import {
   LucideCreditCard,
   LucideTriangleAlert,
   LucideBriefcase,
-  LucideDynamicIcon,
 } from '@lucide/angular';
 import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
 import {
@@ -47,7 +46,6 @@ import { InternshipsFacade } from 'src/app/core/application/facades/internships.
     BandiTabComponent,
     FeesTabComponent,
     InternshipsTabComponent,
-    LucideDynamicIcon,
   ],
   templateUrl: './secretariat.page.html',
 })

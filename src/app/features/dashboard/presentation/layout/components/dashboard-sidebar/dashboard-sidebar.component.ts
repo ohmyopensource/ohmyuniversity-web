@@ -19,8 +19,11 @@ import {
   STATUS_VARIANT,
 } from '@ui/avatar-profile-panel/avatar-profile-panel.component';
 import { AuthFacade } from 'src/app/core/application/facades/auth.facade';
-import { forkJoin } from 'rxjs';
+import { forkJoin, catchError, of } from 'rxjs';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { ProfiloCarriera } from 'src/app/core/domain/models/auth/auth-tokens.model';
+import { UNIVERSITY_ID_KEY } from 'src/app/core/application/usecases/auth/login.usecase';
+import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -31,6 +34,7 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
     RouterLinkActive,
     CustomButtonComponent,
     CustomAvatarComponent,
+    CustomInputComponent,
     AvatarProfilePanelComponent,
   ],
   templateUrl: './dashboard-sidebar.component.html',
@@ -69,10 +73,32 @@ export class DashboardSidebarComponent implements OnInit {
   readonly fotoUrl = signal<string>('');
   readonly hasCarriera = signal(false);
 
+  readonly pendingSwitch = signal<ProfiloCarriera | null>(null);
+  readonly showLoginModal = signal(false);
+
+  crossLoginUsername = '';
+  crossLoginPassword = '';
+  crossLoginLoading = false;
+  crossLoginError = '';
+
   ngOnInit(): void {
     this.hasCarriera.set(this.auth.hasCarriera());
     const profili = this.auth.getProfili();
-    const tuttiAccounts: AccountEntry[] = profili.map(p => ({
+
+    console.log('PROFILI RAW:', profili);
+    console.log(
+      'PROFILI STUID:',
+      profili.map(p => p.stuId),
+    );
+
+    const profiliUnici = profili.filter(
+      (p, i, arr) => arr.findIndex(x => x.stuId === p.stuId) === i,
+    );
+
+    console.log('PROFILI UNICI:', profiliUnici);
+    console.log('PROFILI UNICI LENGTH:', profiliUnici.length);
+
+    const tuttiAccounts: AccountEntry[] = profiliUnici.map(p => ({
       id: String(p.stuId),
       name: this.auth.getNomeCompleto(),
       email: '',
@@ -80,7 +106,8 @@ export class DashboardSidebarComponent implements OnInit {
       courseAcronym: this.tipoCorsoAcronym(p.tipoCorsoCod),
       universityLabel: this.universityLabel(p.universityId),
       status: p.attivo ? 'active' : ('withdrawn' as AccountStatus),
-      isCurrent: p.attivo,
+      isCurrent: p.universityId.toUpperCase() === (this.auth.getUniversityId() ?? '').toUpperCase(),
+      // rimosso il check p.attivo — il profilo corrente può essere cessato
     }));
 
     const defaultAccount: AccountEntry = {
@@ -110,10 +137,9 @@ export class DashboardSidebarComponent implements OnInit {
       next: ({ badge: _badge, profilo, info: _info, foto }) => {
         const fotoUrl = URL.createObjectURL(foto);
         this.fotoUrl.set(fotoUrl);
-
         const updated = this.accounts().map(a => ({
           ...a,
-          avatarSrc: fotoUrl,
+          avatarSrc: a.isCurrent ? fotoUrl : a.avatarSrc,
           email: a.isCurrent ? (profilo.emailAte ?? '') : '',
         }));
         this.accounts.set(updated);
@@ -122,6 +148,78 @@ export class DashboardSidebarComponent implements OnInit {
       },
       error: () => {},
     });
+  }
+
+  onAccountSwitch(account: AccountEntry): void {
+    const profili = this.auth.getProfili();
+    const profilo = profili.find(p => String(p.stuId) === account.id);
+    if (!profilo) return;
+
+    this.auth
+      .switchCarriera(profilo)
+      .pipe(
+        catchError(err => {
+          if (err?.status === 409) {
+            this.pendingSwitch.set(profilo);
+            this.showLoginModal.set(true);
+          }
+          return of(null);
+        }),
+      )
+      .subscribe(result => {
+        if (!result) return;
+        if (
+          profilo.universityId.toUpperCase() !== (this.auth.getUniversityId() ?? '').toUpperCase()
+        ) {
+          localStorage.setItem(UNIVERSITY_ID_KEY, profilo.universityId.toUpperCase());
+        }
+        const profiliAggiornati = profili.map(p => ({
+          ...p,
+          attivo: p.stuId === profilo.stuId,
+        }));
+        localStorage.setItem('omu_profili', JSON.stringify(profiliAggiornati));
+        window.location.reload();
+      });
+  }
+
+  onLoginModalDismiss(): void {
+    this.showLoginModal.set(false);
+    this.pendingSwitch.set(null);
+  }
+
+  onCrossLogin(): void {
+    const profilo = this.pendingSwitch();
+    if (!profilo || !this.crossLoginUsername || !this.crossLoginPassword) return;
+
+    this.crossLoginLoading = true;
+    this.crossLoginError = '';
+
+    this.auth
+      .login({
+        universityId: profilo.universityId,
+        username: this.crossLoginUsername,
+        password: this.crossLoginPassword,
+      })
+      .subscribe({
+        next: () => {
+          this.crossLoginLoading = false;
+          this.showLoginModal.set(false);
+          this.pendingSwitch.set(null);
+          window.location.reload();
+        },
+        error: () => {
+          this.crossLoginLoading = false;
+          this.crossLoginError = 'Credenziali non valide. Riprova.';
+        },
+      });
+  }
+
+  onLogout(): void {
+    this.auth.logout().subscribe();
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/dashboard/profilo']);
   }
 
   private tipoCorsoAcronym(tipoCorsoCod: string | null): string {
@@ -151,29 +249,6 @@ export class DashboardSidebarComponent implements OnInit {
 
   linkActiveBgStyle(item: SidebarItem): string {
     return `background: var(--color-${item.color}-light);`;
-  }
-
-  onAccountSwitch(account: AccountEntry): void {
-    const profili = this.auth.getProfili();
-    const profilo = profili.find(p => String(p.stuId) === account.id);
-    if (!profilo) return;
-
-    this.auth.switchCarriera(profilo).subscribe({
-      next: () => {
-        const aggiornati = profili.map(p => ({ ...p, attivo: p.stuId === profilo.stuId }));
-        localStorage.setItem('omu_profili', JSON.stringify(aggiornati));
-        window.location.reload();
-      },
-      error: () => {},
-    });
-  }
-
-  onLogout(): void {
-    this.auth.logout().subscribe();
-  }
-
-  goToProfile(): void {
-    this.router.navigate(['/dashboard/profilo']);
   }
 
   private universityLabel(universityId: string | null): string {
