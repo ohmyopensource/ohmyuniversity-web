@@ -10,7 +10,7 @@
     <ng-content />
   }
 
-  @for (b of bandi(); track b.id) {
+  @for (b of paginatedBandi(); track b.id) {
     <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
       <div class="flex flex-col gap-3">
         <div class="flex items-start justify-between gap-3 flex-wrap">
@@ -82,5 +82,19 @@
         </div>
       </div>
     </app-custom-card>
+  }
+
+  @if (bandi().length > PAGINATION.threshold) {
+    <div class="flex justify-center">
+      <app-custom-pagination
+        [totalItems]="bandi().length"
+        [pageSize]="PAGINATION.defaultPageSize"
+        [currentPage]="currentPage()"
+        [showPageSizeSelector]="false"
+        [showInfo]="false"
+        [showJumpToPage]="false"
+        size="sm"
+        (pageChange)="onPageChange($event)" />
+    </div>
   }
 </div>

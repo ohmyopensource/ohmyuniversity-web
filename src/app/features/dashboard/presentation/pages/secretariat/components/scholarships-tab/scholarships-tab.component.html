@@ -6,7 +6,7 @@
     </span>
   </div>
 
-  @for (s of scholarships(); track s.id) {
+  @for (s of paginatedScholarships(); track s.id) {
     <app-custom-card
       variant="default"
       padding="md"
@@ -97,5 +97,19 @@
 
   @if (scholarships().length === 0) {
     <ng-content />
+  }
+
+  @if (scholarships().length > PAGINATION.threshold) {
+    <div class="flex justify-center">
+      <app-custom-pagination
+        [totalItems]="scholarships().length"
+        [pageSize]="PAGINATION.defaultPageSize"
+        [currentPage]="currentPage()"
+        [showPageSizeSelector]="false"
+        [showInfo]="false"
+        [showJumpToPage]="false"
+        size="sm"
+        (pageChange)="onPageChange($event)" />
+    </div>
   }
 </div>

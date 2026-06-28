@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, computed, signal } from '@angular/core';
 import {
   LucideDynamicIcon,
   LucideEuro,
@@ -8,20 +8,40 @@ import {
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
+import { CustomPaginationComponent } from '@ui/custom-pagination/custom-pagination.component';
 import { Bando, BandoStatus } from '@shared/types/dashboard/dashboard-secretariat.types';
+import { PAGINATION } from '@shared/constants';
 
 @Component({
   selector: 'app-bandi-tab',
   standalone: true,
-  imports: [LucideDynamicIcon, CustomCardComponent, CustomBadgeComponent, CustomButtonComponent],
+  imports: [
+    LucideDynamicIcon,
+    CustomCardComponent,
+    CustomBadgeComponent,
+    CustomButtonComponent,
+    CustomPaginationComponent,
+  ],
   templateUrl: './bandi-tab.component.html',
 })
 export class BandiTabComponent {
   readonly bandi = input.required<Bando[]>();
 
+  readonly PAGINATION = PAGINATION;
   readonly iconEuro = LucideEuro;
   readonly iconCalendar = LucideCalendarDays;
   readonly iconExternalLink = LucideExternalLink;
+
+  readonly currentPage = signal(1);
+
+  readonly paginatedBandi = computed(() => {
+    const start = (this.currentPage() - 1) * PAGINATION.defaultPageSize;
+    return this.bandi().slice(start, start + PAGINATION.defaultPageSize);
+  });
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
   statusLabel(status: BandoStatus): string {
     const map: Record<BandoStatus, string> = {
