@@ -34,7 +34,6 @@ export class ContattiFormAcademic {
     setTimeout(() => {
       this.isLoading = false;
       this.succeeded = true;
-      console.log('Academic form submitted', this.academicForm);
     }, 1500);
   }
 }

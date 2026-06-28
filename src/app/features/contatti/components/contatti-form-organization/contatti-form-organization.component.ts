@@ -30,7 +30,6 @@ export class ContattiFormOrganization {
     setTimeout(() => {
       this.isLoading = false;
       this.succeeded = true;
-      console.log('Org form submitted', this.orgForm);
     }, 1500);
   }
 }

@@ -10,6 +10,7 @@ import {
   SidebarItem,
 } from '@shared/constants';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
+import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
 import { CustomAvatarComponent, AvatarVariant } from '@ui/custom-avatar/custom-avatar.component';
 import {
   AvatarProfilePanelComponent,
@@ -19,11 +20,11 @@ import {
   STATUS_VARIANT,
 } from '@ui/avatar-profile-panel/avatar-profile-panel.component';
 import { AuthFacade } from 'src/app/core/application/facades/auth.facade';
+import { FeesFacade } from 'src/app/core/application/facades/fees.facade';
 import { forkJoin, catchError, of } from 'rxjs';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 import { ProfiloCarriera } from 'src/app/core/domain/models/auth/auth-tokens.model';
 import { UNIVERSITY_ID_KEY } from 'src/app/core/application/usecases/auth/login.usecase';
-import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -33,8 +34,8 @@ import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
     RouterLink,
     RouterLinkActive,
     CustomButtonComponent,
-    CustomAvatarComponent,
     CustomInputComponent,
+    CustomAvatarComponent,
     AvatarProfilePanelComponent,
   ],
   templateUrl: './dashboard-sidebar.component.html',
@@ -45,6 +46,7 @@ export class DashboardSidebarComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthFacade);
   private readonly carriera = inject(CareerFacade);
+  private readonly fees = inject(FeesFacade);
 
   readonly open = input.required<boolean>();
   readonly toggleSidebar = output<void>();
@@ -75,28 +77,58 @@ export class DashboardSidebarComponent implements OnInit {
 
   readonly pendingSwitch = signal<ProfiloCarriera | null>(null);
   readonly showLoginModal = signal(false);
-
-  crossLoginUsername = '';
+  crossLoginEmail = '';
   crossLoginPassword = '';
   crossLoginLoading = false;
   crossLoginError = '';
+
+  get crossLoginEmailDomains(): string[] {
+    const profilo = this.pendingSwitch();
+    if (!profilo) return [];
+    const uni = UNIVERSITIES.find(u => u.id === profilo.universityId.toLowerCase());
+    return uni?.emailDomains ?? [];
+  }
+
+  get crossLoginEmailPlaceholder(): string {
+    const domains = this.crossLoginEmailDomains;
+    if (!domains.length) return 'username@università.it';
+    const studentDomain = domains.find(d => d.startsWith('studenti.'));
+    return `username@${studentDomain ?? domains[0]}`;
+  }
+
+  get crossLoginEmailError(): string {
+    const value = this.crossLoginEmail.trim();
+    if (!value) return '';
+    const domains = this.crossLoginEmailDomains;
+    if (!domains.length) return '';
+    const domain = value.split('@')[1]?.toLowerCase();
+    if (!domain) return 'Inserisci un indirizzo email valido';
+    const isValid = domains.some(d => d.toLowerCase() === domain);
+    return isValid ? '' : `Email non valida per questo ateneo`;
+  }
+
+  get crossLoginCanSubmit(): boolean {
+    return (
+      !!this.crossLoginEmail.trim() &&
+      !this.crossLoginEmailError &&
+      !!this.crossLoginPassword.trim()
+    );
+  }
 
   ngOnInit(): void {
     this.hasCarriera.set(this.auth.hasCarriera());
     const profili = this.auth.getProfili();
 
-    console.log('PROFILI RAW:', profili);
-    console.log(
-      'PROFILI STUID:',
-      profili.map(p => p.stuId),
-    );
-
     const profiliUnici = profili.filter(
       (p, i, arr) => arr.findIndex(x => x.stuId === p.stuId) === i,
     );
 
-    console.log('PROFILI UNICI:', profiliUnici);
-    console.log('PROFILI UNICI LENGTH:', profiliUnici.length);
+    console.log(
+      'PROFILI LAUREATO:',
+      profiliUnici.map(p => ({ stuId: p.stuId, attivo: p.attivo, laureato: p.laureato })),
+    );
+
+    const currentUniId = (this.auth.getUniversityId() ?? '').toUpperCase();
 
     const tuttiAccounts: AccountEntry[] = profiliUnici.map(p => ({
       id: String(p.stuId),
@@ -105,9 +137,13 @@ export class DashboardSidebarComponent implements OnInit {
       courseLabel: p.corsoNome ?? '',
       courseAcronym: this.tipoCorsoAcronym(p.tipoCorsoCod),
       universityLabel: this.universityLabel(p.universityId),
-      status: p.attivo ? 'active' : ('withdrawn' as AccountStatus),
-      isCurrent: p.universityId.toUpperCase() === (this.auth.getUniversityId() ?? '').toUpperCase(),
-      // rimosso il check p.attivo — il profilo corrente può essere cessato
+      status:
+        p.universityId.toUpperCase() === currentUniId
+          ? p.attivo
+            ? 'active'
+            : 'withdrawn'
+          : ((p.attivo || p.laureato ? 'graduated' : 'withdrawn') as AccountStatus),
+      isCurrent: p.universityId.toUpperCase() === currentUniId,
     }));
 
     const defaultAccount: AccountEntry = {
@@ -133,14 +169,27 @@ export class DashboardSidebarComponent implements OnInit {
       profilo: this.carriera.getPersona(),
       info: this.carriera.getCareerInfo(),
       foto: this.carriera.getAvatar(),
+      tasse: this.fees.getStatus().pipe(catchError(() => of(null))),
     }).subscribe({
-      next: ({ badge: _badge, profilo, info: _info, foto }) => {
+      next: ({ badge: _badge, profilo, info: _info, foto, tasse }) => {
         const fotoUrl = URL.createObjectURL(foto);
         this.fotoUrl.set(fotoUrl);
+
+        const currentProfilo = profiliUnici.find(
+          p => p.universityId.toUpperCase() === currentUniId,
+        );
+        const isCurrentCessato = currentProfilo ? !currentProfilo.attivo : false;
+        const isCurrentLaureato = currentProfilo?.laureato ?? false;
+        const currentStatus =
+          isCurrentCessato && isCurrentLaureato
+            ? 'graduated'
+            : this.statusFromSemaforo(tasse?.semaforo, isCurrentCessato);
+
         const updated = this.accounts().map(a => ({
           ...a,
           avatarSrc: a.isCurrent ? fotoUrl : a.avatarSrc,
           email: a.isCurrent ? (profilo.emailAte ?? '') : '',
+          status: a.isCurrent ? currentStatus : a.status,
         }));
         this.accounts.set(updated);
         const current = updated.find(a => a.isCurrent);
@@ -148,6 +197,20 @@ export class DashboardSidebarComponent implements OnInit {
       },
       error: () => {},
     });
+  }
+
+  private statusFromSemaforo(semaforo: string | undefined, cessato: boolean): AccountStatus {
+    if (cessato) return 'withdrawn';
+    switch (semaforo?.toUpperCase()) {
+      case 'VERDE':
+        return 'active';
+      case 'GIALLO':
+        return 'warning';
+      case 'ROSSO':
+        return 'suspended';
+      default:
+        return 'active';
+    }
   }
 
   onAccountSwitch(account: AccountEntry): void {
@@ -185,11 +248,12 @@ export class DashboardSidebarComponent implements OnInit {
   onLoginModalDismiss(): void {
     this.showLoginModal.set(false);
     this.pendingSwitch.set(null);
+    this.crossLoginError = '';
   }
 
   onCrossLogin(): void {
     const profilo = this.pendingSwitch();
-    if (!profilo || !this.crossLoginUsername || !this.crossLoginPassword) return;
+    if (!profilo || !this.crossLoginEmail || !this.crossLoginPassword) return;
 
     this.crossLoginLoading = true;
     this.crossLoginError = '';
@@ -197,7 +261,7 @@ export class DashboardSidebarComponent implements OnInit {
     this.auth
       .login({
         universityId: profilo.universityId,
-        username: this.crossLoginUsername,
+        username: this.crossLoginEmail.split('@')[0],
         password: this.crossLoginPassword,
       })
       .subscribe({

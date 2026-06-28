@@ -14,6 +14,7 @@ export interface ProfiloCarriera {
   durataAnni: number;
   annoAccademico: number;
   attivo: boolean;
+  laureato: boolean;
 }
 
 export interface AuthTokens {

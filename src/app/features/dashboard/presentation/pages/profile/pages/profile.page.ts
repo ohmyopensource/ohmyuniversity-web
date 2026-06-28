@@ -75,15 +75,12 @@ export class ProfilePage implements OnInit {
         },
       });
     } else {
-      console.log('PROFILO - ramo docente, chiamo getProfilo()');
       this.carriera.getPersona().subscribe({
         next: profilo => {
-          console.log('PROFILO DOCENTE OK:', profilo);
           this.profilo.set(profilo);
           this.loading.set(false);
         },
         error: err => {
-          console.log('PROFILO DOCENTE ERROR:', err.status);
           this.error.set(true);
           this.loading.set(false);
         },

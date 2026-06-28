@@ -113,21 +113,25 @@ export class UniversityLoginFormComponent {
       })
       .subscribe({
         next: () => {
-          this.isLoading = false;
-          this.router.navigate(['/dashboard']);
+          setTimeout(() => {
+            this.isLoading = false;
+            this.router.navigate(['/dashboard']);
+          }, 0);
         },
         error: err => {
-          this.isLoading = false;
-          if (err.status === 401) {
-            this.toast.show('Credenziali non valide. Controlla email e password.', 'error');
-          } else if (err.status === 503) {
-            this.toast.show(
-              'Il servizio universitario non è raggiungibile. Riprova più tardi.',
-              'error',
-            );
-          } else {
-            this.toast.show('Errore durante il login. Riprova più tardi.', 'error');
-          }
+          setTimeout(() => {
+            this.isLoading = false;
+            if (err.status === 401) {
+              this.toast.show('Credenziali non valide. Controlla email e password.', 'error');
+            } else if (err.status === 503) {
+              this.toast.show(
+                'Il servizio universitario non è raggiungibile. Riprova più tardi.',
+                'error',
+              );
+            } else {
+              this.toast.show('Errore durante il login. Riprova più tardi.', 'error');
+            }
+          }, 0);
         },
       });
   }

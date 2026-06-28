@@ -8,6 +8,7 @@ import {
   LucideUser,
   LucideBookOpen,
   LucideHash,
+  LucideBadgeCheck,
 } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
@@ -29,6 +30,7 @@ export class ProfileCourseComponent {
   readonly iconUser = LucideUser;
   readonly iconBookOpen = LucideBookOpen;
   readonly iconHash = LucideHash;
+  readonly iconBadgeCheck = LucideBadgeCheck;
 
   formatData(s: string | null): string {
     if (!s) return '-';
@@ -49,5 +51,20 @@ export class ProfileCourseComponent {
       C: 'neutral',
     };
     return map[staStuCod] ?? 'neutral';
+  }
+
+  isLaureato(): boolean {
+    return this.info().attlauFlg === 1;
+  }
+
+  statoLabel(staStuCod: string): string {
+    if (this.isLaureato()) return 'Laurea Conseguita';
+    const map: Record<string, string> = {
+      A: 'Attivo',
+      S: 'Sospeso',
+      C: 'Cessato',
+      X: 'Cessato',
+    };
+    return map[staStuCod] ?? this.info().statiStuDes ?? 'Cessato';
   }
 }

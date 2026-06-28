@@ -14,12 +14,27 @@
       <div class="flex-1">
         <h2 appText variant="h6" class="m-0">Corso di studi</h2>
       </div>
-      <app-custom-badge
-        [label]="val(info().statiStuDes)"
-        [variant]="statoVariant(info().staStuCod)"
-        size="sm"
-        shape="pill"
-        [dot]="true" />
+      @if (isLaureato()) {
+        <div
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+          style="background: var(--color-primary-light)">
+          <svg
+            [lucideIcon]="iconBadgeCheck"
+            [size]="13"
+            style="color: var(--color-primary-dark)"
+            aria-hidden="true"></svg>
+          <span class="text-[0.72rem] font-semibold" style="color: var(--color-primary-dark)"
+            >Laurea Conseguita</span
+          >
+        </div>
+      } @else {
+        <app-custom-badge
+          [label]="statoLabel(info().staStuCod)"
+          [variant]="statoVariant(info().staStuCod)"
+          size="sm"
+          shape="pill"
+          [dot]="true" />
+      }
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="flex flex-col gap-0.5 sm:col-span-2">
