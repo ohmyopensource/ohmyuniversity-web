@@ -30,6 +30,12 @@ export const APP = {
   },
 } as const;
 
+export const PAGINATION = {
+  defaultPageSize: 10,
+  pageSizeOptions: [10, 25, 50, 100],
+  threshold: 10,
+} as const;
+
 export const TEAM_MEMBERS_INFO = {
   luca: {
     name: 'Luca',

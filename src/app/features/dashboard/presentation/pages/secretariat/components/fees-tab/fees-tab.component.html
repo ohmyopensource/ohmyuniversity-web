@@ -110,70 +110,78 @@
     <!-- Dettaglio rate -->
     <div class="flex flex-col gap-2">
       <h2 appText variant="h6" class="m-0">Dettaglio rate</h2>
-      @for (a of tasse()?.addebiti ?? []; track a.fattId) {
-        @if (a.annullataFlg !== 1) {
-          <app-custom-card
-            [variant]="
-              addebitoStatus(a) === 'paid'
-                ? 'neutral'
-                : addebitoStatus(a) === 'overdue'
-                  ? 'error'
-                  : 'default'
-            "
-            padding="md"
-            shadow="none"
-            [bordered]="true"
-            radius="lg">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div class="flex items-center gap-3 flex-1 min-w-0">
-                <div
-                  class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
-                  [style.background]="feeIconBg(addebitoStatus(a))">
-                  <svg
-                    [lucideIcon]="feeIcon(addebitoStatus(a))"
-                    [size]="15"
-                    [style.color]="feeIconColor(addebitoStatus(a))"
-                    aria-hidden="true"></svg>
+      @for (a of paginatedAddebiti(); track a.fattId) {
+        <app-custom-card
+          [variant]="
+            addebitoStatus(a) === 'paid'
+              ? 'neutral'
+              : addebitoStatus(a) === 'overdue'
+                ? 'error'
+                : 'default'
+          "
+          padding="md"
+          shadow="none"
+          [bordered]="true"
+          radius="lg">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <div
+                class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+                [style.background]="feeIconBg(addebitoStatus(a))">
+                <svg
+                  [lucideIcon]="feeIcon(addebitoStatus(a))"
+                  [size]="15"
+                  [style.color]="feeIconColor(addebitoStatus(a))"
+                  aria-hidden="true"></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 appText variant="h6" class="m-0" style="font-size: 0.85rem">
+                    {{ a.voceDes || a.tassaDes }}
+                  </h3>
+                  <app-custom-badge
+                    [label]="feeStatusLabel(addebitoStatus(a))"
+                    [variant]="feeStatusVariant(addebitoStatus(a))"
+                    size="xs"
+                    shape="pill"
+                    [dot]="true" />
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <h3 appText variant="h6" class="m-0" style="font-size: 0.85rem">
-                      {{ a.voceDes || a.tassaDes }}
-                    </h3>
-                    <app-custom-badge
-                      [label]="feeStatusLabel(addebitoStatus(a))"
-                      [variant]="feeStatusVariant(addebitoStatus(a))"
-                      size="xs"
-                      shape="pill"
-                      [dot]="true" />
-                  </div>
-                  <div class="flex items-center gap-3 mt-0.5 flex-wrap">
-                    @if (addebitoStatus(a) === 'paid' && a.dataPagamento) {
-                      <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
-                        >Pagata il {{ a.dataPagamento }}</span
-                      >
-                    } @else {
-                      <span
-                        class="text-[0.72rem]"
-                        [style.color]="
-                          addebitoStatus(a) === 'overdue'
-                            ? 'var(--color-error-dark)'
-                            : 'var(--color-neutral-400)'
-                        ">
-                        Scadenza: {{ a.scadFattura || a.scadenzaAddebito }}
-                      </span>
-                    }
-                  </div>
+                <div class="flex items-center gap-3 mt-0.5 flex-wrap">
+                  @if (addebitoStatus(a) === 'paid' && a.dataPagamento) {
+                    <span class="text-[0.72rem]" style="color: var(--color-neutral-400)"
+                      >Pagata il {{ a.dataPagamento }}</span
+                    >
+                  } @else {
+                    <span
+                      class="text-[0.72rem]"
+                      [style.color]="
+                        addebitoStatus(a) === 'overdue'
+                          ? 'var(--color-error-dark)'
+                          : 'var(--color-neutral-400)'
+                      ">
+                      Scadenza: {{ a.scadFattura || a.scadenzaAddebito }}
+                    </span>
+                  }
                 </div>
               </div>
-              <span
-                class="text-[1.1rem] font-bold shrink-0"
-                style="color: var(--color-neutral-900)"
-                >{{ formatAmount(a.importoVoce) }}</span
-              >
             </div>
-          </app-custom-card>
-        }
+            <span
+              class="text-[1.1rem] font-bold shrink-0"
+              style="color: var(--color-neutral-900)"
+              >{{ formatAmount(a.importoVoce) }}</span
+            >
+          </div>
+        </app-custom-card>
+      }
+      @if (addebitiTotal() > PAGINATION.threshold) {
+        <app-custom-pagination
+          [totalItems]="addebitiTotal()"
+          [pageSize]="PAGINATION.defaultPageSize"
+          [currentPage]="addebitiPage()"
+          [showPageSizeSelector]="false"
+          [showJumpToPage]="false"
+          size="sm"
+          (pageChange)="onAddebitiPageChange($event)" />
       }
     </div>
 
@@ -201,7 +209,7 @@
           title="Nessuna fattura"
           description="Non sono presenti fatture emesse per il tuo account." />
       } @else {
-        @for (inv of invoices(); track inv.fattId) {
+        @for (inv of paginatedInvoices(); track inv.fattId) {
           <app-custom-card
             [variant]="
               inv.cancelledFlg === 1 ? 'neutral' : inv.paidFlg === 1 ? 'neutral' : 'default'
@@ -275,6 +283,16 @@
             </div>
           </app-custom-card>
         }
+        @if (invoices().length > PAGINATION.threshold) {
+          <app-custom-pagination
+            [totalItems]="invoices().length"
+            [pageSize]="PAGINATION.defaultPageSize"
+            [currentPage]="invoicesPage()"
+            [showPageSizeSelector]="false"
+            [showJumpToPage]="false"
+            size="sm"
+            (pageChange)="onInvoicesPageChange($event)" />
+        }
       }
     </div>
 
@@ -302,7 +320,7 @@
           title="Nessun rimborso"
           description="Non sono presenti rimborsi per il tuo account." />
       } @else {
-        @for (r of refunds(); track r.fattId) {
+        @for (r of paginatedRefunds(); track r.fattId) {
           <app-custom-card
             variant="success"
             padding="md"
@@ -345,6 +363,16 @@
               </span>
             </div>
           </app-custom-card>
+        }
+        @if (refunds().length > PAGINATION.threshold) {
+          <app-custom-pagination
+            [totalItems]="refunds().length"
+            [pageSize]="PAGINATION.defaultPageSize"
+            [currentPage]="refundsPage()"
+            [showPageSizeSelector]="false"
+            [showJumpToPage]="false"
+            size="sm"
+            (pageChange)="onRefundsPageChange($event)" />
         }
       }
     </div>

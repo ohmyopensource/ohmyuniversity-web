@@ -12,7 +12,8 @@ import {
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
 import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
-import { APP } from '@shared/constants';
+import { CustomPaginationComponent } from '@ui/custom-pagination/custom-pagination.component';
+import { APP, PAGINATION } from '@shared/constants';
 import { FeeStatus } from '@shared/types/dashboard/dashboard-secretariat.types';
 import {
   FeeStatusResponse,
@@ -25,7 +26,13 @@ import { FeesFacade } from 'src/app/core/application/facades/fees.facade';
 @Component({
   selector: 'app-fees-tab',
   standalone: true,
-  imports: [LucideDynamicIcon, CustomCardComponent, CustomBadgeComponent, CardStatusComponent],
+  imports: [
+    LucideDynamicIcon,
+    CustomCardComponent,
+    CustomBadgeComponent,
+    CardStatusComponent,
+    CustomPaginationComponent,
+  ],
   templateUrl: './fees-tab.component.html',
 })
 export class FeesTabComponent implements OnInit {
@@ -37,6 +44,7 @@ export class FeesTabComponent implements OnInit {
   private readonly feesFacade = inject(FeesFacade);
 
   readonly APP = APP;
+  readonly PAGINATION = PAGINATION;
   readonly iconCheck = LucideCircleCheck;
   readonly iconAlert = LucideCircleAlert;
   readonly iconClock = LucideClock;
@@ -52,6 +60,30 @@ export class FeesTabComponent implements OnInit {
   readonly refunds = signal<Refund[]>([]);
   readonly refundsLoading = signal(true);
   readonly refundsError = signal(false);
+
+  readonly addebitiPage = signal(1);
+  readonly invoicesPage = signal(1);
+  readonly refundsPage = signal(1);
+
+  readonly addebitiTotal = computed(
+    () => (this.tasse()?.addebiti ?? []).filter(a => a.annullataFlg !== 1).length,
+  );
+
+  readonly paginatedAddebiti = computed(() => {
+    const items = (this.tasse()?.addebiti ?? []).filter(a => a.annullataFlg !== 1);
+    const start = (this.addebitiPage() - 1) * PAGINATION.defaultPageSize;
+    return items.slice(start, start + PAGINATION.defaultPageSize);
+  });
+
+  readonly paginatedInvoices = computed(() => {
+    const start = (this.invoicesPage() - 1) * PAGINATION.defaultPageSize;
+    return this.invoices().slice(start, start + PAGINATION.defaultPageSize);
+  });
+
+  readonly paginatedRefunds = computed(() => {
+    const start = (this.refundsPage() - 1) * PAGINATION.defaultPageSize;
+    return this.refunds().slice(start, start + PAGINATION.defaultPageSize);
+  });
 
   ngOnInit(): void {
     if (!this.hasCarriera()) return;
@@ -77,6 +109,16 @@ export class FeesTabComponent implements OnInit {
         this.refundsLoading.set(false);
       },
     });
+  }
+
+  onAddebitiPageChange(page: number): void {
+    this.addebitiPage.set(page);
+  }
+  onInvoicesPageChange(page: number): void {
+    this.invoicesPage.set(page);
+  }
+  onRefundsPageChange(page: number): void {
+    this.refundsPage.set(page);
   }
 
   readonly totalPaid = computed(() =>
