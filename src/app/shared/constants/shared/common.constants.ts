@@ -31,9 +31,9 @@ export const APP = {
 } as const;
 
 export const PAGINATION = {
-  defaultPageSize: 10,
+  defaultPageSize: 1,
   pageSizeOptions: [10, 25, 50, 100],
-  threshold: 10,
+  threshold: 1,
 } as const;
 
 export const TEAM_MEMBERS_INFO = {

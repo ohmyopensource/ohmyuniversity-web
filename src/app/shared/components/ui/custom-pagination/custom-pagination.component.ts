@@ -108,6 +108,12 @@ export class CustomPaginationComponent implements OnChanges {
   @Input() darkTheme: boolean = false;
 
   /**
+   * Whether to show first/last page buttons on mobile.
+   * Defaults to false to preserve space on small screens.
+   */
+  @Input() showFirstLastOnMobile: boolean = false;
+
+  /**
    * Emitted when page changes.
    * @param page - Selected page (1-based index)
    */
@@ -171,15 +177,18 @@ export class CustomPaginationComponent implements OnChanges {
       return this.range(1, total).map(v => ({ type: 'page', value: v }));
     }
 
-    const half = Math.floor(max / 2);
-    const items: PageItem[] = [];
+    const inner = max - 2;
+    const half = Math.floor(inner / 2);
 
     let start = Math.max(2, current - half);
-    let end = Math.min(total - 1, current + half);
+    let end = start + inner - 1;
 
-    if (current - half <= 2) end = Math.min(total - 1, max - 2);
-    if (current + half >= total - 1) start = Math.max(2, total - max + 2);
+    if (end >= total) {
+      end = total - 1;
+      start = Math.max(2, end - inner + 1);
+    }
 
+    const items: PageItem[] = [];
     items.push({ type: 'page', value: 1 });
 
     if (start > 2) items.push({ type: 'ellipsis', id: 'left' });
@@ -190,7 +199,7 @@ export class CustomPaginationComponent implements OnChanges {
 
     if (end < total - 1) items.push({ type: 'ellipsis', id: 'right' });
 
-    if (total > 1) items.push({ type: 'page', value: total });
+    items.push({ type: 'page', value: total });
 
     return items;
   }
@@ -210,6 +219,7 @@ export class CustomPaginationComponent implements OnChanges {
       [`pagination--${this.emphasis}`]: true,
       'pagination--dark': this.darkTheme,
       'pagination--disabled': this.disabled,
+      'pagination--hide-first-last-mobile': !this.showFirstLastOnMobile,
     };
   }
 

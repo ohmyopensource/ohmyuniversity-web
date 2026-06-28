@@ -9,19 +9,6 @@ jump-to-page input.
   [ngClass]="hostClasses"
   [attr.aria-label]="'Navigazione pagine'"
   [attr.aria-disabled]="disabled ? 'true' : null">
-  <!-- Info range -->
-  @if (showInfo && totalItems > 0) {
-    <span class="pagination__info">
-      <span class="pagination__info-range">{{ rangeStart }}–{{ rangeEnd }}</span>
-      di
-      <span class="pagination__info-total">{{ totalItems }}</span>
-    </span>
-  }
-
-  @if (showInfo && totalItems === 0) {
-    <span class="pagination__info pagination__info--empty"> Nessun risultato </span>
-  }
-
   <!-- Page size selector -->
   @if (showPageSizeSelector) {
     <label class="pagination__size-label">
@@ -43,7 +30,7 @@ jump-to-page input.
     <!-- First page -->
     @if (showFirstLast) {
       <button
-        class="pagination__btn pagination__btn--icon"
+        class="pagination__btn pagination__btn--icon pagination__btn--first-last"
         type="button"
         [disabled]="isFirst || disabled"
         [attr.aria-label]="'Prima pagina'"
@@ -103,7 +90,7 @@ jump-to-page input.
     <!-- Last page -->
     @if (showFirstLast) {
       <button
-        class="pagination__btn pagination__btn--icon"
+        class="pagination__btn pagination__btn--icon pagination__btn--first-last"
         type="button"
         [disabled]="isLast || disabled"
         [attr.aria-label]="'Ultima pagina'"
@@ -128,5 +115,18 @@ jump-to-page input.
         (blur)="onJump()"
         [attr.aria-label]="'Vai alla pagina'" />
     </label>
+  }
+
+  <!-- Info range -->
+  @if (showInfo && totalItems > 0) {
+    <span class="pagination__info">
+      <span class="pagination__info-range">{{ rangeStart }}–{{ rangeEnd }}</span>
+      di
+      <span class="pagination__info-total">{{ totalItems }}</span>
+    </span>
+  }
+
+  @if (showInfo && totalItems === 0) {
+    <span class="pagination__info pagination__info--empty"> Nessun risultato </span>
   }
 </nav>

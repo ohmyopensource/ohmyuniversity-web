@@ -174,14 +174,16 @@
         </app-custom-card>
       }
       @if (addebitiTotal() > PAGINATION.threshold) {
-        <app-custom-pagination
-          [totalItems]="addebitiTotal()"
-          [pageSize]="PAGINATION.defaultPageSize"
-          [currentPage]="addebitiPage()"
-          [showPageSizeSelector]="false"
-          [showJumpToPage]="false"
-          size="sm"
-          (pageChange)="onAddebitiPageChange($event)" />
+        <div class="flex justify-center">
+          <app-custom-pagination
+            [totalItems]="addebitiTotal()"
+            [pageSize]="PAGINATION.defaultPageSize"
+            [currentPage]="addebitiPage()"
+            [showPageSizeSelector]="false"
+            [showJumpToPage]="false"
+            size="sm"
+            (pageChange)="onAddebitiPageChange($event)" />
+        </div>
       }
     </div>
 
@@ -284,14 +286,16 @@
           </app-custom-card>
         }
         @if (invoices().length > PAGINATION.threshold) {
-          <app-custom-pagination
-            [totalItems]="invoices().length"
-            [pageSize]="PAGINATION.defaultPageSize"
-            [currentPage]="invoicesPage()"
-            [showPageSizeSelector]="false"
-            [showJumpToPage]="false"
-            size="sm"
-            (pageChange)="onInvoicesPageChange($event)" />
+          <div class="flex justify-center">
+            <app-custom-pagination
+              [totalItems]="invoices().length"
+              [pageSize]="PAGINATION.defaultPageSize"
+              [currentPage]="invoicesPage()"
+              [showPageSizeSelector]="false"
+              [showJumpToPage]="false"
+              size="sm"
+              (pageChange)="onInvoicesPageChange($event)" />
+          </div>
         }
       }
     </div>
@@ -365,14 +369,16 @@
           </app-custom-card>
         }
         @if (refunds().length > PAGINATION.threshold) {
-          <app-custom-pagination
-            [totalItems]="refunds().length"
-            [pageSize]="PAGINATION.defaultPageSize"
-            [currentPage]="refundsPage()"
-            [showPageSizeSelector]="false"
-            [showJumpToPage]="false"
-            size="sm"
-            (pageChange)="onRefundsPageChange($event)" />
+          <div class="flex justify-center">
+            <app-custom-pagination
+              [totalItems]="refunds().length"
+              [pageSize]="PAGINATION.defaultPageSize"
+              [currentPage]="refundsPage()"
+              [showPageSizeSelector]="false"
+              [showJumpToPage]="false"
+              size="sm"
+              (pageChange)="onRefundsPageChange($event)" />
+          </div>
         }
       }
     </div>
