@@ -272,6 +272,10 @@
   min-width: 2em;
   padding: 0.3em 0.45em;
 }
+.pagination--sm .pagination__size-select,
+.pagination--sm .pagination__jump-input {
+  font-size: 0.8rem;
+}
 
 .pagination--md {
   font-size: 0.875rem;
@@ -358,74 +362,74 @@
 
 /* Emphasis Variants - Soft */
 .pagination--soft .pagination__btn--active {
-  background: var(--color-primary-light) !important;
-  border-color: var(--color-primary-dark) !important;
-  color: var(--color-primary-text) !important;
-  box-shadow: none !important;
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-dark);
+  color: var(--color-primary-text);
+  box-shadow: none;
   cursor: default;
   pointer-events: none;
 }
 .pagination--soft.pagination--secondary .pagination__btn--active {
-  background: var(--color-secondary-light) !important;
-  border-color: var(--color-secondary-dark) !important;
-  color: var(--color-secondary-text) !important;
+  background: var(--color-secondary-light);
+  border-color: var(--color-secondary-dark);
+  color: var(--color-secondary-text);
 }
 .pagination--soft.pagination--tertiary .pagination__btn--active {
-  background: var(--color-tertiary-light) !important;
-  border-color: var(--color-tertiary-dark) !important;
-  color: var(--color-tertiary-text) !important;
+  background: var(--color-tertiary-light);
+  border-color: var(--color-tertiary-dark);
+  color: var(--color-tertiary-text);
 }
 .pagination--soft.pagination--success .pagination__btn--active {
-  background: var(--color-success-light) !important;
-  border-color: var(--color-success-dark) !important;
-  color: var(--color-success-text) !important;
+  background: var(--color-success-light);
+  border-color: var(--color-success-dark);
+  color: var(--color-success-text);
 }
 .pagination--soft.pagination--warning .pagination__btn--active {
-  background: var(--color-warning-light) !important;
-  border-color: var(--color-warning-dark) !important;
-  color: var(--color-warning-text) !important;
+  background: var(--color-warning-light);
+  border-color: var(--color-warning-dark);
+  color: var(--color-warning-text);
 }
 .pagination--soft.pagination--error .pagination__btn--active {
-  background: var(--color-error-light) !important;
-  border-color: var(--color-error-dark) !important;
-  color: var(--color-error-text) !important;
+  background: var(--color-error-light);
+  border-color: var(--color-error-dark);
+  color: var(--color-error-text);
 }
 .pagination--soft.pagination--info .pagination__btn--active {
-  background: var(--color-info-light) !important;
-  border-color: var(--color-info-dark) !important;
-  color: var(--color-info-text) !important;
+  background: var(--color-info-light);
+  border-color: var(--color-info-dark);
+  color: var(--color-info-text);
 }
 
 /* Emphasis Variants - Minimal */
 .pagination--minimal .pagination__btn--active {
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  color: var(--color-primary-dark) !important;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--color-primary-dark);
   font-weight: 800;
   cursor: default;
   pointer-events: none;
 }
 .pagination--minimal.pagination--secondary .pagination__btn--active {
-  color: var(--color-secondary-dark) !important;
+  color: var(--color-secondary-dark);
 }
 .pagination--minimal.pagination--tertiary .pagination__btn--active {
-  color: var(--color-tertiary-dark) !important;
+  color: var(--color-tertiary-dark);
 }
 .pagination--minimal.pagination--success .pagination__btn--active {
-  color: var(--color-success-dark) !important;
+  color: var(--color-success-dark);
 }
 .pagination--minimal.pagination--warning .pagination__btn--active {
-  color: var(--color-warning-dark) !important;
+  color: var(--color-warning-dark);
 }
 .pagination--minimal.pagination--error .pagination__btn--active {
-  color: var(--color-error-dark) !important;
+  color: var(--color-error-dark);
 }
 .pagination--minimal.pagination--info .pagination__btn--active {
-  color: var(--color-info-dark) !important;
+  color: var(--color-info-dark);
 }
 
 /* Emphasis Variants - Dark + Minimal */
 .pagination--dark.pagination--minimal .pagination__btn--active {
-  color: var(--color-primary-light) !important;
+  color: var(--color-primary-light);
 }

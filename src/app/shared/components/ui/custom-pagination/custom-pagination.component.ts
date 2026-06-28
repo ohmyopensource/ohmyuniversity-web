@@ -219,13 +219,11 @@ export class CustomPaginationComponent implements OnChanges {
    * @param changes - Angular SimpleChanges object
    */
   ngOnChanges(changes: SimpleChanges): void {
-    // Se cambiano i dati, resetta il jump input
     if (changes['totalItems'] || changes['pageSize']) {
       this.jumpValue = null;
     }
-    // Clamp currentPage entro i limiti validi
     if (this.currentPage > this.totalPages) {
-      this.goTo(this.totalPages);
+      setTimeout(() => this.goTo(this.totalPages));
     }
   }
 
