@@ -1,5 +1,5 @@
 import { Component, ViewChild, signal, inject, OnInit, OnDestroy } from '@angular/core';
-import { RouterLink, Router, NavigationEnd } from '@angular/router';
+import { RouterLink, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { filter, Subscription } from 'rxjs';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
@@ -25,33 +25,8 @@ import {
 } from '@lucide/angular';
 import { API } from 'src/app/core/infrastructure/api/api-endpoints';
 import { UniversityConfigResponse } from 'src/app/core/domain/models/career/university-config.model';
-
-export interface Notification {
-  id: string;
-  title: string;
-  body: string;
-  time: string;
-  read: boolean;
-  icon: any;
-  color: string;
-  hovered?: boolean;
-}
-
-export interface BreadcrumbItem {
-  label: string;
-  path: string;
-  hovered?: boolean;
-}
-
-const SEGMENT_LABELS: Record<string, string> = {
-  dashboard: 'Dashboard',
-  didattica: 'Didattica',
-  'sviluppi-futuri': 'Sviluppi Futuri',
-  partner: 'Partner',
-  messaggi: 'Messaggi',
-  impostazioni: 'Impostazioni',
-  profilo: 'Profilo',
-};
+import { SEGMENT_LABELS, TAB_LABELS } from '@shared/constants';
+import { BreadcrumbItem, Notification } from '@shared/types';
 
 @Component({
   selector: 'app-dashboard-topbar',
@@ -67,6 +42,7 @@ const SEGMENT_LABELS: Record<string, string> = {
 })
 export class DashboardTopbarComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly http = inject(HttpClient);
   private sub!: Subscription;
@@ -211,6 +187,7 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
     const rest = segments.slice(1);
     const crumbs: BreadcrumbItem[] = [];
     let accumulated = '/dashboard';
+
     for (const seg of rest) {
       accumulated += '/' + seg;
       crumbs.push({
@@ -219,6 +196,23 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
         hovered: false,
       });
     }
+
+    const urlTree = this.router.parseUrl(url);
+    const tab = urlTree.queryParams['tab'];
+    if (tab && TAB_LABELS[tab]) {
+      crumbs.push({
+        label: TAB_LABELS[tab],
+        path: accumulated,
+        hovered: false,
+      });
+    } else if (crumbs.length > 0) {
+      crumbs.push({
+        label: 'Panoramica',
+        path: accumulated,
+        hovered: false,
+      });
+    }
+
     this.breadcrumbs.set(crumbs);
   }
 

@@ -8,6 +8,7 @@ export * from './dashboard/dashboard-home.types';
 export * from './dashboard/dashboard-profile.types';
 export * from './dashboard/dashboard-schedule.types';
 export * from './dashboard/dashboard-secretariat.types';
+export * from './dashboard/dashboard-topbar.types';
 export * from './dashboard/dashboard-transport.types';
 export * from './dashboard/university-contacts.types';
 

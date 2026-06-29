@@ -323,7 +323,7 @@ export const UNIVERSITIES: University[] = [
     id: 'unibo',
     name: 'Università degli Studi di Bologna',
     shortName: 'UniBo',
-    emailDomains: ['unibo.it', 'studio.unibo.it'],
+    emailDomains: ['unibo.it', 'studio.unibo.it', 'esterni.unibo.it'],
     city: 'Bologna',
     type: 'statale',
     campuses: [
@@ -1560,15 +1560,6 @@ export const UNIVERSITIES: University[] = [
         address: 'Piazza degli Strozzi, 50123 Firenze',
       },
     ],
-  },
-  {
-    id: 'unibo-proprietary',
-    name: 'Università degli Studi di Bologna',
-    shortName: 'UniBo',
-    emailDomains: ['unibo.it', 'studio.unibo.it'],
-    city: 'Bologna',
-    type: 'statale',
-    campuses: [],
   },
 
   // Private Universities

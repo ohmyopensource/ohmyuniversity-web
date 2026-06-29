@@ -25,15 +25,15 @@
         (tabChange)="onTabChange($event)" />
     </div>
 
-    @if (activeTab() === 'informazioni') {
+    @if (activeTab() === 'information') {
       <app-profile-information [profilo]="profilo()!" />
     }
 
-    @if (activeTab() === 'corso' && hasCarriera && carrieraInfo()) {
+    @if (activeTab() === 'study-plan' && hasCarriera && carrieraInfo()) {
       <app-profile-course [info]="carrieraInfo()!" />
     }
 
-    @if (activeTab() === 'sicurezza') {
+    @if (activeTab() === 'security') {
       <app-profile-security />
     }
   }

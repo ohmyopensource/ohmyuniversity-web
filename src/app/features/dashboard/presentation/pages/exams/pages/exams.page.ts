@@ -10,6 +10,7 @@ import { ExamListComponent } from '../components/exam-list/exam-list.component';
 import { QuestionnaireListComponent } from '../components/questionnaire-list/questionnaire-list.component';
 import { forkJoin } from 'rxjs';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-exams',
@@ -26,6 +27,8 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 export class ExamsPage implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly carriera = inject(CareerFacade);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly tabs: TabItem[] = [
     { id: 'exams', label: 'Appelli', icon: LucideCalendarDays },
@@ -43,6 +46,18 @@ export class ExamsPage implements OnInit {
   readonly exams = signal<Exam[]>([]);
 
   ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab) {
+      this.activeTab.set(tab);
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: this.activeTab() },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
+
     forkJoin({
       appelli: this.carriera.getBookableSessions(),
       prenotazioni: this.carriera.getBookings(),
@@ -113,6 +128,11 @@ export class ExamsPage implements OnInit {
 
   onTabChange(id: string): void {
     this.activeTab.set(id);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onBookExam(exam: Exam): void {

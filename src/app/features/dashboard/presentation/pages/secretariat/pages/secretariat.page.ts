@@ -1,4 +1,5 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardHeaderComponent } from '@ui/dashboard-header/dashboard-header.component';
 import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
 import { ToastService } from '@ui/custom-toast/toast.service';
@@ -53,6 +54,8 @@ export class SecretariatPage implements OnInit {
   readonly lucideAlertTriangle = LucideTriangleAlert;
   readonly APP = APP;
 
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly fees = inject(FeesFacade);
   private readonly internships = inject(InternshipsFacade);
@@ -121,6 +124,11 @@ export class SecretariatPage implements OnInit {
   onTabChange(id: string): void {
     this.activeTab.set(id);
     this.searchValue.set('');
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onSearchChange(val: string | number): void {
@@ -136,6 +144,18 @@ export class SecretariatPage implements OnInit {
   }
 
   ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab) {
+      this.activeTab.set(tab);
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: this.activeTab() },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
+
     if (!this.hasCarriera) return;
 
     this.fees.getStatus().subscribe({

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { DashboardHeaderComponent } from '@ui/dashboard-header/dashboard-header.component';
 import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-container.component';
 import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
@@ -13,6 +13,7 @@ import { TransportRoutesTabComponent } from '../components/transport-routes-tab/
 import { TransportSearchCardComponent } from '../components/transport-search-card/transport-search-card.component';
 import { TransportCompaniesTabComponent } from '../components/transport-companies-tab/transport-companies-tab.component';
 import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-transport',
@@ -28,7 +29,10 @@ import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
   ],
   templateUrl: './transport.page.html',
 })
-export class TransportPage {
+export class TransportPage implements OnInit {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   readonly lucideAlertTriangle = LucideTriangleAlert;
 
   readonly APP = APP;
@@ -47,8 +51,27 @@ export class TransportPage {
 
   activeTab = signal<string>('public');
 
+  ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab) {
+      this.activeTab.set(tab);
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: this.activeTab() },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
+  }
+
   onTabChange(id: string): void {
     this.activeTab.set(id);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   openGoogleMaps(from: string = ''): void {

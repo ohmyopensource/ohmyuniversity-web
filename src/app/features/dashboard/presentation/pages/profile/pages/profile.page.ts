@@ -18,6 +18,7 @@ import { CareerInfoResponse } from '../../../../../../core/domain/models/career/
 import { forkJoin } from 'rxjs';
 import { ProfileCourseComponent } from '../components/profile-course/profile-course.component';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -37,28 +38,42 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 export class ProfilePage implements OnInit {
   private readonly carriera = inject(CareerFacade);
   private readonly auth = inject(AuthFacade);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly lucideAlertTriangle = LucideTriangleAlert;
   readonly hasCarriera = this.auth.hasCarriera();
 
   readonly tabs = computed<TabItem[]>(() => {
     const base: TabItem[] = [
-      { id: 'informazioni', label: 'Informazioni', icon: LucideUser },
-      { id: 'sicurezza', label: 'Sicurezza', icon: LucideShield },
+      { id: 'information', label: 'Informazioni', icon: LucideUser },
+      { id: 'security', label: 'Sicurezza', icon: LucideShield },
     ];
     if (this.hasCarriera) {
-      base.splice(1, 0, { id: 'corso', label: 'Corso di studi', icon: LucideGraduationCap });
+      base.splice(1, 0, { id: 'study-plan', label: 'Corso di studi', icon: LucideGraduationCap });
     }
     return base;
   });
 
-  readonly activeTab = signal<string>('informazioni');
+  readonly activeTab = signal<string>('information');
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly profilo = signal<PersonaResponse | null>(null);
   readonly carrieraInfo = signal<CareerInfoResponse | null>(null);
 
   ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab) {
+      this.activeTab.set(tab);
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: this.activeTab() },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
+
     if (this.hasCarriera) {
       forkJoin({
         profilo: this.carriera.getPersona(),
@@ -90,5 +105,10 @@ export class ProfilePage implements OnInit {
 
   onTabChange(id: string): void {
     this.activeTab.set(id);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: id },
+      queryParamsHandling: 'merge',
+    });
   }
 }
