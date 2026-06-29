@@ -12,6 +12,7 @@ import {
   BookingsResponse,
 } from '../../domain/models/career/sessions.model';
 import { SurveysResponse } from '../../domain/models/career/surveys.model';
+import { BookExamRequest, CancelBookingRequest } from '../../domain/models/career/book-exam.model';
 
 @Injectable()
 export class ExamsApiRepository extends ExamsRepository {
@@ -36,5 +37,26 @@ export class ExamsApiRepository extends ExamsRepository {
 
   getSurveys(): Observable<SurveysResponse> {
     return this.http.get<SurveysResponse>(API.exams.surveys);
+  }
+
+  bookExam(request: BookExamRequest): Observable<void> {
+    const params = new HttpParams()
+      .set('cdsId', request.cdsId.toString())
+      .set('adId', request.adId.toString())
+      .set('appId', request.appId.toString())
+      .set('adsceId', request.adsceId.toString());
+    return this.http.post<void>(API.exams.bookings, { password: request.password }, { params });
+  }
+
+  cancelBooking(request: CancelBookingRequest): Observable<void> {
+    const params = new HttpParams()
+      .set('cdsId', request.cdsId.toString())
+      .set('adId', request.adId.toString())
+      .set('appId', request.appId.toString());
+    return this.http.post<void>(
+      API.exams.cancelBooking,
+      { password: request.password },
+      { params },
+    );
   }
 }

@@ -30,6 +30,9 @@ import { GetAvatarUseCase } from '../usecases/profile/get-avatar.usecase';
 import { GetBadgeUseCase } from '../usecases/profile/get-badge.usecase';
 import { GetCareerInfoUseCase } from '../usecases/profile/get-career-info.usecase';
 import { GetPersonaUseCase } from '../usecases/profile/get-persona.usecase';
+import { BookExamUseCase } from '../usecases/exams/book-exam.usecase';
+import { CancelBookingUseCase } from '../usecases/exams/cancel-booking.usecase';
+import { BookExamRequest, CancelBookingRequest } from '../../domain/models/career/book-exam.model';
 
 @Injectable()
 export class CareerFacade {
@@ -46,6 +49,8 @@ export class CareerFacade {
   private readonly getBookingsUseCase = inject(GetBookingsUseCase);
   private readonly getLegacyBookingsUseCase = inject(GetLegacyBookingsUseCase);
   private readonly getSurveysUseCase = inject(GetSurveysUseCase);
+  private readonly bookExamUseCase = inject(BookExamUseCase);
+  private readonly cancelBookingUseCase = inject(CancelBookingUseCase);
 
   getTranscript(): Observable<Exam[]> {
     return this.getTranscriptUseCase.execute();
@@ -97,5 +102,13 @@ export class CareerFacade {
 
   getSurveys(): Observable<SurveysResponse> {
     return this.getSurveysUseCase.execute();
+  }
+
+  bookExam(request: BookExamRequest): Observable<void> {
+    return this.bookExamUseCase.execute(request);
+  }
+
+  cancelBooking(request: CancelBookingRequest): Observable<void> {
+    return this.cancelBookingUseCase.execute(request);
   }
 }

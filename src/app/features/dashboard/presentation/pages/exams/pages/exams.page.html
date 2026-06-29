@@ -37,4 +37,109 @@
   @if (activeTab() === 'questionnaires') {
     <app-questionnaire-list />
   }
+
+  <!-- Modal 1: Confirm Reservation -->
+  <app-custom-modal
+    #confirmModal
+    type="center"
+    size="sm"
+    title="Conferma prenotazione"
+    [showCloseButton]="true">
+    <div class="flex flex-col gap-3">
+      <div
+        class="flex items-center justify-center w-12 h-12 rounded-xl mx-auto"
+        style="background: var(--color-primary-light)">
+        <svg
+          [lucideIcon]="iconCalendarCheck"
+          [size]="22"
+          style="color: var(--color-primary-dark)"
+          aria-hidden="true"></svg>
+      </div>
+      <p appText variant="body-sm" class="m-0 text-center" style="color: var(--color-neutral-700)">
+        Vuoi prenotarti all'appello di
+        <span class="font-semibold" style="color: var(--color-neutral-900)">{{
+          selectedExam()?.courseName
+        }}</span
+        >?
+      </p>
+    </div>
+    <div footer class="flex items-center justify-end gap-2 w-full">
+      <app-custom-button variant="ghost" size="sm" label="No" (clicked)="onConfirmNo()" />
+      <app-custom-button
+        variant="primary"
+        size="sm"
+        label="Sì, prenota"
+        (clicked)="onConfirmYes()" />
+    </div>
+  </app-custom-modal>
+
+  <!-- Modal 2: Password Validation -->
+  <app-custom-modal
+    #passwordModal
+    type="center"
+    size="sm"
+    title="Conferma con la password"
+    subtitle="Per prenotare l'appello reinserisci la password del tuo account."
+    [persistent]="bookingLoading()"
+    [showCloseButton]="true">
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-1">
+        <span
+          class="text-[0.72rem] font-semibold uppercase tracking-wide"
+          style="color: var(--color-neutral-400)"
+          >Account</span
+        >
+        <div
+          class="flex items-center gap-2 px-3 py-2 rounded-lg"
+          style="background: var(--color-neutral-100)">
+          <svg
+            [lucideIcon]="iconLock"
+            [size]="14"
+            style="color: var(--color-neutral-400)"
+            aria-hidden="true"></svg>
+          <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">{{
+            userEmail()
+          }}</span>
+        </div>
+      </div>
+
+      <app-custom-input
+        type="password"
+        label="Password"
+        placeholder="Inserisci la tua password"
+        [fullWidth]="true"
+        size="md"
+        autocomplete="current-password"
+        [disabled]="bookingLoading()"
+        (inputChange)="onPasswordChange($event)"
+        (inputEnter)="onSubmitBooking()" />
+
+      <div
+        class="flex items-start gap-2 px-3 py-2 rounded-lg"
+        style="background: var(--color-warning-light)">
+        <svg
+          [lucideIcon]="iconAlert"
+          [size]="13"
+          style="color: var(--color-warning-dark); margin-top: 1px"
+          aria-hidden="true"></svg>
+        <span class="text-[0.72rem]" style="color: var(--color-warning-dark)">
+          La password non viene salvata. Viene usata solo per autenticare questa prenotazione.
+        </span>
+      </div>
+    </div>
+    <div footer class="flex items-center justify-end gap-2 w-full">
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        label="Annulla"
+        [disabled]="bookingLoading()"
+        (clicked)="passwordModal.close('button')" />
+      <app-custom-button
+        variant="primary"
+        size="sm"
+        [label]="bookingLoading() ? 'Prenotazione...' : 'Prenota'"
+        [disabled]="bookingLoading() || !bookingPassword()"
+        (clicked)="onSubmitBooking()" />
+    </div>
+  </app-custom-modal>
 </app-dashboard-container>

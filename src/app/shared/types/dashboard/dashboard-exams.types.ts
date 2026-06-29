@@ -24,6 +24,10 @@ export interface Exam extends CourseEvent<BookingExamStatus> {
   spotsLeft: number;
   cfu: number;
   year: number;
+  cdsId?: number;
+  adId?: number;
+  appId?: number;
+  adsceId?: number;
 }
 
 /** Course evaluation questionnaire to be filled out by a deadline */

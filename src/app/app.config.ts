@@ -56,6 +56,8 @@ import { GetBookableSessionsUseCase } from './core/application/usecases/exams/ge
 import { GetBookingsUseCase } from './core/application/usecases/exams/get-bookings.usecase';
 import { GetLegacyBookingsUseCase } from './core/application/usecases/exams/get-legacy-bookings.usecase';
 import { GetSurveysUseCase } from './core/application/usecases/exams/get-surveys.usecase';
+import { BookExamUseCase } from './core/application/usecases/exams/book-exam.usecase';
+import { CancelBookingUseCase } from './core/application/usecases/exams/cancel-booking.usecase';
 
 // Fees usecases
 import { GetFeesStatusUseCase } from './core/application/usecases/fees/get-fees-status.usecase';
@@ -193,6 +195,8 @@ export const appConfig: ApplicationConfig = {
     GetBookingsUseCase,
     GetLegacyBookingsUseCase,
     GetSurveysUseCase,
+    BookExamUseCase,
+    CancelBookingUseCase,
 
     // Fees
     GetFeesStatusUseCase,

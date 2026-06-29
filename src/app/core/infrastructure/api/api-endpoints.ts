@@ -27,6 +27,7 @@ export const API = {
     sessions: `${BASE}/v1/exams/sessions`,
     bookable: `${BASE}/v1/exams/bookable`,
     bookings: `${BASE}/v1/exams/bookings`,
+    cancelBooking: `${BASE}/v1/exams/bookings/cancel`,
     legacyBookings: `${BASE}/v1/exams/bookings/legacy`,
     surveys: `${BASE}/v1/exams/surveys`,
   },

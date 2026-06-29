@@ -11,6 +11,16 @@ import { QuestionnaireListComponent } from '../components/questionnaire-list/que
 import { forkJoin } from 'rxjs';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CustomModalComponent } from '@ui/custom-modal/custom-modal.component';
+import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
+import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
+import {
+  LucideDynamicIcon,
+  LucideCalendarCheck,
+  LucideLock,
+  LucideTriangleAlert,
+} from '@lucide/angular';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-exams',
@@ -21,6 +31,10 @@ import { Router, ActivatedRoute } from '@angular/router';
     CustomTabsComponent,
     ExamListComponent,
     QuestionnaireListComponent,
+    CustomModalComponent,
+    CustomButtonComponent,
+    CustomInputComponent,
+    LucideDynamicIcon,
   ],
   templateUrl: './exams.page.html',
 })
@@ -44,6 +58,17 @@ export class ExamsPage implements OnInit {
   readonly examsLoading = signal(true);
   readonly examsError = signal(false);
   readonly exams = signal<Exam[]>([]);
+  @ViewChild('confirmModal') confirmModal!: CustomModalComponent;
+  @ViewChild('passwordModal') passwordModal!: CustomModalComponent;
+
+  readonly iconCalendarCheck = LucideCalendarCheck;
+  readonly iconLock = LucideLock;
+  readonly iconAlert = LucideTriangleAlert;
+
+  readonly userEmail = signal<string>('');
+  readonly selectedExam = signal<Exam | null>(null);
+  readonly bookingPassword = signal<string>('');
+  readonly bookingLoading = signal(false);
 
   ngOnInit(): void {
     const tab = this.route.snapshot.queryParamMap.get('tab');
@@ -63,8 +88,10 @@ export class ExamsPage implements OnInit {
       prenotazioni: this.carriera.getBookings(),
       piano: this.carriera.getStudyPlan(),
       suggeriti: this.carriera.getRecommendations(),
+      info: this.carriera.getCareerInfo(),
     }).subscribe({
-      next: ({ appelli, prenotazioni, piano, suggeriti }) => {
+      next: ({ appelli, prenotazioni, piano, suggeriti, info }) => {
+        this.userEmail.set(info.emailAte ?? info.email ?? 'N/D');
         const pianoMap = new Map<string, { cfu: number; annoCorso: number }>();
         for (const riga of piano.righe ?? []) {
           if (riga.adCod)
@@ -144,10 +171,94 @@ export class ExamsPage implements OnInit {
       this.toast.error(`Le iscrizioni per ${exam.courseName} sono chiuse.`, { duration: 4000 });
       return;
     }
-    this.toast.success(
-      `Prenotazione per ${exam.courseName} registrata. Riceverai una conferma via email.`,
-      { duration: 5000 },
-    );
+    this.selectedExam.set(exam);
+    this.confirmModal.open();
+  }
+
+  onConfirmYes(): void {
+    this.confirmModal.close('button');
+    this.bookingPassword.set('');
+    this.passwordModal.open();
+  }
+
+  onConfirmNo(): void {
+    this.confirmModal.close('button');
+    this.selectedExam.set(null);
+  }
+
+  onPasswordChange(val: string | number): void {
+    this.bookingPassword.set(String(val));
+  }
+
+  onSubmitBooking(): void {
+    const exam = this.selectedExam();
+    const password = this.bookingPassword();
+
+    if (!exam || !password) {
+      return;
+    }
+
+    if (exam.cdsId == null || exam.adId == null || exam.appId == null || exam.adsceId == null) {
+      this.toast.error('Dati appello incompleti, impossibile prenotare.', { duration: 4000 });
+      return;
+    }
+
+    this.bookingLoading.set(true);
+
+    this.carriera
+      .bookExam({
+        cdsId: exam.cdsId,
+        adId: exam.adId,
+        appId: exam.appId,
+        adsceId: exam.adsceId,
+        password,
+      })
+      .subscribe({
+        next: () => {
+          this.bookingLoading.set(false);
+          this.passwordModal.close('button');
+          this.bookingPassword.set('');
+          this.toast.success(`Prenotazione per ${exam.courseName} effettuata con successo.`, {
+            duration: 5000,
+          });
+          this.exams.update(list =>
+            list.map(e => (e.id === exam.id ? { ...e, status: 'booked' as BookingExamStatus } : e)),
+          );
+          this.selectedExam.set(null);
+        },
+        error: err => {
+          this.bookingLoading.set(false);
+
+          let msg = 'Prenotazione non riuscita. Verifica la password e riprova.';
+          const raw = err?.error;
+
+          if (raw) {
+            let parsed = raw;
+            if (typeof raw === 'string') {
+              try {
+                parsed = JSON.parse(raw);
+              } catch {
+                parsed = raw;
+              }
+            }
+            if (parsed && typeof parsed === 'object' && parsed.retErrMsg) {
+              msg = parsed.retErrMsg;
+            } else if (typeof parsed === 'string' && parsed.trim().length > 0) {
+              msg = parsed;
+            }
+          }
+
+          if (msg.toLowerCase().includes('questionario')) {
+            msg = `Per prenotarti devi prima compilare il questionario di valutazione della didattica di ${exam.courseName}. Lo trovi nel tab "Questionari".`;
+          }
+
+          if (err?.status === 401) {
+            msg = 'Password errata. Riprova.';
+          }
+
+          this.toast.error(msg, { duration: 7000 });
+        },
+      });
   }
 
   private mapAppello(
@@ -182,7 +293,7 @@ export class ExamsPage implements OnInit {
       status = 'booked';
     } else if (a.stato === 'S') {
       status = 'closed';
-    } else if (a.stato === 'I') {
+    } else if (a.stato === 'P' || a.stato === 'I') {
       if (dataFineIscr && dataFineIscr < oggi) {
         status = 'closed';
       } else if (dataInizioIscr && dataInizioIscr > oggi) {
@@ -213,6 +324,10 @@ export class ExamsPage implements OnInit {
       spotsTotal: 0,
       status,
       dataInizioIscr: this.formatData(a.dataInizioIscr),
+      cdsId: a.cdsId,
+      adId: a.adId,
+      appId: a.appId,
+      adsceId: a.adsceId,
     } as any;
   }
 
