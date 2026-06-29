@@ -51,6 +51,22 @@ export class ExamListComponent {
     );
   });
 
+  readonly examsByYear = computed(() => {
+    const groups = new Map<number, Exam[]>();
+    for (const exam of this.filteredExams()) {
+      const year = exam.year ?? 0;
+      if (!groups.has(year)) groups.set(year, []);
+      groups.get(year)!.push(exam);
+    }
+    return Array.from(groups.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([year, exams]) => ({
+        year,
+        yearLabel: year > 0 ? `${year}° Anno` : 'Anno non specificato',
+        exams,
+      }));
+  });
+
   onSearchChange(val: string | number): void {
     this.searchValue.set(String(val));
   }

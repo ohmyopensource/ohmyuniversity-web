@@ -62,8 +62,17 @@
     }
 
     <!-- List -->
-    @for (exam of filteredExams(); track exam.id) {
-      <app-exam-card [exam]="exam" (bookClicked)="bookClicked.emit($event)" />
+    @for (group of examsByYear(); track group.year) {
+      <div class="flex flex-col gap-2">
+        <span
+          class="text-[0.68rem] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md self-start"
+          style="background: var(--color-neutral-200); color: var(--color-neutral-500)">
+          {{ group.yearLabel }}
+        </span>
+        @for (exam of group.exams; track exam.id) {
+          <app-exam-card [exam]="exam" (bookClicked)="bookClicked.emit($event)" />
+        }
+      </div>
     }
 
     <!-- Disclaimer -->
