@@ -38,6 +38,7 @@ export type ButtonVariant =
   | 'info'
   | 'ghost'
   | 'outline'
+  | 'outline-error'
   | 'flat';
 
 /**

@@ -137,6 +137,27 @@
   box-shadow: 0 2px 8px var(--btn-outline-shadow);
 }
 
+.btn--outline-error {
+  background: transparent;
+  color: var(--color-error-dark);
+  border: 1.5px solid var(--color-error-dark);
+  box-shadow: 0 2px 8px var(--btn-error-shadow);
+}
+
+.btn--outline-error:not(.btn--disabled):not(.btn--loading):hover {
+  background: var(--color-error-light);
+  transform: translateY(-1px);
+}
+
+.btn--outline-error:focus-visible {
+  outline: 3px solid var(--btn-error-focus);
+  outline-offset: 3px;
+}
+
+.btn--outline-error .btn__ripple {
+  background: rgba(80, 100, 130, 0.18);
+}
+
 .btn--flat {
   background: transparent;
   color: var(--btn-flat-text);
