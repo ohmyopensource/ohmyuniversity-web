@@ -894,7 +894,7 @@ export const UNIVERSITIES: University[] = [
     id: 'unipv',
     name: 'Università degli Studi di Pavia',
     shortName: 'UniPv',
-    emailDomains: ['unipv.it'],
+    emailDomains: ['unipv.it', 'universitadipavia.it'],
     city: 'Pavia',
     type: 'statale',
     campuses: [
@@ -1338,7 +1338,7 @@ export const UNIVERSITIES: University[] = [
     id: 'unich',
     name: 'Università degli Studi "Gabriele D\'Annunzio" di Chieti e Pescara',
     shortName: 'UniCh',
-    emailDomains: ['unich.it'],
+    emailDomains: ['unich.it', 'studenti.unich.it'],
     city: 'Chieti',
     type: 'statale',
     campuses: [

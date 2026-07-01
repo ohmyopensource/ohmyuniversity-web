@@ -20,7 +20,7 @@
       </li>
 
       <!-- Dynamic Segments -->
-      @for (crumb of breadcrumbs(); track crumb.path; let last = $last) {
+      @for (crumb of breadcrumbs(); track $index; let last = $last) {
         <!-- Divider -->
         <li class="flex items-center" aria-hidden="true">
           <svg [lucideIcon]="iconChevron" [size]="13" style="color: var(--color-neutral-300)"></svg>
@@ -56,7 +56,7 @@
 
   <!-- Right — actions -->
   <div class="flex items-center gap-1">
-    <!-- Desktop: tutti i bottoni visibili (sm+) -->
+    <!-- Desktop -->
     <div class="hidden sm:flex items-center gap-1">
       <!-- Search -->
       <app-custom-button
@@ -88,7 +88,7 @@
         (click)="onMoodleClick()"
         (keydown.enter)="onMoodleClick()" />
 
-      <!-- Biblioteca -->
+      <!-- Library -->
       <app-custom-button
         variant="ghost"
         size="sm"
@@ -108,7 +108,7 @@
         (click)="onMailClick()"
         (keydown.enter)="onMailClick()" />
 
-      <!-- Preferiti -->
+      <!-- Favorites -->
       <app-custom-button
         variant="ghost"
         size="sm"
@@ -119,7 +119,7 @@
         (keydown.enter)="onFavoritesClick()" />
     </div>
 
-    <!-- Mobile: bottone "..." con dropdown (< sm) -->
+    <!-- Mobile -->
     <div class="relative sm:hidden">
       <!-- Trigger -->
       <app-custom-button
@@ -132,7 +132,6 @@
         (keydown.enter)="toggleMobileMenu()" />
 
       @if (mobileMenuOpen()) {
-        <!-- Overlay per chiudere cliccando fuori -->
         <div
           class="fixed inset-0 z-40"
           (click)="closeMobileMenu()"
@@ -142,7 +141,7 @@
         <div
           class="absolute right-0 top-full mt-1 z-50 rounded-xl shadow-lg py-1"
           style="background: white; border: 1px solid var(--color-neutral-200); min-width: 180px">
-          <!-- Cerca -->
+          <!-- Search -->
           <button
             type="button"
             class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"
@@ -184,7 +183,7 @@
             Moodle
           </button>
 
-          <!-- Biblioteca -->
+          <!-- Library -->
           <button
             type="button"
             class="flex w-full items-center gap-3 px-4 py-2.5 text-[0.82rem] transition-colors"

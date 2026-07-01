@@ -13,6 +13,16 @@ import {
 } from '../../domain/models/career/sessions.model';
 import { SurveysResponse } from '../../domain/models/career/surveys.model';
 import { BookExamRequest, CancelBookingRequest } from '../../domain/models/career/book-exam.model';
+import {
+  SurveyStartResponse,
+  SurveySaveRequest,
+  SurveyNavigateRequest,
+  SurveyConfirmRequest,
+  SurveyPage,
+  SurveySummaryRequest,
+  SurveySummaryResponse,
+  SurveyGetPageRequest,
+} from '../../domain/models/career/survey-compilation.model';
 
 @Injectable()
 export class ExamsApiRepository extends ExamsRepository {
@@ -58,5 +68,34 @@ export class ExamsApiRepository extends ExamsRepository {
       { password: request.password },
       { params },
     );
+  }
+
+  startSurvey(adsceId: number): Observable<SurveyStartResponse> {
+    const params = new HttpParams().set('adsceId', adsceId.toString());
+    return this.http.post<SurveyStartResponse>(API.exams.surveysStart, null, { params });
+  }
+
+  saveSurveyPage(request: SurveySaveRequest): Observable<void> {
+    return this.http.post(API.exams.surveysSave, request, {
+      responseType: 'text',
+    }) as unknown as Observable<void>;
+  }
+
+  navigateSurvey(request: SurveyNavigateRequest): Observable<SurveyPage> {
+    return this.http.post<SurveyPage>(API.exams.surveysNavigate, request);
+  }
+
+  confirmSurvey(request: SurveyConfirmRequest): Observable<void> {
+    return this.http.post(API.exams.surveysConfirm, request, {
+      responseType: 'text',
+    }) as unknown as Observable<void>;
+  }
+
+  getSurveyPage(request: SurveyGetPageRequest): Observable<SurveyPage> {
+    return this.http.post<SurveyPage>(API.exams.surveysPage, request);
+  }
+
+  getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse> {
+    return this.http.post<SurveySummaryResponse>(API.exams.surveysSummary, request);
   }
 }

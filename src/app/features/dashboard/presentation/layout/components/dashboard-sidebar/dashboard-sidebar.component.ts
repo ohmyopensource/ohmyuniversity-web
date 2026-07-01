@@ -123,11 +123,6 @@ export class DashboardSidebarComponent implements OnInit {
       (p, i, arr) => arr.findIndex(x => x.stuId === p.stuId) === i,
     );
 
-    console.log(
-      'PROFILI LAUREATO:',
-      profiliUnici.map(p => ({ stuId: p.stuId, attivo: p.attivo, laureato: p.laureato })),
-    );
-
     const currentUniId = (this.auth.getUniversityId() ?? '').toUpperCase();
 
     const tuttiAccounts: AccountEntry[] = profiliUnici.map(p => ({

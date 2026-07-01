@@ -18,6 +18,7 @@ export const SEGMENT_LABELS: Record<string, string> = {
   secretariat: 'Segreteria',
   career: 'Carriera',
   exams: 'Esami',
+  questionnaires: 'Questionari',
   agenda: 'Agenda',
   schedule: 'Orario',
   classrooms: 'Aule',

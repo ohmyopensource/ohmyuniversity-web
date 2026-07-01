@@ -36,6 +36,7 @@ import { DashboardLayoutComponent } from './features/dashboard/presentation/layo
 import { DashboardHomePage } from './features/dashboard/presentation/pages/home/pages/home.page';
 import { CareerPage } from './features/dashboard/presentation/pages/career/pages/career.page';
 import { ExamsPage } from './features/dashboard/presentation/pages/exams/pages/exams.page';
+import { SurveyCompilationPage } from './features/dashboard/presentation/pages/exams/components/survey-compilation/survey-compilation.page';
 import { AgendaPage } from './features/dashboard/presentation/pages/agenda/pages/agenda.page';
 import { SchedulePage } from './features/dashboard/presentation/pages/schedule/pages/schedule.page';
 
@@ -167,6 +168,11 @@ export const routes: Routes = [
       },
       { path: 'carriera', component: CareerPage, canActivate: [carrieraGuard] },
       { path: 'appelli', component: ExamsPage, canActivate: [carrieraGuard] },
+      {
+        path: 'appelli/questionari/:adsceId',
+        component: SurveyCompilationPage,
+        canActivate: [carrieraGuard],
+      },
       {
         path: 'agenda',
         component: AgendaPage,

@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   LucideDynamicIcon,
   LucideClipboardList,
@@ -31,6 +32,7 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 export class QuestionnaireListComponent implements OnInit {
   private readonly carriera = inject(CareerFacade);
   private readonly toast = inject(ToastService);
+  private readonly router = inject(Router);
 
   readonly iconClipboard = LucideClipboardList;
   readonly iconClipboardDone = LucideClipboardCheck;
@@ -58,8 +60,8 @@ export class QuestionnaireListComponent implements OnInit {
     });
   }
 
-  onCompila(_adsceId: number): void {
-    this.toast.show('La compilazione diretta dei questionari sarà disponibile a breve.', 'warning');
+  onCompila(adsceId: number): void {
+    this.router.navigate(['/dashboard/appelli/questionari', adsceId]);
   }
 
   statoLabel(statoLink: number): string {

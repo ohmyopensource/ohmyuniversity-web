@@ -58,6 +58,12 @@ import { GetLegacyBookingsUseCase } from './core/application/usecases/exams/get-
 import { GetSurveysUseCase } from './core/application/usecases/exams/get-surveys.usecase';
 import { BookExamUseCase } from './core/application/usecases/exams/book-exam.usecase';
 import { CancelBookingUseCase } from './core/application/usecases/exams/cancel-booking.usecase';
+import { StartSurveyUseCase } from './core/application/usecases/exams/start-survey.usecase';
+import { SaveSurveyPageUseCase } from './core/application/usecases/exams/save-survey-page.usecase';
+import { NavigateSurveyUseCase } from './core/application/usecases/exams/navigate-survey.usecase';
+import { ConfirmSurveyUseCase } from './core/application/usecases/exams/confirm-survey.usecase';
+import { GetSurveyPageUseCase } from './core/application/usecases/exams/get-survey-page.usecase';
+import { GetSurveySummaryUseCase } from './core/application/usecases/exams/get-survey-summary.usecase';
 
 // Fees usecases
 import { GetFeesStatusUseCase } from './core/application/usecases/fees/get-fees-status.usecase';
@@ -197,6 +203,12 @@ export const appConfig: ApplicationConfig = {
     GetSurveysUseCase,
     BookExamUseCase,
     CancelBookingUseCase,
+    StartSurveyUseCase,
+    SaveSurveyPageUseCase,
+    NavigateSurveyUseCase,
+    ConfirmSurveyUseCase,
+    GetSurveyPageUseCase,
+    GetSurveySummaryUseCase,
 
     // Fees
     GetFeesStatusUseCase,

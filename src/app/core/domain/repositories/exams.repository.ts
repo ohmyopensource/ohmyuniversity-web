@@ -6,6 +6,16 @@ import {
 } from '../models/career/legacy-bookings.model';
 import { SurveysResponse } from '../models/career/surveys.model';
 import { BookExamRequest, CancelBookingRequest } from '../models/career/book-exam.model';
+import {
+  SurveyStartResponse,
+  SurveySaveRequest,
+  SurveyNavigateRequest,
+  SurveyConfirmRequest,
+  SurveyPage,
+  SurveySummaryRequest,
+  SurveySummaryResponse,
+  SurveyGetPageRequest,
+} from '../models/career/survey-compilation.model';
 
 export abstract class ExamsRepository {
   abstract getSessions(cdsId: number, adId: number): Observable<BookableSessionsResponse>;
@@ -15,4 +25,10 @@ export abstract class ExamsRepository {
   abstract getSurveys(): Observable<SurveysResponse>;
   abstract bookExam(request: BookExamRequest): Observable<void>;
   abstract cancelBooking(request: CancelBookingRequest): Observable<void>;
+  abstract startSurvey(adsceId: number): Observable<SurveyStartResponse>;
+  abstract saveSurveyPage(request: SurveySaveRequest): Observable<void>;
+  abstract navigateSurvey(request: SurveyNavigateRequest): Observable<SurveyPage>;
+  abstract confirmSurvey(request: SurveyConfirmRequest): Observable<void>;
+  abstract getSurveyPage(request: SurveyGetPageRequest): Observable<SurveyPage>;
+  abstract getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse>;
 }

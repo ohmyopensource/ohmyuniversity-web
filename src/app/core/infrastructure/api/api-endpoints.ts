@@ -30,6 +30,12 @@ export const API = {
     cancelBooking: `${BASE}/v1/exams/bookings/cancel`,
     legacyBookings: `${BASE}/v1/exams/bookings/legacy`,
     surveys: `${BASE}/v1/exams/surveys`,
+    surveysStart: `${BASE}/v1/exams/surveys/start`,
+    surveysSave: `${BASE}/v1/exams/surveys/save`,
+    surveysNavigate: `${BASE}/v1/exams/surveys/navigate`,
+    surveysConfirm: `${BASE}/v1/exams/surveys/confirm`,
+    surveysPage: `${BASE}/v1/exams/surveys/page`,
+    surveysSummary: `${BASE}/v1/exams/surveys/summary`,
   },
   fees: {
     status: `${BASE}/v1/fees/status`,

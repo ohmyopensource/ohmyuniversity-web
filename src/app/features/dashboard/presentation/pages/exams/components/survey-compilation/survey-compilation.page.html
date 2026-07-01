@@ -1,0 +1,393 @@
+<app-dashboard-container>
+  <app-dashboard-header
+    [title]="surveyTitle() || 'Compilazione questionario'"
+    description="Compila il questionario di valutazione della didattica. Le domande contrassegnate con * sono obbligatorie." />
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-16 gap-3">
+      <svg
+        [lucideIcon]="iconLoader"
+        [size]="28"
+        class="animate-spin"
+        style="color: var(--color-primary-dark)"
+        aria-hidden="true"></svg>
+      <span class="text-sm" style="color: var(--color-neutral-400)">
+        Avvio compilazione questionario...
+      </span>
+    </div>
+  } @else if (error()) {
+    <!-- Error -->
+    <app-custom-card variant="error" padding="md" shadow="none" [bordered]="true" radius="lg">
+      <div class="flex items-start gap-3">
+        <svg
+          [lucideIcon]="iconAlert"
+          [size]="20"
+          style="color: var(--color-error-dark)"
+          aria-hidden="true"></svg>
+        <div class="flex flex-col gap-2">
+          <p class="m-0 font-semibold" style="color: var(--color-error-dark)">
+            Impossibile aprire il questionario
+          </p>
+          <p class="m-0 text-[0.85rem]" style="color: var(--color-neutral-600)">
+            Il questionario potrebbe non essere più disponibile o si è verificato un errore. Riprova
+            dalla lista questionari.
+          </p>
+          <div class="mt-1">
+            <app-custom-button
+              variant="ghost"
+              size="sm"
+              label="Torna ai questionari"
+              [icon]="iconBack"
+              iconPosition="left"
+              (clicked)="onCancel()" />
+          </div>
+        </div>
+      </div>
+    </app-custom-card>
+  } @else if (showSummary()) {
+    <!-- Summary / Review -->
+    <div class="flex flex-col gap-4 mt-2">
+      <div
+        class="flex items-center gap-2 px-3 py-2 rounded-lg"
+        style="background: var(--color-primary-light)">
+        <svg
+          [lucideIcon]="iconClipboard"
+          [size]="15"
+          style="color: var(--color-primary-dark)"
+          aria-hidden="true"></svg>
+        <span class="text-[0.82rem]" style="color: var(--color-primary-dark)">
+          Rivedi le tue risposte. Una volta confermato, il questionario non sarà più modificabile.
+        </span>
+      </div>
+
+      @for (page of summaryPages(); track page.paginaId; let i = $index) {
+        <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-[0.7rem] font-semibold uppercase tracking-wide"
+                style="color: var(--color-neutral-400)">
+                Pagina {{ i + 1 }}
+              </span>
+              <button
+                type="button"
+                class="flex items-center gap-1.5 px-2 py-1 rounded-md text-[0.72rem] font-medium transition-colors cursor-pointer"
+                style="color: var(--color-primary-dark); background: var(--color-primary-light)"
+                (click)="onEditPage(page.paginaId)">
+                <svg [lucideIcon]="iconPencil" [size]="13" aria-hidden="true"></svg>
+                Modifica
+              </button>
+            </div>
+            @for (item of page.items; track $index) {
+              <div
+                class="flex flex-col gap-1 pb-2"
+                style="border-bottom: 1px solid var(--color-neutral-100)">
+                @if (item.paragrafoDes) {
+                  <span
+                    class="text-[0.7rem] font-semibold"
+                    style="color: var(--color-primary-dark)">
+                    {{ item.paragrafoDes }}
+                  </span>
+                }
+                <span class="text-[0.85rem] font-medium" style="color: var(--color-neutral-900)">
+                  {{ item.domandaDes }}
+                </span>
+                <span class="text-[0.85rem]" style="color: var(--color-neutral-600)">
+                  {{ item.rispostaDes }}
+                  @if (item.testoLibero) {
+                    : <em>{{ item.testoLibero }}</em>
+                  }
+                </span>
+              </div>
+            }
+          </div>
+        </app-custom-card>
+      }
+    </div>
+
+    <!-- Summary actions -->
+    <div class="flex items-center justify-between gap-3 mt-6 mb-4">
+      <app-custom-button
+        variant="ghost"
+        size="md"
+        label="Annulla"
+        [disabled]="confirming()"
+        (clicked)="onCancel()" />
+      <app-custom-button
+        variant="primary"
+        size="md"
+        label="Conferma e invia"
+        [icon]="iconCheck"
+        iconPosition="right"
+        [disabled]="confirming()"
+        (clicked)="confirmModal.open()" />
+    </div>
+  } @else if (currentPage(); as page) {
+    <!-- Anonymous badge -->
+    @if (anonimo()) {
+      <div
+        class="flex items-center gap-2 px-3 py-2 my-3 rounded-lg"
+        style="background: var(--color-success-light)">
+        <svg
+          [lucideIcon]="iconShield"
+          [size]="14"
+          style="color: var(--color-success-dark)"
+          aria-hidden="true"></svg>
+        <span class="text-[0.78rem]" style="color: var(--color-success-dark)">
+          Questionario anonimo: le tue risposte non sono associate alla tua identità.
+        </span>
+      </div>
+    }
+
+    <!-- Page title (optional) -->
+    @if (isInfoPage(page)) {
+      <!-- Info / closing page -->
+      <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-2">
+            <svg
+              [lucideIcon]="iconInfo"
+              [size]="18"
+              style="color: var(--color-primary-dark)"
+              aria-hidden="true"></svg>
+            <h3 appText variant="h6" class="m-0">Prima di concludere</h3>
+          </div>
+          <ul class="flex flex-col gap-3 m-0 pl-0 list-none">
+            <li class="flex items-start gap-2.5">
+              <svg
+                [lucideIcon]="iconShield"
+                [size]="16"
+                style="color: var(--color-success-dark); margin-top: 2px"
+                aria-hidden="true"></svg>
+              <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">
+                Il questionario è <strong>completamente anonimo</strong>: le risposte non sono
+                associate alla tua identità.
+              </span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg
+                [lucideIcon]="iconClipboard"
+                [size]="16"
+                style="color: var(--color-primary-dark); margin-top: 2px"
+                aria-hidden="true"></svg>
+              <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">
+                Le tue opinioni aiutano a <strong>migliorare la qualità della didattica</strong> e
+                dei servizi del tuo ateneo.
+              </span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg
+                [lucideIcon]="iconCheck"
+                [size]="16"
+                style="color: var(--color-primary-dark); margin-top: 2px"
+                aria-hidden="true"></svg>
+              <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">
+                I dati sono gestiti dall'ateneo tramite ESSE3. <strong>OhMyUniversity!</strong> fa
+                solo da tramite e non conserva le tue risposte.
+              </span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg
+                [lucideIcon]="iconInfo"
+                [size]="16"
+                style="color: var(--color-neutral-400); margin-top: 2px"
+                aria-hidden="true"></svg>
+              <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">
+                Premi <strong>Riepilogo</strong> per rivedere tutte le risposte prima dell'invio
+                definitivo.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </app-custom-card>
+    } @else {
+      <!-- Page title (optional) -->
+      @if (page.des) {
+        <h2 appText variant="h6" class="mt-4 mb-2">{{ page.des }}</h2>
+      }
+
+      <!-- Paragraphs -->
+      <div class="flex flex-col gap-4 mt-2">
+        @for (par of page.paragrafi; track par.paragrafoId) {
+          <div class="flex flex-col gap-3">
+            @if (par.des) {
+              <div class="flex items-center gap-2 mt-2">
+                <svg
+                  [lucideIcon]="iconClipboard"
+                  [size]="15"
+                  style="color: var(--color-primary-dark)"
+                  aria-hidden="true"></svg>
+                <h3 appText variant="h6" class="m-0">{{ par.des }}</h3>
+              </div>
+            }
+
+            @for (q of par.domande; track q.domandaId) {
+              <app-custom-card
+                variant="default"
+                padding="md"
+                shadow="sm"
+                [bordered]="true"
+                radius="lg">
+                <div class="flex flex-col gap-3">
+                  <p
+                    class="m-0 font-semibold text-[0.9rem]"
+                    style="color: var(--color-neutral-900)">
+                    {{ q.des }}
+                    @if (q.mandatory) {
+                      <span style="color: var(--color-error-dark)"> *</span>
+                    }
+                  </p>
+                  <div class="flex flex-col gap-2">
+                    @for (opt of q.risposte; track opt.rispostaId) {
+                      <div class="flex flex-col gap-1.5">
+                        <label
+                          class="flex items-center gap-2.5 cursor-pointer select-none px-1 py-1 rounded-md transition-colors"
+                          style="color: var(--color-neutral-700)">
+                          @if (isMulti(q)) {
+                            <input
+                              type="checkbox"
+                              class="w-4 h-4 cursor-pointer"
+                              style="accent-color: var(--color-primary-dark)"
+                              [checked]="isMultiSelected(q.domandaId, opt.rispostaId)"
+                              (change)="onToggleMulti(q.domandaId, opt.rispostaId)" />
+                          } @else {
+                            <input
+                              type="radio"
+                              class="w-4 h-4 cursor-pointer"
+                              style="accent-color: var(--color-primary-dark)"
+                              [name]="'q-' + q.domandaId"
+                              [checked]="isSingleSelected(q.domandaId, opt.rispostaId)"
+                              (change)="onSelectSingle(q.domandaId, opt.rispostaId)" />
+                          }
+                          <span class="text-[0.85rem]">{{ opt.des }}</span>
+                        </label>
+                        @if (isFreeTextOption(opt.formatCod)) {
+                          @if (
+                            (isMulti(q) && isMultiSelected(q.domandaId, opt.rispostaId)) ||
+                            (!isMulti(q) && isSingleSelected(q.domandaId, opt.rispostaId))
+                          ) {
+                            <input
+                              type="text"
+                              class="ml-7 px-3 py-1.5 rounded-md text-[0.85rem] border outline-none"
+                              style="
+                                border-color: var(--color-neutral-200);
+                                color: var(--color-neutral-800);
+                              "
+                              placeholder="Specificare..."
+                              [value]="freeTextValue(q.domandaId, opt.rispostaId)"
+                              (input)="
+                                onFreeTextChange(
+                                  q.domandaId,
+                                  opt.rispostaId,
+                                  $any($event.target).value
+                                )
+                              " />
+                          }
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </app-custom-card>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Navigation buttons -->
+    <div class="flex flex-col gap-3 mt-6 mb-4">
+      @if (cameFromSummary()) {
+        <div class="flex items-center justify-end">
+          <app-custom-button
+            variant="primary"
+            size="md"
+            label="Salva modifiche"
+            [icon]="iconCheck"
+            iconPosition="right"
+            [loading]="saving()"
+            [disabled]="saving()"
+            (clicked)="onSaveEdit()" />
+        </div>
+        <div class="flex items-center justify-end">
+          <app-custom-button
+            variant="ghost"
+            size="md"
+            label="Torna al riepilogo"
+            [icon]="iconClipboard"
+            iconPosition="left"
+            [disabled]="saving()"
+            (clicked)="onBackToSummary()" />
+        </div>
+      } @else {
+        <div class="flex items-center justify-end gap-2">
+          @if (hasPrevPage()) {
+            <app-custom-button
+              variant="secondary"
+              size="md"
+              label="Precedente"
+              [icon]="iconBack"
+              iconPosition="left"
+              [disabled]="saving()"
+              (clicked)="onPrev()" />
+          }
+          <app-custom-button
+            variant="primary"
+            size="md"
+            [label]="nextButtonLabel()"
+            [icon]="iconNext"
+            iconPosition="right"
+            [loading]="saving()"
+            [disabled]="saving()"
+            (clicked)="onNext()" />
+        </div>
+        <app-custom-button
+          variant="ghost"
+          size="md"
+          label="Annulla"
+          [disabled]="saving()"
+          (clicked)="onCancel()" />
+      }
+    </div>
+  }
+
+  <!-- Confirm modal -->
+  <app-custom-modal
+    #confirmModal
+    type="center"
+    size="sm"
+    title="Conferma invio questionario"
+    subtitle="Una volta confermato, il questionario non potrà più essere modificato."
+    [persistent]="confirming()"
+    [showCloseButton]="true">
+    <div class="flex flex-col gap-3">
+      <div
+        class="flex items-center justify-center w-12 h-12 rounded-xl mx-auto"
+        style="background: var(--color-success-light)">
+        <svg
+          [lucideIcon]="iconCheck"
+          [size]="22"
+          style="color: var(--color-success-dark)"
+          aria-hidden="true"></svg>
+      </div>
+      <p class="m-0 text-center text-[0.875rem]" style="color: var(--color-neutral-700)">
+        Hai completato tutte le domande. Vuoi inviare e confermare definitivamente il questionario?
+      </p>
+    </div>
+    <div footer class="flex items-center justify-end gap-2 w-full">
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        label="Rivedi"
+        [disabled]="confirming()"
+        (clicked)="confirmModal.close('button')" />
+      <app-custom-button
+        variant="primary"
+        size="sm"
+        [label]="confirming() ? 'Invio...' : 'Conferma e invia'"
+        [disabled]="confirming()"
+        (clicked)="onConfirm()" />
+    </div>
+  </app-custom-modal>
+</app-dashboard-container>

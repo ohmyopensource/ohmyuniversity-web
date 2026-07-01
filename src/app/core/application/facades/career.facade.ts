@@ -33,6 +33,22 @@ import { GetPersonaUseCase } from '../usecases/profile/get-persona.usecase';
 import { BookExamUseCase } from '../usecases/exams/book-exam.usecase';
 import { CancelBookingUseCase } from '../usecases/exams/cancel-booking.usecase';
 import { BookExamRequest, CancelBookingRequest } from '../../domain/models/career/book-exam.model';
+import { StartSurveyUseCase } from '../usecases/exams/start-survey.usecase';
+import { SaveSurveyPageUseCase } from '../usecases/exams/save-survey-page.usecase';
+import { NavigateSurveyUseCase } from '../usecases/exams/navigate-survey.usecase';
+import { ConfirmSurveyUseCase } from '../usecases/exams/confirm-survey.usecase';
+import {
+  SurveyStartResponse,
+  SurveySaveRequest,
+  SurveyNavigateRequest,
+  SurveyConfirmRequest,
+  SurveyPage,
+  SurveySummaryRequest,
+  SurveySummaryResponse,
+  SurveyGetPageRequest,
+} from '../../domain/models/career/survey-compilation.model';
+import { GetSurveySummaryUseCase } from '../usecases/exams/get-survey-summary.usecase';
+import { GetSurveyPageUseCase } from '../usecases/exams/get-survey-page.usecase';
 
 @Injectable()
 export class CareerFacade {
@@ -51,6 +67,12 @@ export class CareerFacade {
   private readonly getSurveysUseCase = inject(GetSurveysUseCase);
   private readonly bookExamUseCase = inject(BookExamUseCase);
   private readonly cancelBookingUseCase = inject(CancelBookingUseCase);
+  private readonly startSurveyUseCase = inject(StartSurveyUseCase);
+  private readonly saveSurveyPageUseCase = inject(SaveSurveyPageUseCase);
+  private readonly navigateSurveyUseCase = inject(NavigateSurveyUseCase);
+  private readonly confirmSurveyUseCase = inject(ConfirmSurveyUseCase);
+  private readonly getSurveyPageUseCase = inject(GetSurveyPageUseCase);
+  private readonly getSurveySummaryUseCase = inject(GetSurveySummaryUseCase);
 
   getTranscript(): Observable<Exam[]> {
     return this.getTranscriptUseCase.execute();
@@ -110,5 +132,29 @@ export class CareerFacade {
 
   cancelBooking(request: CancelBookingRequest): Observable<void> {
     return this.cancelBookingUseCase.execute(request);
+  }
+
+  startSurvey(adsceId: number): Observable<SurveyStartResponse> {
+    return this.startSurveyUseCase.execute(adsceId);
+  }
+
+  saveSurveyPage(request: SurveySaveRequest): Observable<void> {
+    return this.saveSurveyPageUseCase.execute(request);
+  }
+
+  navigateSurvey(request: SurveyNavigateRequest): Observable<SurveyPage> {
+    return this.navigateSurveyUseCase.execute(request);
+  }
+
+  confirmSurvey(request: SurveyConfirmRequest): Observable<void> {
+    return this.confirmSurveyUseCase.execute(request);
+  }
+
+  getSurveyPage(request: SurveyGetPageRequest): Observable<SurveyPage> {
+    return this.getSurveyPageUseCase.execute(request);
+  }
+
+  getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse> {
+    return this.getSurveySummaryUseCase.execute(request);
   }
 }

@@ -184,33 +184,42 @@ export class DashboardTopbarComponent implements OnInit, OnDestroy {
   private updateBreadcrumbs(url: string): void {
     const clean = url.split('?')[0].split('#')[0];
     const segments = clean.split('/').filter(Boolean);
-    const rest = segments.slice(1);
+    let rest = segments.slice(1);
+
+    const surveyIdx = rest.indexOf('questionari');
+    const isSurveyPage = rest.includes('appelli') && surveyIdx !== -1;
+    if (isSurveyPage) {
+      rest = rest.slice(0, surveyIdx + 1);
+    }
+
     const crumbs: BreadcrumbItem[] = [];
     let accumulated = '/dashboard';
 
     for (const seg of rest) {
       accumulated += '/' + seg;
       crumbs.push({
-        label: SEGMENT_LABELS[seg] ?? this.toTitleCase(seg),
-        path: accumulated,
+        label:
+          seg === 'questionari'
+            ? 'Questionari'
+            : seg === 'appelli'
+              ? 'Appelli'
+              : (SEGMENT_LABELS[seg] ?? this.toTitleCase(seg)),
+        path: seg === 'questionari' ? '/dashboard/appelli?tab=questionnaires' : accumulated,
         hovered: false,
       });
+    }
+
+    if (isSurveyPage) {
+      this.breadcrumbs.set(crumbs);
+      return;
     }
 
     const urlTree = this.router.parseUrl(url);
     const tab = urlTree.queryParams['tab'];
     if (tab && TAB_LABELS[tab]) {
-      crumbs.push({
-        label: TAB_LABELS[tab],
-        path: accumulated,
-        hovered: false,
-      });
+      crumbs.push({ label: TAB_LABELS[tab], path: accumulated, hovered: false });
     } else if (crumbs.length > 0) {
-      crumbs.push({
-        label: 'Panoramica',
-        path: accumulated,
-        hovered: false,
-      });
+      crumbs.push({ label: 'Panoramica', path: accumulated, hovered: false });
     }
 
     this.breadcrumbs.set(crumbs);
