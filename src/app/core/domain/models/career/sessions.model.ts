@@ -36,6 +36,8 @@ export interface Booking {
   dataFineIscr: string;
   aulaDes: string;
   tipoIscrCod: string;
+  posizApp?: number;
+  numIscritti?: number;
 }
 
 export interface BookingsResponse {

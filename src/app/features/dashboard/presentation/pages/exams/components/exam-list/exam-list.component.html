@@ -10,8 +10,16 @@
     description="Impossibile recuperare gli appelli. Riprova più tardi." />
 } @else {
   <div class="flex flex-col gap-4">
-    <!-- Toolbar -->
-    <div class="flex flex-col sm:flex-row gap-3">
+    <!-- Tabs + Search -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
+      <div class="shrink-0">
+        <app-custom-tabs
+          [tabs]="tabs()"
+          [activeTab]="activeFilter()"
+          tabStyle="pill"
+          size="sm"
+          (tabChange)="onTabChange($event)" />
+      </div>
       <div class="flex-1">
         <app-custom-input
           placeholder="Cerca per corso o docente..."
@@ -20,23 +28,6 @@
           [fullWidth]="true"
           [clearable]="true"
           (inputChange)="onSearchChange($event)" />
-      </div>
-      <div class="flex items-center gap-2 shrink-0">
-        <app-custom-button
-          [variant]="activeFilter() === 'all' ? 'primary' : 'ghost'"
-          size="sm"
-          label="Tutti"
-          (clicked)="setFilter('all')" />
-        <app-custom-button
-          [variant]="activeFilter() === 'open' ? 'success' : 'ghost'"
-          size="sm"
-          label="Disponibili"
-          (clicked)="setFilter('open')" />
-        <app-custom-button
-          [variant]="activeFilter() === 'booked' ? 'secondary' : 'ghost'"
-          size="sm"
-          label="Prenotati"
-          (clicked)="setFilter('booked')" />
       </div>
     </div>
 
@@ -56,7 +47,7 @@
           style="color: var(--color-neutral-300)"
           aria-hidden="true"></svg>
         <p appText variant="body-sm" color="subtle" class="m-0">
-          Nessun appello trovato con i filtri selezionati.
+          Nessun appello in questa categoria.
         </p>
       </div>
     }

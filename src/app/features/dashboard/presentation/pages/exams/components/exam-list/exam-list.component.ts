@@ -1,20 +1,20 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { LucideDynamicIcon, LucideSearch, LucideCalendarX, LucideInfo } from '@lucide/angular';
 import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
-import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
+import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
 import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
 import { ExamCardComponent } from '../exam-card/exam-card.component';
 import { Exam } from '@shared/types/dashboard/dashboard-exams.types';
 import { LucideTriangleAlert } from '@lucide/angular';
 
-type ExamFilter = 'all' | 'open' | 'booked';
+type ExamFilter = 'open' | 'booked' | 'closed';
 
 @Component({
   selector: 'app-exam-list',
   standalone: true,
   imports: [
     CustomInputComponent,
-    CustomButtonComponent,
+    CustomTabsComponent,
     ExamCardComponent,
     CardStatusComponent,
     LucideDynamicIcon,
@@ -33,7 +33,23 @@ export class ExamListComponent {
   readonly iconInfo = LucideInfo;
 
   readonly searchValue = signal('');
-  readonly activeFilter = signal<ExamFilter>('all');
+  readonly activeFilter = signal<ExamFilter>('open');
+
+  private readonly countOpen = computed(
+    () => this.exams().filter(e => e.status === 'open' || e.status === 'closing').length,
+  );
+  private readonly countBooked = computed(
+    () => this.exams().filter(e => e.status === 'booked').length,
+  );
+  private readonly countClosed = computed(
+    () => this.exams().filter(e => e.status === 'closed').length,
+  );
+
+  readonly tabs = computed<TabItem[]>(() => [
+    { id: 'open', label: 'Disponibili', badge: this.countOpen() },
+    { id: 'booked', label: 'Prenotati', badge: this.countBooked() },
+    { id: 'closed', label: 'Chiusi', badge: this.countClosed() },
+  ]);
 
   readonly filteredExams = computed(() => {
     const q = this.searchValue().toLowerCase().trim();
@@ -43,6 +59,8 @@ export class ExamListComponent {
       list = list.filter(e => e.status === 'open' || e.status === 'closing');
     } else if (this.activeFilter() === 'booked') {
       list = list.filter(e => e.status === 'booked');
+    } else if (this.activeFilter() === 'closed') {
+      list = list.filter(e => e.status === 'closed');
     }
 
     if (!q) return list;
@@ -71,7 +89,7 @@ export class ExamListComponent {
     this.searchValue.set(String(val));
   }
 
-  setFilter(filter: ExamFilter): void {
-    this.activeFilter.set(filter);
+  onTabChange(id: string): void {
+    this.activeFilter.set(id as ExamFilter);
   }
 }

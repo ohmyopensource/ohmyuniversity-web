@@ -105,4 +105,17 @@ export class ExamCardComponent {
     const diff = data.getTime() - oggi.getTime();
     return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : null;
   }
+
+  enrolledLabel(): string {
+    const e = this.exam();
+    return e.status === 'booked' && e.position != null ? 'Posizione' : 'Iscritti';
+  }
+
+  enrolledValue(): string {
+    const e = this.exam();
+    if (e.status === 'booked' && e.position != null) {
+      return e.spotsLeft > 0 ? `${e.position} su ${e.spotsLeft}` : `${e.position}`;
+    }
+    return String(e.spotsLeft);
+  }
 }

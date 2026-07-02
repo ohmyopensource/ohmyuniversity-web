@@ -1,26 +1,27 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
-import { DashboardHeaderComponent } from '@ui/dashboard-header/dashboard-header.component';
-import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-container.component';
-import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
-import { ToastService } from '@ui/custom-toast/toast.service';
-import { LucideCalendarDays, LucideClipboardList, LucideSparkles } from '@lucide/angular';
-import { Exam, BookingExamStatus } from '@shared/types/dashboard/dashboard-exams.types';
-import { BookableSession, Booking } from 'src/app/core/domain/models/career/sessions.model';
-import { ExamListComponent } from '../components/exam-list/exam-list.component';
-import { QuestionnaireListComponent } from '../components/questionnaire-list/questionnaire-list.component';
-import { forkJoin } from 'rxjs';
-import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { Component, signal, inject, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CustomModalComponent } from '@ui/custom-modal/custom-modal.component';
-import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
-import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
+import { forkJoin } from 'rxjs';
 import {
   LucideDynamicIcon,
   LucideCalendarCheck,
   LucideLock,
   LucideTriangleAlert,
+  LucideCalendarDays,
+  LucideClipboardList,
+  LucideSparkles,
 } from '@lucide/angular';
-import { ViewChild } from '@angular/core';
+import { DashboardHeaderComponent } from '@ui/dashboard-header/dashboard-header.component';
+import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-container.component';
+import { CustomTabsComponent, TabItem } from '@ui/custom-tab/custom-tab.component';
+import { ToastService } from '@ui/custom-toast/toast.service';
+import { Exam, BookingExamStatus } from '@shared/types/dashboard/dashboard-exams.types';
+import { BookableSession, Booking } from 'src/app/core/domain/models/career/sessions.model';
+import { ExamListComponent } from '../components/exam-list/exam-list.component';
+import { QuestionnaireListComponent } from '../components/questionnaire-list/questionnaire-list.component';
+import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { CustomModalComponent } from '@ui/custom-modal/custom-modal.component';
+import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
+import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-exams',
@@ -98,17 +99,32 @@ export class ExamsPage implements OnInit {
             pianoMap.set(riga.adCod, { cfu: riga.cfu ?? 0, annoCorso: riga.annoCorso ?? 0 });
         }
 
-        const prenotatiAdsceIds = new Set(prenotazioni.prenotazioni.map(p => p.adsceId));
-        const prenotazioniMap = new Map(prenotazioni.prenotazioni.map(p => [p.adsceId, p]));
+        const infoByAdsce = new Map<number, { cfu: number; annoCorso: number }>();
+        for (const p of prenotazioni.prenotazioni ?? []) {
+          const info = pianoMap.get(p.adStuCod);
+          if (info) infoByAdsce.set(p.adsceId, info);
+        }
 
-        const mapAppelli = appelli.appelli.map(a =>
-          this.mapAppello(a, pianoMap, prenotazioniMap, prenotatiAdsceIds),
+        const prenotatiKeys = new Set(
+          prenotazioni.prenotazioni.map(p => this.bookingKey(p.adsceId, p.appId)),
+        );
+        const prenotazioniMap = new Map(
+          prenotazioni.prenotazioni.map(p => [this.bookingKey(p.adsceId, p.appId), p]),
         );
 
-        const idsGiaPresenti = new Set(appelli.appelli.map(a => a.adsceId));
+        const mapAppelli = appelli.appelli.map(a =>
+          this.mapAppello(a, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce),
+        );
+
+        const keysGiaPresenti = new Set(
+          appelli.appelli.map(a => this.bookingKey(a.adsceId, a.appId)),
+        );
+        const docenteByAdsce = new Map(
+          appelli.appelli.filter(a => a.docente).map(a => [a.adsceId, a.docente]),
+        );
         const prenotatiExtra = prenotazioni.prenotazioni
-          .filter(p => !idsGiaPresenti.has(p.adsceId))
-          .map(p => this.mapIscrizione(p, pianoMap));
+          .filter(p => !keysGiaPresenti.has(this.bookingKey(p.adsceId, p.appId)))
+          .map(p => this.mapIscrizione(p, pianoMap, docenteByAdsce));
 
         this.exams.set([...mapAppelli, ...prenotatiExtra]);
         this.examsLoading.set(false);
@@ -121,7 +137,7 @@ export class ExamsPage implements OnInit {
         const suggested = (suggeriti.esami ?? []).map(s => {
           const appello = appelliMap.get(s.adCod);
           if (appello) {
-            return this.mapAppello(appello, pianoMap, prenotazioniMap, prenotatiAdsceIds);
+            return this.mapAppello(appello, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce);
           }
           return {
             id: s.adCod,
@@ -264,8 +280,9 @@ export class ExamsPage implements OnInit {
   private mapAppello(
     a: BookableSession,
     pianoMap: Map<string, { cfu: number; annoCorso: number }>,
-    prenotazioniMap: Map<number, Booking>,
-    prenotatiAdsceIds: Set<number>,
+    prenotazioniMap: Map<string, Booking>,
+    prenotatiKeys: Set<string>,
+    infoByAdsce: Map<number, { cfu: number; annoCorso: number }>,
   ): Exam {
     const oggi = new Date();
     const parseData = (s: string | null): Date | null => {
@@ -277,9 +294,10 @@ export class ExamsPage implements OnInit {
 
     const dataFineIscr = parseData(a.dataFineIscr);
     const dataInizioIscr = parseData(a.dataInizioIscr);
-    const isPrenotato = prenotatiAdsceIds.has(a.adsceId);
-    const prenotazione = prenotazioniMap.get(a.adsceId);
-    const pianoInfo = pianoMap.get(a.adCod) ?? { cfu: 0, annoCorso: 0 };
+    const isPrenotato = prenotatiKeys.has(this.bookingKey(a.adsceId, a.appId));
+    const prenotazione = prenotazioniMap.get(this.bookingKey(a.adsceId, a.appId));
+    const pianoInfo = infoByAdsce.get(a.adsceId) ??
+      pianoMap.get(a.adCod) ?? { cfu: 0, annoCorso: 0 };
 
     let ora = 'N/D';
     if (prenotazione?.dataOraTurno?.includes(' ')) {
@@ -320,8 +338,9 @@ export class ExamsPage implements OnInit {
       building: 'N/D',
       professor: a.docente ?? 'N/D',
       enrollDeadline: this.formatData(a.dataFineIscr),
-      spotsLeft: a.numIscritti ?? 0,
+      spotsLeft: prenotazione?.numIscritti ?? a.numIscritti ?? 0,
       spotsTotal: 0,
+      position: prenotazione?.posizApp,
       status,
       dataInizioIscr: this.formatData(a.dataInizioIscr),
       cdsId: a.cdsId,
@@ -334,6 +353,7 @@ export class ExamsPage implements OnInit {
   private mapIscrizione(
     p: Booking,
     pianoMap: Map<string, { cfu: number; annoCorso: number }>,
+    docenteByAdsce: Map<number, string>,
   ): Exam {
     const pianoInfo = pianoMap.get(p.adStuCod) ?? { cfu: 0, annoCorso: 0 };
     const ora = p.dataOraTurno?.includes(' ')
@@ -350,10 +370,11 @@ export class ExamsPage implements OnInit {
       time: ora,
       location: p.aulaDes ?? 'N/D',
       building: 'N/D',
-      professor: 'N/D',
+      professor: docenteByAdsce.get(p.adsceId) ?? 'N/D',
       enrollDeadline: this.formatData(p.dataFineIscr),
-      spotsLeft: 0,
+      spotsLeft: p.numIscritti ?? 0,
       spotsTotal: 0,
+      position: p.posizApp,
       status: 'booked' as BookingExamStatus,
       dataInizioIscr: this.formatData(p.dataInizioIscr),
     } as any;
@@ -364,5 +385,9 @@ export class ExamsPage implements OnInit {
     const parts = s.split(' ')[0].split('/');
     if (parts.length !== 3) return s;
     return `${parts[0]}/${parts[1]}/${parts[2]}`;
+  }
+
+  private bookingKey(adsceId: number, appId: number): string {
+    return `${adsceId}:${appId}`;
   }
 }

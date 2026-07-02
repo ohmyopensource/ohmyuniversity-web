@@ -85,7 +85,7 @@
         <span
           class="text-[0.68rem] font-semibold uppercase tracking-wide"
           style="color: var(--color-neutral-400)"
-          >Iscritti</span
+          >{{ enrolledLabel() }}</span
         >
         <div class="flex items-center gap-1.5">
           <svg
@@ -94,7 +94,7 @@
             style="color: var(--color-neutral-400)"
             aria-hidden="true"></svg>
           <span class="text-[0.82rem] font-semibold" style="color: var(--color-neutral-900)">{{
-            exam().spotsLeft
+            enrolledValue()
           }}</span>
         </div>
       </div>

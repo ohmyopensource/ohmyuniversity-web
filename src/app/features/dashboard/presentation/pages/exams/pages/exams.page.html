@@ -3,12 +3,14 @@
     title="Appelli & Questionari"
     description="Prenota i tuoi esami e compila i questionari di valutazione della didattica." />
 
-  <app-custom-tabs
-    [tabs]="tabs"
-    [activeTab]="activeTab()"
-    tabStyle="pill"
-    size="md"
-    (tabChange)="onTabChange($event)" />
+  <div class="flex flex-1 mx-auto">
+    <app-custom-tabs
+      [tabs]="tabs"
+      [activeTab]="activeTab()"
+      tabStyle="pill"
+      size="md"
+      (tabChange)="onTabChange($event)" />
+  </div>
 
   @if (activeTab() === 'exams') {
     <app-exam-list
