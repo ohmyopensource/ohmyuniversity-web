@@ -152,12 +152,14 @@ export class CareerPage implements OnInit {
   );
 
   readonly weightedAverage = computed(() => {
-    if (this.media()?.mediaPesata) return this.roundAverage(this.media()!.mediaPesata);
+    if (!this.hasSimulation() && this.media()?.mediaPesata)
+      return this.roundAverage(this.media()!.mediaPesata);
     return this.computeWeightedAverage();
   });
 
   readonly arithmeticAverage = computed(() => {
-    if (this.media()?.mediaAritmetica) return this.roundAverage(this.media()!.mediaAritmetica);
+    if (!this.hasSimulation() && this.media()?.mediaAritmetica)
+      return this.roundAverage(this.media()!.mediaAritmetica);
     return this.computeArithmeticAverage();
   });
 
