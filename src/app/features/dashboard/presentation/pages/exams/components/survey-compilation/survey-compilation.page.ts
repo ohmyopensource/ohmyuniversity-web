@@ -171,6 +171,8 @@ export class SurveyCompilationPage implements OnInit {
 
   /** A question is multi-choice when it allows more than one selection. */
   isMulti(q: SurveyQuestion): boolean {
+    if (q.formatCod === 'TL_DOM_DFM') return true;
+    if (q.formatCod === 'TL_DOM_DFS') return false;
     return (q.maxChoices ?? 1) > 1;
   }
 
