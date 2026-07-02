@@ -105,7 +105,7 @@
                         shape="rounded"
                         size="sm"
                         [icon]="iconCheck" />
-                    } @else {
+                    } @else if (exam.gradable) {
                       @if (exam.simulatedGrade !== undefined) {
                         <app-custom-badge
                           [label]="'~' + exam.simulatedGrade"
@@ -334,7 +334,7 @@
                     shape="rounded"
                     size="sm"
                     [icon]="iconCheck" />
-                } @else {
+                } @else if (exam.gradable) {
                   @if (exam.simulatedGrade !== undefined) {
                     <app-custom-badge
                       [label]="'~' + exam.simulatedGrade"

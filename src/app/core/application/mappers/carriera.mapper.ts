@@ -10,6 +10,7 @@ function rigaToExam(
   tipoInsCod: string,
   superata: boolean,
   transcriptRow?: TranscriptRow,
+  modValCod?: string,
 ): Exam {
   return {
     courseCode: adCod,
@@ -29,6 +30,7 @@ function rigaToExam(
     location: 'N/D',
     prerequisites: [],
     cfuBreakdown: [],
+    gradable: modValCod === 'V',
   };
 }
 
@@ -59,6 +61,7 @@ export function mergeToExams(righe: StudyPlanRow[], libretto: TranscriptRow[]): 
         riga.tipoInsCod,
         superata,
         transcriptRow,
+        transcriptRow?.modValCod,
       ),
     );
   }
@@ -74,6 +77,7 @@ export function mergeToExams(righe: StudyPlanRow[], libretto: TranscriptRow[]): 
           row.tipoInsCod ?? '',
           row.superata ?? false,
           row,
+          row.modValCod,
         ),
       );
     }

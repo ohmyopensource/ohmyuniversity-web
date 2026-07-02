@@ -54,6 +54,7 @@ export interface Exam {
   status: ExamStatus;
   grade: string;
   simulatedGrade?: number;
+  gradable: boolean;
   category: ExamCategory;
   language: string;
   period: TeachingPeriod;

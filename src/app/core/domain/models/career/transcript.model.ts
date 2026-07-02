@@ -13,6 +13,7 @@ export interface TranscriptRow {
   dataEsame: string | null;
   superata: boolean;
   numAppelliPrenotabili: number;
+  modValCod?: string;
 }
 
 export interface TranscriptResponse {
