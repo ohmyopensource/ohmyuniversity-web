@@ -23,6 +23,7 @@ import {
   SurveySummaryResponse,
   SurveyGetPageRequest,
 } from '../../domain/models/career/survey-compilation.model';
+import { CourseDetailResponse } from '../../domain/models/career/course-detail.model';
 
 @Injectable()
 export class ExamsApiRepository extends ExamsRepository {
@@ -104,5 +105,17 @@ export class ExamsApiRepository extends ExamsRepository {
 
   getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse> {
     return this.http.post<SurveySummaryResponse>(API.exams.surveysSummary, request);
+  }
+
+  getCourseDetail(
+    adCod: string,
+    cdsCod: string,
+    aaOffId?: number,
+    cdsOffId?: number,
+  ): Observable<CourseDetailResponse> {
+    let params = new HttpParams().set('adCod', adCod).set('cdsCod', cdsCod);
+    if (aaOffId != null) params = params.set('aaOffId', aaOffId.toString());
+    if (cdsOffId != null) params = params.set('cdsOffId', cdsOffId.toString());
+    return this.http.get<CourseDetailResponse>(API.exams.courseDetail, { params });
   }
 }

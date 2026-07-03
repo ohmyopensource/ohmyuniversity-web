@@ -37,6 +37,7 @@ export const API = {
     surveysConfirm: `${BASE}/v1/exams/surveys/confirm`,
     surveysPage: `${BASE}/v1/exams/surveys/page`,
     surveysSummary: `${BASE}/v1/exams/surveys/summary`,
+    courseDetail: `${BASE}/v1/exams/course-detail`,
   },
   fees: {
     status: `${BASE}/v1/fees/status`,

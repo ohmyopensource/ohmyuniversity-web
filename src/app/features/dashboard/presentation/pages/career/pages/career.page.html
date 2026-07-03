@@ -38,6 +38,7 @@
         [activeFilter]="activeFilter()"
         [yearFilterOptions]="yearFilterOptions()"
         [selectedYear]="yearFilter() === 'ALL' ? 'ALL' : yearFilter().toString()"
+        [cdsCod]="careerInfo()?.cdsCod ?? ''"
         (filterChange)="applyFilter($event)"
         (yearChange)="applyYearFilter($event)"
         (simulatedGradeChange)="setSimulatedGrade($event.courseCode, $event.grade)" />

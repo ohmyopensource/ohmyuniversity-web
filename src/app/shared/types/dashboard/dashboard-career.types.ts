@@ -56,14 +56,26 @@ export interface Exam {
   simulatedGrade?: number;
   gradable: boolean;
   category: ExamCategory;
-  language: string;
-  period: TeachingPeriod;
-  durationHours: number;
-  attendance: AttendanceType;
-  scientificSector: string;
-  location: string;
-  cfuBreakdown: CfuBreakdownItem[];
   prerequisites: string[];
+  adId?: number;
+  cdsId?: number;
+  aaOffId?: number;
+  detail?: CourseDetail;
+  detailLoading?: boolean;
+  detailError?: boolean;
+}
+
+/** Publicly available course catalog details, fetched lazily per exam. */
+export interface CourseDetail {
+  period: string | null;
+  location: string | null;
+  teachingStartDate: string | null;
+  teachingEndDate: string | null;
+  teachingLanguage: string | null;
+  examType: string | null;
+  evaluationType: string | null;
+  mandatory: boolean | null;
+  coursePageUrl: string | null;
 }
 
 /** Descriptor for a selectable exam list filter option. */

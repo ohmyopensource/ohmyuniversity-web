@@ -14,6 +14,9 @@ export interface TranscriptRow {
   superata: boolean;
   numAppelliPrenotabili: number;
   modValCod?: string;
+  adId?: number;
+  cdsId?: number;
+  aaOffId?: number;
 }
 
 export interface TranscriptResponse {

@@ -9,7 +9,7 @@
  * every elective is meant to be booked.
  */
 
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   LucideDynamicIcon,
@@ -28,6 +28,8 @@ import { CustomInputComponent, SelectOption } from '@ui/custom-input/custom-inpu
 import { TEACHING_PERIOD_LABELS, ATTENDANCE_LABELS } from '@constants';
 import { Exam, ExamFilter, ExamGroup, FilterOption, TeachingPeriod, AttendanceType } from '@types';
 import { GradeSimulatorPopupComponent } from '../grade-simulator-popup/grade-simulator-popup.component';
+import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { CourseDetailResponse } from 'src/app/core/domain/models/career/course-detail.model';
 
 interface PopupState {
   courseCode: string;
@@ -56,18 +58,24 @@ export class CareerExamsComponent {
   readonly iconLock = LucideLock;
   readonly iconPencil = LucidePencil;
 
+  private readonly careerFacade = inject(CareerFacade);
+
   readonly mandatoryGroups = input.required<ExamGroup[]>();
   readonly electiveExams = input.required<Exam[]>();
   readonly filterOptions = input.required<FilterOption[]>();
   readonly activeFilter = input.required<ExamFilter>();
   readonly yearFilterOptions = input.required<SelectOption[]>();
   readonly selectedYear = input.required<string>();
+  readonly cdsCod = input.required<string>();
 
   readonly filterChange = output<ExamFilter>();
   readonly yearChange = output<string>();
   readonly simulatedGradeChange = output<{ courseCode: string; grade: number | null }>();
 
   readonly openExamCodes = new Set<string>();
+  readonly courseDetails = signal<Record<string, CourseDetailResponse>>({});
+  readonly loadingDetails = signal<Record<string, boolean>>({});
+  readonly errorDetails = signal<Record<string, boolean>>({});
   activePopup: PopupState | null = null;
 
   get selectedYearModel(): string {
@@ -82,16 +90,61 @@ export class CareerExamsComponent {
     this.filterChange.emit(id as ExamFilter);
   }
 
-  toggleExam(courseCode: string): void {
+  toggleExam(exam: Exam): void {
+    const courseCode = exam.courseCode;
     if (this.openExamCodes.has(courseCode)) {
       this.openExamCodes.delete(courseCode);
-    } else {
-      this.openExamCodes.add(courseCode);
+      return;
     }
+    this.openExamCodes.add(courseCode);
+    this.loadCourseDetail(exam);
   }
 
   isOpen(courseCode: string): boolean {
     return this.openExamCodes.has(courseCode);
+  }
+
+  courseDetail(courseCode: string): CourseDetailResponse | undefined {
+    return this.courseDetails()[courseCode];
+  }
+
+  isDetailLoading(courseCode: string): boolean {
+    return !!this.loadingDetails()[courseCode];
+  }
+
+  isDetailError(courseCode: string): boolean {
+    return !!this.errorDetails()[courseCode];
+  }
+
+  private loadCourseDetail(exam: Exam): void {
+    const courseCode = exam.courseCode;
+    if (this.courseDetails()[courseCode] || this.loadingDetails()[courseCode]) {
+      return;
+    }
+    this.loadingDetails.update(m => ({ ...m, [courseCode]: true }));
+    this.errorDetails.update(m => {
+      const { [courseCode]: _, ...rest } = m;
+      return rest;
+    });
+
+    this.careerFacade
+      .getCourseDetail(courseCode, this.cdsCod(), exam.aaOffId, exam.cdsId)
+      .subscribe({
+        next: detail => {
+          this.loadingDetails.update(m => {
+            const { [courseCode]: _, ...rest } = m;
+            return rest;
+          });
+          this.courseDetails.update(m => ({ ...m, [courseCode]: detail }));
+        },
+        error: () => {
+          this.loadingDetails.update(m => {
+            const { [courseCode]: _, ...rest } = m;
+            return rest;
+          });
+          this.errorDetails.update(m => ({ ...m, [courseCode]: true }));
+        },
+      });
   }
 
   openSimulator(event: MouseEvent, courseCode: string): void {

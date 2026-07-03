@@ -64,9 +64,9 @@
                   <button
                     type="button"
                     class="flex min-w-0 flex-1 items-center gap-2.5 text-left"
-                    (click)="toggleExam(exam.courseCode)"
-                    (keydown.enter)="toggleExam(exam.courseCode)"
-                    (keydown.space)="toggleExam(exam.courseCode)">
+                    (click)="toggleExam(exam)"
+                    (keydown.enter)="toggleExam(exam)"
+                    (keydown.space)="toggleExam(exam)">
                     <svg
                       [lucideIcon]="iconChevron"
                       [size]="15"
@@ -144,80 +144,99 @@
                       background: var(--color-neutral-50);
                       border-color: var(--color-neutral-100);
                     ">
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Lingua
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ exam.language }}
-                        </p>
+                    @if (isDetailLoading(exam.courseCode)) {
+                      <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                        Caricamento dettagli...
+                      </p>
+                    } @else if (isDetailError(exam.courseCode)) {
+                      <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                        Dettagli non disponibili al momento.
+                      </p>
+                    } @else {
+                      @let detail = courseDetail(exam.courseCode);
+                      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <div>
+                          <p
+                            class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                            style="color: var(--color-neutral-400)">
+                            Lingua
+                          </p>
+                          <p
+                            class="text-[0.82rem] font-medium m-0 mt-0.5"
+                            style="color: var(--color-neutral-700)">
+                            {{ detail?.teachingLanguage ?? 'Italiano' }}
+                          </p>
+                        </div>
+                        @if (detail?.period) {
+                          <div>
+                            <p
+                              class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                              style="color: var(--color-neutral-400)">
+                              Periodo
+                            </p>
+                            <p
+                              class="text-[0.82rem] font-medium m-0 mt-0.5"
+                              style="color: var(--color-neutral-700)">
+                              {{ detail?.period }}
+                            </p>
+                          </div>
+                        }
+                        @if (detail?.examType) {
+                          <div>
+                            <p
+                              class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                              style="color: var(--color-neutral-400)">
+                              Tipo esame
+                            </p>
+                            <p
+                              class="text-[0.82rem] font-medium m-0 mt-0.5"
+                              style="color: var(--color-neutral-700)">
+                              {{ detail?.examType }}
+                            </p>
+                          </div>
+                        }
+                        @if (detail?.evaluationType) {
+                          <div>
+                            <p
+                              class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                              style="color: var(--color-neutral-400)">
+                              Valutazione
+                            </p>
+                            <p
+                              class="text-[0.82rem] font-medium m-0 mt-0.5"
+                              style="color: var(--color-neutral-700)">
+                              {{ detail?.evaluationType }}
+                            </p>
+                          </div>
+                        }
+                        @if (detail?.location) {
+                          <div>
+                            <p
+                              class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                              style="color: var(--color-neutral-400)">
+                              Sede
+                            </p>
+                            <p
+                              class="text-[0.82rem] font-medium m-0 mt-0.5"
+                              style="color: var(--color-neutral-700)">
+                              {{ detail?.location }}
+                            </p>
+                          </div>
+                        }
                       </div>
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Periodo
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ periodLabel(exam.period) }}
-                        </p>
-                      </div>
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Durata
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ exam.durationHours }} ore
-                        </p>
-                      </div>
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Frequenza
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ attendanceLabel(exam.attendance) }}
-                        </p>
-                      </div>
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Settore
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ exam.scientificSector }}
-                        </p>
-                      </div>
-                      <div>
-                        <p
-                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                          style="color: var(--color-neutral-400)">
-                          Sede
-                        </p>
-                        <p
-                          class="text-[0.82rem] font-medium m-0 mt-0.5"
-                          style="color: var(--color-neutral-700)">
-                          {{ exam.location }}
-                        </p>
-                      </div>
-                    </div>
+
+                      @if (detail?.coursePageUrl) {
+                        <div class="mt-4">
+                          <app-custom-button
+                            label="Vedi scheda completa"
+                            [icon]="iconBooking"
+                            mode="link-external"
+                            [href]="detail?.coursePageUrl ?? ''"
+                            variant="ghost"
+                            size="sm" />
+                        </div>
+                      }
+                    }
 
                     @if (exam.prerequisites.length > 0) {
                       <div
@@ -231,30 +250,6 @@
                         <p class="text-[0.78rem] m-0 mt-0.5" style="color: var(--color-info-dark)">
                           {{ exam.prerequisites.join(', ') }}
                         </p>
-                      </div>
-                    }
-
-                    @if (exam.cfuBreakdown.length > 0) {
-                      <div class="mt-3">
-                        <p
-                          class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-2"
-                          style="color: var(--color-neutral-400)">
-                          Programma per CFU
-                        </p>
-                        <div class="flex flex-col gap-1.5">
-                          @for (item of exam.cfuBreakdown; track item.cfuNumber) {
-                            <div class="flex gap-3 text-[0.78rem]">
-                              <span
-                                class="shrink-0 font-semibold"
-                                style="color: var(--color-neutral-500)">
-                                CFU {{ item.cfuNumber }}
-                              </span>
-                              <span style="color: var(--color-neutral-600)">{{
-                                item.description
-                              }}</span>
-                            </div>
-                          }
-                        </div>
                       </div>
                     }
 
@@ -304,9 +299,9 @@
               <button
                 type="button"
                 class="flex min-w-0 flex-1 items-center gap-2.5 text-left"
-                (click)="toggleExam(exam.courseCode)"
-                (keydown.enter)="toggleExam(exam.courseCode)"
-                (keydown.space)="toggleExam(exam.courseCode)">
+                (click)="toggleExam(exam)"
+                (keydown.enter)="toggleExam(exam)"
+                (keydown.space)="toggleExam(exam)">
                 <svg
                   [lucideIcon]="iconChevron"
                   [size]="15"
@@ -369,80 +364,99 @@
               <div
                 class="px-4 py-4 border-t"
                 style="background: var(--color-neutral-50); border-color: var(--color-neutral-100)">
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Lingua
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ exam.language }}
-                    </p>
+                @if (isDetailLoading(exam.courseCode)) {
+                  <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                    Caricamento dettagli...
+                  </p>
+                } @else if (isDetailError(exam.courseCode)) {
+                  <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                    Dettagli non disponibili al momento.
+                  </p>
+                } @else {
+                  @let detail = courseDetail(exam.courseCode);
+                  <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div>
+                      <p
+                        class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                        style="color: var(--color-neutral-400)">
+                        Lingua
+                      </p>
+                      <p
+                        class="text-[0.82rem] font-medium m-0 mt-0.5"
+                        style="color: var(--color-neutral-700)">
+                        {{ detail?.teachingLanguage ?? 'Italiano' }}
+                      </p>
+                    </div>
+                    @if (detail?.period) {
+                      <div>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Periodo
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ detail?.period }}
+                        </p>
+                      </div>
+                    }
+                    @if (detail?.examType) {
+                      <div>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Tipo esame
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ detail?.examType }}
+                        </p>
+                      </div>
+                    }
+                    @if (detail?.evaluationType) {
+                      <div>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Valutazione
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ detail?.evaluationType }}
+                        </p>
+                      </div>
+                    }
+                    @if (detail?.location) {
+                      <div>
+                        <p
+                          class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
+                          style="color: var(--color-neutral-400)">
+                          Sede
+                        </p>
+                        <p
+                          class="text-[0.82rem] font-medium m-0 mt-0.5"
+                          style="color: var(--color-neutral-700)">
+                          {{ detail?.location }}
+                        </p>
+                      </div>
+                    }
                   </div>
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Periodo
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ periodLabel(exam.period) }}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Durata
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ exam.durationHours }} ore
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Frequenza
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ attendanceLabel(exam.attendance) }}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Settore
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ exam.scientificSector }}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-[0.65rem] font-semibold uppercase tracking-wide m-0"
-                      style="color: var(--color-neutral-400)">
-                      Sede
-                    </p>
-                    <p
-                      class="text-[0.82rem] font-medium m-0 mt-0.5"
-                      style="color: var(--color-neutral-700)">
-                      {{ exam.location }}
-                    </p>
-                  </div>
-                </div>
+
+                  @if (detail?.coursePageUrl) {
+                    <div class="mt-4">
+                      <app-custom-button
+                        label="Vedi scheda completa"
+                        [icon]="iconBooking"
+                        mode="link-external"
+                        [href]="detail?.coursePageUrl ?? ''"
+                        variant="ghost"
+                        size="sm" />
+                    </div>
+                  }
+                }
               </div>
             }
           </div>

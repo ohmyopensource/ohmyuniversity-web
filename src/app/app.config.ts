@@ -154,6 +154,7 @@ import {
   LucideHourglass,
   LucideLibrary,
 } from '@lucide/angular';
+import { GetCourseDetailUseCase } from './core/application/usecases/career/get-course-detail.usecase';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -196,6 +197,7 @@ export const appConfig: ApplicationConfig = {
     GetStudyPlanUseCase,
     GetExamHistoryUseCase,
     GetRecommendationsUseCase,
+    GetCourseDetailUseCase,
 
     // Exams
     GetBookableSessionsUseCase,

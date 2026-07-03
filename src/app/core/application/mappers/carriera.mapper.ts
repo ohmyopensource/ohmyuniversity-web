@@ -22,15 +22,11 @@ function rigaToExam(
     grade:
       transcriptRow?.voto != null ? (transcriptRow.lode ? '30L' : String(transcriptRow.voto)) : '',
     simulatedGrade: undefined,
-    language: 'N/D',
-    period: 'N/D' as any,
-    durationHours: 0,
-    attendance: 'N/D' as any,
-    scientificSector: 'N/D',
-    location: 'N/D',
     prerequisites: [],
-    cfuBreakdown: [],
     gradable: modValCod === 'V',
+    adId: transcriptRow?.adId,
+    cdsId: transcriptRow?.cdsId,
+    aaOffId: transcriptRow?.aaOffId,
   };
 }
 

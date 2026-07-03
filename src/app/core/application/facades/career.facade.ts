@@ -50,6 +50,8 @@ import {
 import { GetSurveySummaryUseCase } from '../usecases/exams/get-survey-summary.usecase';
 import { GetSurveyPageUseCase } from '../usecases/exams/get-survey-page.usecase';
 import { GetSurveyUnitsUseCase } from '../usecases/exams/get-survey-units.usecase';
+import { GetCourseDetailUseCase } from '../usecases/career/get-course-detail.usecase';
+import { CourseDetailResponse } from '../../domain/models/career/course-detail.model';
 
 @Injectable()
 export class CareerFacade {
@@ -75,6 +77,7 @@ export class CareerFacade {
   private readonly confirmSurveyUseCase = inject(ConfirmSurveyUseCase);
   private readonly getSurveyPageUseCase = inject(GetSurveyPageUseCase);
   private readonly getSurveySummaryUseCase = inject(GetSurveySummaryUseCase);
+  private readonly getCourseDetailUseCase = inject(GetCourseDetailUseCase);
 
   getTranscript(): Observable<Exam[]> {
     return this.getTranscriptUseCase.execute();
@@ -162,5 +165,14 @@ export class CareerFacade {
 
   getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse> {
     return this.getSurveySummaryUseCase.execute(request);
+  }
+
+  getCourseDetail(
+    adCod: string,
+    cdsCod: string,
+    aaOffId?: number,
+    cdsOffId?: number,
+  ): Observable<CourseDetailResponse> {
+    return this.getCourseDetailUseCase.execute(adCod, cdsCod, aaOffId, cdsOffId);
   }
 }

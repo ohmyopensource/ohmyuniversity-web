@@ -16,6 +16,7 @@ import {
   SurveySummaryResponse,
   SurveyGetPageRequest,
 } from '../models/career/survey-compilation.model';
+import { CourseDetailResponse } from '../models/career/course-detail.model';
 
 export abstract class ExamsRepository {
   abstract getSessions(cdsId: number, adId: number): Observable<BookableSessionsResponse>;
@@ -32,4 +33,10 @@ export abstract class ExamsRepository {
   abstract confirmSurvey(request: SurveyConfirmRequest): Observable<void>;
   abstract getSurveyPage(request: SurveyGetPageRequest): Observable<SurveyPage>;
   abstract getSurveySummary(request: SurveySummaryRequest): Observable<SurveySummaryResponse>;
+  abstract getCourseDetail(
+    adCod: string,
+    cdsCod: string,
+    aaOffId?: number,
+    cdsOffId?: number,
+  ): Observable<CourseDetailResponse>;
 }
