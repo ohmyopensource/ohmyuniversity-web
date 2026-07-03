@@ -18,6 +18,8 @@ export interface CareerInfoResponse {
   facCod: string;
   facDes: string;
   annoCorso: number;
+  durataCorso?: number;
+  cfuTitolo?: number;
   aaIscrId: number;
   aaOrdId: number;
   dataImm: string;

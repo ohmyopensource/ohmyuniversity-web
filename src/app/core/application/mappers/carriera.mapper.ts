@@ -16,7 +16,7 @@ function rigaToExam(
     courseCode: adCod,
     courseName: adDes,
     cfu: cfu ?? 0,
-    academicYear: annoCorso ?? 1,
+    academicYear: annoCorso ?? 0,
     category: tipoInsCod === 'S' ? 'ELECTIVE' : 'MANDATORY',
     status: superata ? 'PASSED' : 'TO_TAKE',
     grade:

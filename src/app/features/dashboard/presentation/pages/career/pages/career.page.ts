@@ -14,6 +14,7 @@ import { DashboardContainerComponent } from '@ui/dashboard-container/dashboard-c
 import { SelectOption } from '@ui/custom-input/custom-input.component';
 import { GradesResponse } from 'src/app/core/domain/models/career/grades.model';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
+import { CareerInfoResponse } from 'src/app/core/domain/models/career/career-info.model';
 
 const MAX_GRADE = 30;
 const GRADUATION_BASE_MAX = 110;
@@ -38,6 +39,7 @@ export class CareerPage implements OnInit {
   readonly exams = signal<Exam[]>([]);
   readonly yearFilter = signal<number | 'ALL' | 'ELECTIVE'>('ALL');
   readonly media = signal<GradesResponse | null>(null);
+  readonly careerInfo = signal<CareerInfoResponse | null>(null);
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -62,6 +64,11 @@ export class CareerPage implements OnInit {
 
     this.carriera.getGrades().subscribe({
       next: media => this.media.set(media),
+      error: () => {},
+    });
+
+    this.carriera.getCareerInfo().subscribe({
+      next: info => this.careerInfo.set(info),
       error: () => {},
     });
   }
@@ -131,7 +138,6 @@ export class CareerPage implements OnInit {
     this.yearFilter.set(year === 'ALL' ? 'ALL' : year === 'ELECTIVE' ? 'ELECTIVE' : Number(year));
   }
 
-  // Stats - usa media da API se disponibile, altrimenti calcola dal libretto
   readonly earnedCfu = computed(
     () =>
       this.media()?.cfu ??
@@ -140,7 +146,29 @@ export class CareerPage implements OnInit {
         .reduce((s, e) => s + e.cfu, 0),
   );
 
-  readonly totalCfu = computed(() => this.media()?.cfuTotali ?? 180);
+  readonly totalCfu = computed(() => {
+    const byTipoCorso = this.cfuFromTipoCorso(this.careerInfo()?.tipoCorsoCod);
+    if (byTipoCorso) return byTipoCorso;
+    const apiTot = this.media()?.cfuTotali;
+    if (apiTot && apiTot > 0) return apiTot;
+    const sum = this.exams().reduce((s, e) => s + (e.cfu ?? 0), 0);
+    return sum > 0 ? sum : 180;
+  });
+
+  /** Maps the ministerial course type to the total credits required for the degree. */
+  private cfuFromTipoCorso(cod: string | undefined): number | null {
+    if (!cod) return null;
+    const map: Record<string, number> = {
+      L: 180, // 3 years
+      LM: 120, // 2 years
+      LM5: 300, // 3 + 2 years
+      LM6: 360, // 6 years
+      LS: 120, // Old stuff
+      L2: 180,
+      CU: 300, // 5 years fallback
+    };
+    return map[cod] ?? null;
+  }
 
   readonly cfuProgress = computed(() =>
     Math.min(100, Math.round((this.earnedCfu() / this.totalCfu()) * 100)),
@@ -248,7 +276,14 @@ export class CareerPage implements OnInit {
   }
 
   private formatYearLabel(year: number): string {
-    const labels: Record<number, string> = { 1: 'Primo anno', 2: 'Secondo anno', 3: 'Terzo anno' };
+    const labels: Record<number, string> = {
+      1: 'Primo anno',
+      2: 'Secondo anno',
+      3: 'Terzo anno',
+      4: 'Quarto anno',
+      5: 'Quinto anno',
+      6: 'Sesto anno',
+    };
     return labels[year] ?? `Anno ${year}`;
   }
 
