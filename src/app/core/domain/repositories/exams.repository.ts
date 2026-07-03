@@ -4,7 +4,7 @@ import {
   LegacyBookingRequest,
   LegacyBookingsResponse,
 } from '../models/career/legacy-bookings.model';
-import { SurveysResponse } from '../models/career/surveys.model';
+import { SurveysResponse, SurveyUnitsResponse } from '../models/career/surveys.model';
 import { BookExamRequest, CancelBookingRequest } from '../models/career/book-exam.model';
 import {
   SurveyStartResponse,
@@ -23,9 +23,10 @@ export abstract class ExamsRepository {
   abstract getBookings(): Observable<BookingsResponse>;
   abstract getLegacyBookings(request: LegacyBookingRequest): Observable<LegacyBookingsResponse>;
   abstract getSurveys(): Observable<SurveysResponse>;
+  abstract getSurveyUnits(adsceId: number): Observable<SurveyUnitsResponse>;
   abstract bookExam(request: BookExamRequest): Observable<void>;
   abstract cancelBooking(request: CancelBookingRequest): Observable<void>;
-  abstract startSurvey(adsceId: number): Observable<SurveyStartResponse>;
+  abstract startSurvey(adsceId: number, tags?: string): Observable<SurveyStartResponse>;
   abstract saveSurveyPage(request: SurveySaveRequest): Observable<void>;
   abstract navigateSurvey(request: SurveyNavigateRequest): Observable<SurveyPage>;
   abstract confirmSurvey(request: SurveyConfirmRequest): Observable<void>;

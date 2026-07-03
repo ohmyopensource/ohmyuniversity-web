@@ -6,7 +6,7 @@ import { SurveyStartResponse } from '../../../domain/models/career/survey-compil
 @Injectable()
 export class StartSurveyUseCase {
   private readonly repo = inject(ExamsRepository);
-  execute(adsceId: number): Observable<SurveyStartResponse> {
-    return this.repo.startSurvey(adsceId);
+  execute(adsceId: number, tags?: string): Observable<SurveyStartResponse> {
+    return this.repo.startSurvey(adsceId, tags);
   }
 }

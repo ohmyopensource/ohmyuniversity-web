@@ -8,10 +8,10 @@ import {
   LucideInfo,
   LucideExternalLink,
   LucideTriangleAlert,
+  LucideChevronRight,
 } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
-import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
 import { SurveyExam } from 'src/app/core/domain/models/career/surveys.model';
 import { ToastService } from '@ui/custom-toast/toast.service';
@@ -20,13 +20,7 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 @Component({
   selector: 'app-questionnaire-list',
   standalone: true,
-  imports: [
-    CustomCardComponent,
-    CustomBadgeComponent,
-    CustomButtonComponent,
-    CardStatusComponent,
-    LucideDynamicIcon,
-  ],
+  imports: [CustomCardComponent, CustomBadgeComponent, CardStatusComponent, LucideDynamicIcon],
   templateUrl: './questionnaire-list.component.html',
 })
 export class QuestionnaireListComponent implements OnInit {
@@ -40,17 +34,20 @@ export class QuestionnaireListComponent implements OnInit {
   readonly iconInfo = LucideInfo;
   readonly iconExternal = LucideExternalLink;
   readonly lucideAlertTriangle = LucideTriangleAlert;
+  readonly iconChevron = LucideChevronRight;
 
   readonly loading = signal(true);
   readonly error = signal(false);
-  readonly daCompilare = signal<SurveyExam[]>([]);
-  readonly compilati = signal<SurveyExam[]>([]);
+  readonly questionari = signal<SurveyExam[]>([]);
 
   ngOnInit(): void {
     this.carriera.getSurveys().subscribe({
       next: response => {
-        this.daCompilare.set(response.daCompilare);
-        this.compilati.set(response.compilati);
+        const merged = new Map<number, SurveyExam>();
+        for (const q of [...response.daCompilare, ...response.compilati]) {
+          merged.set(q.adsceId, q);
+        }
+        this.questionari.set([...merged.values()]);
         this.loading.set(false);
       },
       error: () => {
@@ -60,7 +57,7 @@ export class QuestionnaireListComponent implements OnInit {
     });
   }
 
-  onCompila(adsceId: number): void {
+  onOpen(adsceId: number): void {
     this.router.navigate(['/dashboard/appelli/questionari', adsceId]);
   }
 

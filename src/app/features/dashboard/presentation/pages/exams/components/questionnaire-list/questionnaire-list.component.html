@@ -12,159 +12,74 @@
     description="Impossibile recuperare i questionari. Riprova più tardi." />
 } @else {
   <div class="flex flex-col gap-5">
-    <!-- Da compilare -->
     <div class="flex flex-col gap-3">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 py-2">
         <svg
           [lucideIcon]="iconClipboard"
           [size]="15"
           style="color: var(--color-primary-dark)"
           aria-hidden="true"></svg>
-        <h2 appText variant="h6" class="m-0">Da compilare</h2>
-        <app-custom-badge [count]="daCompilare().length" variant="primary" size="xs" shape="pill" />
+        <h2 appText variant="h6" class="m-0">Questionari</h2>
+        <app-custom-badge [count]="questionari().length" variant="primary" size="xs" shape="pill" />
       </div>
 
-      @if (daCompilare().length === 0) {
-        <app-custom-card variant="success" padding="md" shadow="none" [bordered]="true" radius="lg">
-          <div class="flex items-center gap-3">
-            <svg
-              [lucideIcon]="iconClipboardDone"
-              [size]="20"
-              style="color: var(--color-success-dark)"
-              aria-hidden="true"></svg>
-            <p appText variant="body-sm" color="muted" class="m-0">
-              Hai compilato tutti i questionari disponibili. Ottimo lavoro!
-            </p>
-          </div>
+      @if (questionari().length === 0) {
+        <app-custom-card variant="neutral" padding="md" shadow="none" [bordered]="true" radius="lg">
+          <p appText variant="body-sm" color="muted" class="m-0">
+            Nessun questionario disponibile per l'anno accademico corrente.
+          </p>
         </app-custom-card>
       }
 
-      @for (q of daCompilare(); track q.adsceId) {
+      @for (q of questionari(); track q.adsceId) {
         <app-custom-card
           variant="default"
           padding="md"
           shadow="sm"
           [bordered]="true"
           radius="lg"
-          [accentBar]="true">
-          <div class="flex flex-col gap-3">
-            <div class="flex items-start justify-between gap-3 flex-wrap">
-              <div class="flex items-start gap-3 flex-1 min-w-0">
-                <div
-                  class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
-                  style="background: var(--color-primary-light)">
-                  <svg
-                    [lucideIcon]="iconClipboard"
-                    [size]="16"
-                    style="color: var(--color-primary-dark)"
-                    aria-hidden="true"></svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 appText variant="h6" class="m-0">{{ q.adDes || q.adCod }}</h3>
-                  <p class="text-[0.75rem] m-0 mt-0.5" style="color: var(--color-neutral-500)">
-                    {{ q.adCod }} · {{ q.cfu }} CFU · Anno {{ q.annoCorso }}
-                  </p>
-                </div>
-              </div>
-              <app-custom-badge
-                label="Da compilare"
-                variant="primary"
-                size="sm"
-                shape="pill"
-                [dot]="true" />
-            </div>
-
-            <div class="flex items-center gap-1.5 px-1">
-              <svg
-                [lucideIcon]="iconClock"
-                [size]="12"
-                style="color: var(--color-primary-dark)"
-                aria-hidden="true"></svg>
-              <span class="text-[0.75rem]" style="color: var(--color-primary-dark)">
-                Obbligatorio per prenotare l'appello d'esame
-              </span>
-            </div>
-
-            <app-custom-button
-              variant="primary"
-              size="md"
-              label="Compila questionario"
-              [icon]="iconClipboard"
-              iconPosition="right"
-              [fullWidth]="true"
-              (clicked)="onCompila(q.adsceId)" />
-          </div>
-        </app-custom-card>
-      }
-    </div>
-
-    <!-- Compilati -->
-    <div class="flex flex-col gap-3">
-      <div class="flex items-center gap-2">
-        <svg
-          [lucideIcon]="iconClipboardDone"
-          [size]="15"
-          style="color: var(--color-success-dark)"
-          aria-hidden="true"></svg>
-        <h2 appText variant="h6" class="m-0">Compilati</h2>
-        <app-custom-badge [count]="compilati().length" variant="success" size="xs" shape="pill" />
-      </div>
-
-      @for (q of compilati(); track q.adsceId) {
-        <app-custom-card variant="neutral" padding="md" shadow="none" [bordered]="true" radius="lg">
-          <div class="flex items-center justify-between gap-4">
+          [clickable]="true"
+          [hoverable]="true"
+          [ariaLabel]="'Apri i questionari di ' + (q.adDes || q.adCod)"
+          (cardClick)="onOpen(q.adsceId)">
+          <div class="flex items-center justify-between gap-4 w-full">
             <div class="flex items-center gap-3 flex-1 min-w-0">
               <div
                 class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
-                style="background: var(--color-success-light)">
+                style="background: var(--color-primary-light)">
                 <svg
-                  [lucideIcon]="iconClipboardDone"
+                  [lucideIcon]="iconClipboard"
                   [size]="16"
-                  style="color: var(--color-success-dark)"
+                  style="color: var(--color-primary-dark)"
                   aria-hidden="true"></svg>
               </div>
               <div class="flex-1 min-w-0">
-                <h3 appText variant="h6" class="m-0 truncate">{{ q.adDes }}</h3>
-                <p class="text-[0.75rem] m-0 mt-0.5" style="color: var(--color-neutral-400)">
+                <h3 appText variant="h6" class="m-0 truncate">{{ q.adDes || q.adCod }}</h3>
+                <p class="text-[0.75rem] m-0 mt-0.5" style="color: var(--color-neutral-500)">
                   {{ q.adCod }} · {{ q.cfu }} CFU · Anno {{ q.annoCorso }}
                 </p>
               </div>
             </div>
-            <app-custom-badge
-              label="Compilato"
-              variant="success"
-              size="sm"
-              shape="pill"
-              [dot]="true" />
+            <svg
+              [lucideIcon]="iconChevron"
+              [size]="18"
+              style="color: var(--color-neutral-400)"
+              aria-hidden="true"></svg>
           </div>
         </app-custom-card>
       }
     </div>
 
-    <!-- Disclaimer -->
-    <div class="flex flex-col gap-2 px-1">
-      <div class="flex items-start gap-2">
-        <svg
-          [lucideIcon]="iconInfo"
-          [size]="13"
-          style="color: var(--color-neutral-400); margin-top: 1px"
-          aria-hidden="true"></svg>
-        <p appText variant="caption" color="subtle" class="m-0">
-          I questionari sono completamente <strong>anonimi</strong> - i docenti non possono sapere
-          chi li ha compilati. Una volta inviati non possono essere modificati.
-        </p>
-      </div>
-      <div class="flex items-start gap-2">
-        <svg
-          [lucideIcon]="iconInfo"
-          [size]="13"
-          style="color: var(--color-neutral-400); margin-top: 1px"
-          aria-hidden="true"></svg>
-        <p appText variant="caption" color="subtle" class="m-0">
-          Vengono mostrati solo i questionari dell'anno accademico corrente. I questionari degli
-          anni precedenti non sono più visibili.
-        </p>
-      </div>
+    <div class="flex items-start gap-2 px-1">
+      <svg
+        [lucideIcon]="iconInfo"
+        [size]="13"
+        style="color: var(--color-neutral-400); margin-top: 1px"
+        aria-hidden="true"></svg>
+      <p appText variant="caption" color="subtle" class="m-0">
+        Ogni questionario è <strong>anonimo</strong>. Un corso può contenere più questionari (per
+        modulo o docente): aprilo per compilarli tutti.
+      </p>
     </div>
   </div>
 }

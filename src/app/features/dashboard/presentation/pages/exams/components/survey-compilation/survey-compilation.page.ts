@@ -122,7 +122,8 @@ export class SurveyCompilationPage implements OnInit {
       return;
     }
 
-    this.carriera.startSurvey(this.adsceId).subscribe({
+    const tags = this.route.snapshot.queryParamMap.get('tags') ?? undefined;
+    this.carriera.startSurvey(this.adsceId, tags).subscribe({
       next: res => {
         this.questionarioId = res.questionarioId;
         this.questCompId = res.questCompId;
@@ -471,9 +472,7 @@ export class SurveyCompilationPage implements OnInit {
           this.toast.success('Questionario compilato e confermato con successo.', {
             duration: 5000,
           });
-          this.router.navigate(['/dashboard/appelli'], {
-            queryParams: { tab: 'questionnaires' },
-          });
+          this.router.navigate(['/dashboard/appelli/questionari', this.adsceId]);
         },
         error: err => {
           this.confirming.set(false);
@@ -485,7 +484,7 @@ export class SurveyCompilationPage implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/dashboard/appelli'], { queryParams: { tab: 'questionnaires' } });
+    this.router.navigate(['/dashboard/appelli/questionari', this.adsceId]);
   }
 
   // ============ Error parsing ============

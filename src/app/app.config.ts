@@ -64,6 +64,7 @@ import { NavigateSurveyUseCase } from './core/application/usecases/exams/navigat
 import { ConfirmSurveyUseCase } from './core/application/usecases/exams/confirm-survey.usecase';
 import { GetSurveyPageUseCase } from './core/application/usecases/exams/get-survey-page.usecase';
 import { GetSurveySummaryUseCase } from './core/application/usecases/exams/get-survey-summary.usecase';
+import { GetSurveyUnitsUseCase } from './core/application/usecases/exams/get-survey-units.usecase';
 
 // Fees usecases
 import { GetFeesStatusUseCase } from './core/application/usecases/fees/get-fees-status.usecase';
@@ -209,6 +210,7 @@ export const appConfig: ApplicationConfig = {
     ConfirmSurveyUseCase,
     GetSurveyPageUseCase,
     GetSurveySummaryUseCase,
+    GetSurveyUnitsUseCase,
 
     // Fees
     GetFeesStatusUseCase,

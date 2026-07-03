@@ -1,0 +1,137 @@
+<app-dashboard-container>
+  <app-dashboard-header
+    [title]="title()"
+    description="Questo corso ha più questionari (uno per modulo/docente). Compila quelli ancora aperti." />
+
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-16 gap-3">
+      <svg
+        [lucideIcon]="iconLoader"
+        [size]="28"
+        class="animate-spin"
+        style="color: var(--color-primary-dark)"
+        aria-hidden="true"></svg>
+      <span class="text-sm" style="color: var(--color-neutral-400)"
+        >Caricamento questionari...</span
+      >
+    </div>
+  } @else if (error()) {
+    <app-custom-card variant="error" padding="md" shadow="none" [bordered]="true" radius="lg">
+      <div class="flex items-start gap-3">
+        <svg
+          [lucideIcon]="iconAlert"
+          [size]="20"
+          style="color: var(--color-error-dark)"
+          aria-hidden="true"></svg>
+        <div class="flex flex-col gap-2">
+          <p class="m-0 font-semibold" style="color: var(--color-error-dark)">
+            Impossibile aprire i questionari
+          </p>
+          <div class="mt-1">
+            <app-custom-button
+              variant="ghost"
+              size="sm"
+              label="Torna ai questionari"
+              [icon]="iconBack"
+              iconPosition="left"
+              (clicked)="onBack()" />
+          </div>
+        </div>
+      </div>
+    </app-custom-card>
+  } @else {
+    <div class="flex flex-col gap-4 mt-2">
+      @if (allDone()) {
+        <div
+          class="flex items-center gap-2 px-3 py-2 rounded-lg"
+          style="background: var(--color-success-light)">
+          <svg
+            [lucideIcon]="iconClipboardDone"
+            [size]="15"
+            style="color: var(--color-success-dark)"
+            aria-hidden="true"></svg>
+          <span class="text-[0.82rem]" style="color: var(--color-success-dark)">
+            Hai compilato tutti i questionari di questo corso.
+          </span>
+        </div>
+      }
+
+      @for (m of moduli(); track $index) {
+        <app-custom-card
+          variant="default"
+          padding="md"
+          shadow="sm"
+          [bordered]="true"
+          radius="lg"
+          [clickable]="isPending(m)"
+          [hoverable]="isPending(m)"
+          [ariaLabel]="isPending(m) ? 'Compila il questionario di ' + (m.docente || m.udDes) : ''"
+          (cardClick)="onCompila(m)">
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-start gap-3 flex-1 min-w-0">
+              <div
+                class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+                [style.background]="
+                  isDone(m) ? 'var(--color-success-light)' : 'var(--color-primary-light)'
+                ">
+                <svg
+                  [lucideIcon]="isDone(m) ? iconClipboardDone : iconClipboard"
+                  [size]="16"
+                  [style.color]="
+                    isDone(m) ? 'var(--color-success-dark)' : 'var(--color-primary-dark)'
+                  "
+                  aria-hidden="true"></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 appText variant="h6" class="m-0 truncate">
+                  {{ m.docente || m.udDes || m.adDes || 'Questionario' }}
+                </h3>
+                <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                  <app-custom-badge
+                    [label]="moduleChip(m, $index)"
+                    variant="neutral"
+                    size="xs"
+                    shape="rounded" />
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              @if (isDone(m)) {
+                <app-custom-badge
+                  label="Compilato"
+                  variant="success"
+                  size="sm"
+                  shape="pill"
+                  [dot]="true" />
+              } @else {
+                <app-custom-button
+                  variant="primary"
+                  size="sm"
+                  label="Compila"
+                  [icon]="iconChevron"
+                  iconPosition="right"
+                  (clicked)="onCompila(m)" />
+              }
+            </div>
+          </div>
+        </app-custom-card>
+      }
+
+      @if (moduli().length === 0) {
+        <p class="text-[0.82rem] m-0 py-4 text-center" style="color: var(--color-neutral-400)">
+          Nessun questionario disponibile per questo corso.
+        </p>
+      }
+
+      <div class="mt-2">
+        <app-custom-button
+          variant="ghost"
+          size="md"
+          label="Torna ai questionari"
+          [icon]="iconBack"
+          iconPosition="left"
+          (clicked)="onBack()" />
+      </div>
+    </div>
+  }
+</app-dashboard-container>

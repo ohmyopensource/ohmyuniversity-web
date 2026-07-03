@@ -30,6 +30,7 @@ export const API = {
     cancelBooking: `${BASE}/v1/exams/bookings/cancel`,
     legacyBookings: `${BASE}/v1/exams/bookings/legacy`,
     surveys: `${BASE}/v1/exams/surveys`,
+    surveysUnits: (adsceId: number) => `${BASE}/v1/exams/surveys/${adsceId}/units`,
     surveysStart: `${BASE}/v1/exams/surveys/start`,
     surveysSave: `${BASE}/v1/exams/surveys/save`,
     surveysNavigate: `${BASE}/v1/exams/surveys/navigate`,

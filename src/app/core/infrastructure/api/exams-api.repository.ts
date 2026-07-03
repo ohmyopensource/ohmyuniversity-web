@@ -11,7 +11,7 @@ import {
   BookableSessionsResponse,
   BookingsResponse,
 } from '../../domain/models/career/sessions.model';
-import { SurveysResponse } from '../../domain/models/career/surveys.model';
+import { SurveysResponse, SurveyUnitsResponse } from '../../domain/models/career/surveys.model';
 import { BookExamRequest, CancelBookingRequest } from '../../domain/models/career/book-exam.model';
 import {
   SurveyStartResponse,
@@ -49,6 +49,10 @@ export class ExamsApiRepository extends ExamsRepository {
     return this.http.get<SurveysResponse>(API.exams.surveys);
   }
 
+  getSurveyUnits(adsceId: number): Observable<SurveyUnitsResponse> {
+    return this.http.get<SurveyUnitsResponse>(API.exams.surveysUnits(adsceId));
+  }
+
   bookExam(request: BookExamRequest): Observable<void> {
     const params = new HttpParams()
       .set('cdsId', request.cdsId.toString())
@@ -70,8 +74,11 @@ export class ExamsApiRepository extends ExamsRepository {
     );
   }
 
-  startSurvey(adsceId: number): Observable<SurveyStartResponse> {
-    const params = new HttpParams().set('adsceId', adsceId.toString());
+  startSurvey(adsceId: number, tags?: string): Observable<SurveyStartResponse> {
+    let params = new HttpParams().set('adsceId', adsceId.toString());
+    if (tags) {
+      params = params.set('tags', tags);
+    }
     return this.http.post<SurveyStartResponse>(API.exams.surveysStart, null, { params });
   }
 

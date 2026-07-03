@@ -16,7 +16,7 @@ import {
   BookingsResponse,
 } from '../../domain/models/career/sessions.model';
 import { StudyPlanResponse } from '../../domain/models/career/study-plan.model';
-import { SurveysResponse } from '../../domain/models/career/surveys.model';
+import { SurveysResponse, SurveyUnitsResponse } from '../../domain/models/career/surveys.model';
 import { GetExamHistoryUseCase } from '../usecases/career/get-exam-history.usecase';
 import { GetGradesUseCase } from '../usecases/career/get-grades.usecase';
 import { GetRecommendationsUseCase } from '../usecases/career/get-recommendations.usecase';
@@ -49,6 +49,7 @@ import {
 } from '../../domain/models/career/survey-compilation.model';
 import { GetSurveySummaryUseCase } from '../usecases/exams/get-survey-summary.usecase';
 import { GetSurveyPageUseCase } from '../usecases/exams/get-survey-page.usecase';
+import { GetSurveyUnitsUseCase } from '../usecases/exams/get-survey-units.usecase';
 
 @Injectable()
 export class CareerFacade {
@@ -65,6 +66,7 @@ export class CareerFacade {
   private readonly getBookingsUseCase = inject(GetBookingsUseCase);
   private readonly getLegacyBookingsUseCase = inject(GetLegacyBookingsUseCase);
   private readonly getSurveysUseCase = inject(GetSurveysUseCase);
+  private readonly getSurveyUnitsUseCase = inject(GetSurveyUnitsUseCase);
   private readonly bookExamUseCase = inject(BookExamUseCase);
   private readonly cancelBookingUseCase = inject(CancelBookingUseCase);
   private readonly startSurveyUseCase = inject(StartSurveyUseCase);
@@ -134,8 +136,12 @@ export class CareerFacade {
     return this.cancelBookingUseCase.execute(request);
   }
 
-  startSurvey(adsceId: number): Observable<SurveyStartResponse> {
-    return this.startSurveyUseCase.execute(adsceId);
+  startSurvey(adsceId: number, tags?: string): Observable<SurveyStartResponse> {
+    return this.startSurveyUseCase.execute(adsceId, tags);
+  }
+
+  getSurveyUnits(adsceId: number): Observable<SurveyUnitsResponse> {
+    return this.getSurveyUnitsUseCase.execute(adsceId);
   }
 
   saveSurveyPage(request: SurveySaveRequest): Observable<void> {
