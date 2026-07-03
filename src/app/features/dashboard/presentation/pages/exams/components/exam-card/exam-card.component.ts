@@ -8,6 +8,8 @@ import {
   LucideUsers,
   LucideAward,
   LucideBookOpen,
+  LucideBadgeCheck,
+  LucideInfo,
 } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
@@ -24,15 +26,18 @@ import { acronymVariant } from '@shared/utils/ui.utils';
 export class ExamCardComponent {
   readonly iconAward = LucideAward;
   readonly iconBookOpen = LucideBookOpen;
+  readonly iconBadgeCheck = LucideBadgeCheck;
 
   readonly exam = input.required<Exam>();
   readonly bookClicked = output<Exam>();
+  readonly cancelClicked = output<Exam>();
 
   readonly iconCalendarCheck = LucideCalendarCheck;
   readonly iconCalendarDays = LucideCalendarDays;
   readonly iconClock = LucideClock;
   readonly iconUser = LucideUser;
   readonly iconUsers = LucideUsers;
+  readonly iconInfo = LucideInfo;
   readonly acronymVariant = acronymVariant;
 
   statusLabel(status: BookingExamStatus): string {
@@ -85,12 +90,14 @@ export class ExamCardComponent {
   deadlineColor(status: BookingExamStatus): string {
     if (status === 'closed' || status === 'no-exam') return 'var(--color-neutral-400)';
     if (status === 'closing') return 'var(--color-warning-dark)';
+    if (status === 'booked') return 'var(--color-info-dark)';
     return 'var(--color-success-dark)';
   }
 
   deadlineBackground(status: BookingExamStatus): string {
     if (status === 'closed' || status === 'no-exam') return 'var(--color-neutral-100)';
     if (status === 'closing') return 'var(--color-warning-light)';
+    if (status === 'booked') return 'var(--color-info-light)';
     return 'var(--color-success-light)';
   }
 

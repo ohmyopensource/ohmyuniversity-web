@@ -31,18 +31,33 @@
           <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
             <app-custom-badge
               [label]="exam().courseAcronym"
-              [variant]="acronymVariant(exam().courseAcronym)"
+              variant="info"
               size="xs"
               shape="rounded" />
           </div>
         </div>
       </div>
-      <app-custom-badge
-        [label]="statusLabel(exam().status)"
-        [variant]="statusVariant(exam().status)"
-        size="sm"
-        shape="pill"
-        [dot]="true" />
+      @if (exam().status === 'booked') {
+        <div
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+          style="background: var(--color-success-light)">
+          <svg
+            [lucideIcon]="iconBadgeCheck"
+            [size]="14"
+            style="color: var(--color-success-dark)"
+            aria-hidden="true"></svg>
+          <span class="text-[0.75rem] font-semibold" style="color: var(--color-success-dark)">
+            Prenotato
+          </span>
+        </div>
+      } @else {
+        <app-custom-badge
+          [label]="statusLabel(exam().status)"
+          [variant]="statusVariant(exam().status)"
+          size="sm"
+          shape="pill"
+          [dot]="true" />
+      }
     </div>
 
     <!-- Info grid -->
@@ -172,18 +187,45 @@
             [size]="12"
             [style.color]="deadlineColor(exam().status)"
             aria-hidden="true"></svg>
-          <span class="text-[0.75rem] font-semibold" [style.color]="deadlineColor(exam().status)">
-            Iscrizioni: {{ exam().enrollDeadline }}
+          <span
+            class="text-[0.75rem] font-semibold leading-tight"
+            [style.color]="deadlineColor(exam().status)">
+            Iscrizioni disponibili fino al:<br />{{ exam().enrollDeadline }}
           </span>
         </div>
       </div>
-      <app-custom-button
-        [variant]="bookVariant(exam().status)"
-        size="sm"
-        [label]="bookLabel(exam().status)"
-        [icon]="exam().status === 'booked' ? iconCalendarCheck : iconCalendarDays"
-        [disabled]="exam().status === 'closed' || exam().status === 'no-exam'"
-        (clicked)="bookClicked.emit(exam())" />
+      @if (exam().status === 'booked') {
+        <div class="flex flex-col gap-2 w-full">
+          @if (exam().bookingDate) {
+            <div class="flex items-center justify-center gap-1.5">
+              <svg
+                [lucideIcon]="iconInfo"
+                [size]="13"
+                style="color: var(--color-neutral-400)"
+                aria-hidden="true"></svg>
+              <span class="text-[0.75rem]" style="color: var(--color-neutral-500)">
+                Prenotazione effettuata il {{ exam().bookingDate }}
+              </span>
+            </div>
+          }
+          <app-custom-button
+            variant="error"
+            label="Annulla prenotazione"
+            size="md"
+            [fullWidth]="true"
+            (clicked)="cancelClicked.emit(exam())" />
+        </div>
+      } @else {
+        <div class="w-full">
+          <app-custom-button
+            [variant]="bookVariant(exam().status)"
+            [label]="bookLabel(exam().status)"
+            size="md"
+            [fullWidth]="true"
+            [disabled]="exam().status === 'closed' || exam().status === 'no-exam'"
+            (clicked)="bookClicked.emit(exam())" />
+        </div>
+      }
     </div>
   </div>
 </app-custom-card>

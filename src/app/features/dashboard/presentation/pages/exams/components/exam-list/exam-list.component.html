@@ -61,7 +61,10 @@
           {{ group.yearLabel }}
         </span>
         @for (exam of group.exams; track exam.id) {
-          <app-exam-card [exam]="exam" (bookClicked)="bookClicked.emit($event)" />
+          <app-exam-card
+            [exam]="exam"
+            (bookClicked)="bookClicked.emit($event)"
+            (cancelClicked)="cancelClicked.emit($event)" />
         }
       </div>
     }

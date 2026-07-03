@@ -17,7 +17,8 @@
       [exams]="exams()"
       [loading]="examsLoading()"
       [error]="examsError()"
-      (bookClicked)="onBookExam($event)" />
+      (bookClicked)="onBookExam($event)"
+      (cancelClicked)="onCancelExam($event)" />
   }
 
   @if (activeTab() === 'suggested') {
@@ -33,7 +34,8 @@
       [exams]="suggestedExams()"
       [loading]="suggestedLoading()"
       [error]="suggestedError()"
-      (bookClicked)="onBookExam($event)" />
+      (bookClicked)="onBookExam($event)"
+      (cancelClicked)="onCancelExam($event)" />
   }
 
   @if (activeTab() === 'questionnaires') {
@@ -142,6 +144,84 @@
         [label]="bookingLoading() ? 'Prenotazione...' : 'Prenota'"
         [disabled]="bookingLoading() || !bookingPassword()"
         (clicked)="onSubmitBooking()" />
+    </div>
+  </app-custom-modal>
+
+  <!-- Modal 3: Cancel Booking -->
+  <app-custom-modal
+    #cancelModal
+    type="center"
+    size="sm"
+    title="Annulla prenotazione"
+    subtitle="Per annullare l'appello reinserisci la password del tuo account."
+    [persistent]="cancelling()"
+    [showCloseButton]="true">
+    <div class="flex flex-col gap-4">
+      <p appText variant="body-sm" class="m-0" style="color: var(--color-neutral-700)">
+        Vuoi annullare la prenotazione di
+        <span class="font-semibold" style="color: var(--color-neutral-900)">{{
+          examToCancel()?.courseName
+        }}</span
+        >? Potrai prenotarti di nuovo finché l'appello resta aperto.
+      </p>
+
+      <div class="flex flex-col gap-1">
+        <span
+          class="text-[0.72rem] font-semibold uppercase tracking-wide"
+          style="color: var(--color-neutral-400)"
+          >Account</span
+        >
+        <div
+          class="flex items-center gap-2 px-3 py-2 rounded-lg"
+          style="background: var(--color-neutral-100)">
+          <svg
+            [lucideIcon]="iconLock"
+            [size]="14"
+            style="color: var(--color-neutral-400)"
+            aria-hidden="true"></svg>
+          <span class="text-[0.85rem]" style="color: var(--color-neutral-700)">{{
+            userEmail()
+          }}</span>
+        </div>
+      </div>
+
+      <app-custom-input
+        type="password"
+        label="Password"
+        placeholder="Inserisci la tua password"
+        [fullWidth]="true"
+        size="md"
+        autocomplete="current-password"
+        [disabled]="cancelling()"
+        (inputChange)="onCancelPasswordChange($event)"
+        (inputEnter)="onSubmitCancel()" />
+
+      <div
+        class="flex items-start gap-2 px-3 py-2 rounded-lg"
+        style="background: var(--color-warning-light)">
+        <svg
+          [lucideIcon]="iconAlert"
+          [size]="13"
+          style="color: var(--color-warning-dark); margin-top: 1px"
+          aria-hidden="true"></svg>
+        <span class="text-[0.72rem]" style="color: var(--color-warning-dark)">
+          La password non viene salvata. Viene usata solo per autenticare l'annullamento.
+        </span>
+      </div>
+    </div>
+    <div footer class="flex items-center justify-end gap-2 w-full">
+      <app-custom-button
+        variant="ghost"
+        size="sm"
+        label="Indietro"
+        [disabled]="cancelling()"
+        (clicked)="cancelModal.close('button')" />
+      <app-custom-button
+        variant="error"
+        size="sm"
+        [label]="cancelling() ? 'Annullamento...' : 'Annulla prenotazione'"
+        [disabled]="cancelling() || !cancelPassword()"
+        (clicked)="onSubmitCancel()" />
     </div>
   </app-custom-modal>
 </app-dashboard-container>

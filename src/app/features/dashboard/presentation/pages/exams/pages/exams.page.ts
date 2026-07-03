@@ -45,31 +45,34 @@ export class ExamsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
+  readonly iconCalendarCheck = LucideCalendarCheck;
+  readonly iconLock = LucideLock;
+  readonly iconAlert = LucideTriangleAlert;
+
+  readonly suggestedLoading = signal(true);
+  readonly suggestedError = signal(false);
+  readonly suggestedExams = signal<Exam[]>([]);
+  readonly activeTab = signal<string>('exams');
+  readonly examsLoading = signal(true);
+  readonly examsError = signal(false);
+  readonly exams = signal<Exam[]>([]);
+  readonly userEmail = signal<string>('');
+  readonly selectedExam = signal<Exam | null>(null);
+  readonly bookingPassword = signal<string>('');
+  readonly bookingLoading = signal(false);
+  readonly examToCancel = signal<Exam | null>(null);
+  readonly cancelPassword = signal('');
+  readonly cancelling = signal(false);
+
+  @ViewChild('confirmModal') confirmModal!: CustomModalComponent;
+  @ViewChild('passwordModal') passwordModal!: CustomModalComponent;
+  @ViewChild('cancelModal') cancelModal!: CustomModalComponent;
+
   readonly tabs: TabItem[] = [
     { id: 'exams', label: 'Appelli', icon: LucideCalendarDays },
     { id: 'suggested', label: 'Suggeriti', icon: LucideSparkles },
     { id: 'questionnaires', label: 'Questionari', icon: LucideClipboardList },
   ];
-
-  readonly suggestedLoading = signal(true);
-  readonly suggestedError = signal(false);
-  readonly suggestedExams = signal<Exam[]>([]);
-
-  readonly activeTab = signal<string>('exams');
-  readonly examsLoading = signal(true);
-  readonly examsError = signal(false);
-  readonly exams = signal<Exam[]>([]);
-  @ViewChild('confirmModal') confirmModal!: CustomModalComponent;
-  @ViewChild('passwordModal') passwordModal!: CustomModalComponent;
-
-  readonly iconCalendarCheck = LucideCalendarCheck;
-  readonly iconLock = LucideLock;
-  readonly iconAlert = LucideTriangleAlert;
-
-  readonly userEmail = signal<string>('');
-  readonly selectedExam = signal<Exam | null>(null);
-  readonly bookingPassword = signal<string>('');
-  readonly bookingLoading = signal(false);
 
   ngOnInit(): void {
     const tab = this.route.snapshot.queryParamMap.get('tab');
@@ -83,6 +86,15 @@ export class ExamsPage implements OnInit {
         replaceUrl: true,
       });
     }
+
+    this.reload();
+  }
+
+  private reload(): void {
+    this.examsLoading.set(true);
+    this.suggestedLoading.set(true);
+    this.examsError.set(false);
+    this.suggestedError.set(false);
 
     forkJoin({
       appelli: this.carriera.getBookableSessions(),
@@ -277,6 +289,74 @@ export class ExamsPage implements OnInit {
       });
   }
 
+  onCancelExam(exam: Exam): void {
+    if (exam.status !== 'booked') return;
+    if (exam.cdsId == null || exam.adId == null || exam.appId == null) {
+      this.toast.error('Dati appello incompleti, impossibile annullare.', { duration: 4000 });
+      return;
+    }
+    this.examToCancel.set(exam);
+    this.cancelPassword.set('');
+    this.cancelModal.open();
+  }
+
+  onCancelPasswordChange(val: string | number): void {
+    this.cancelPassword.set(String(val));
+  }
+
+  onSubmitCancel(): void {
+    const exam = this.examToCancel();
+    const password = this.cancelPassword();
+    if (!exam || !password) return;
+    if (exam.cdsId == null || exam.adId == null || exam.appId == null) {
+      this.toast.error('Dati appello incompleti, impossibile annullare.', { duration: 4000 });
+      return;
+    }
+
+    this.cancelling.set(true);
+    this.carriera
+      .cancelBooking({
+        cdsId: exam.cdsId,
+        adId: exam.adId,
+        appId: exam.appId,
+        password,
+      })
+      .subscribe({
+        next: () => {
+          this.cancelling.set(false);
+          this.cancelModal.close('button');
+          this.cancelPassword.set('');
+          this.toast.success(`Prenotazione per ${exam.courseName} annullata.`, { duration: 5000 });
+          this.examToCancel.set(null);
+          this.reload();
+        },
+        error: err => {
+          this.cancelling.set(false);
+          let msg = 'Annullamento non riuscito. Verifica la password e riprova.';
+          const raw = err?.error;
+          if (raw) {
+            let parsed = raw;
+            if (typeof raw === 'string') {
+              try {
+                parsed = JSON.parse(raw);
+              } catch {
+                parsed = raw;
+              }
+            }
+            if (parsed && typeof parsed === 'object' && parsed.retErrMsg) {
+              msg = parsed.retErrMsg;
+            } else if (typeof parsed === 'string' && parsed.trim().length > 0) {
+              msg = parsed;
+            }
+          }
+          if (err?.status === 401) {
+            msg = 'Password errata. Riprova.';
+          }
+          this.toast.error(msg, { duration: 7000 });
+        },
+      });
+  }
+
   private mapAppello(
     a: BookableSession,
     pianoMap: Map<string, { cfu: number; annoCorso: number }>,
@@ -341,6 +421,7 @@ export class ExamsPage implements OnInit {
       spotsLeft: prenotazione?.numIscritti ?? a.numIscritti ?? 0,
       spotsTotal: 0,
       position: prenotazione?.posizApp,
+      bookingDate: prenotazione?.dataIns ? this.formatData(prenotazione.dataIns) : undefined,
       status,
       dataInizioIscr: this.formatData(a.dataInizioIscr),
       cdsId: a.cdsId,
@@ -375,8 +456,13 @@ export class ExamsPage implements OnInit {
       spotsLeft: p.numIscritti ?? 0,
       spotsTotal: 0,
       position: p.posizApp,
+      bookingDate: p.dataIns ? this.formatData(p.dataIns) : undefined,
       status: 'booked' as BookingExamStatus,
       dataInizioIscr: this.formatData(p.dataInizioIscr),
+      cdsId: p.cdsId,
+      adId: p.adId,
+      appId: p.appId,
+      adsceId: p.adsceId,
     } as any;
   }
 

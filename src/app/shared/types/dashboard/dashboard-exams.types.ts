@@ -29,6 +29,7 @@ export interface Exam extends CourseEvent<BookingExamStatus> {
   appId?: number;
   adsceId?: number;
   position?: number;
+  bookingDate?: string;
 }
 
 /** Course evaluation questionnaire to be filled out by a deadline */

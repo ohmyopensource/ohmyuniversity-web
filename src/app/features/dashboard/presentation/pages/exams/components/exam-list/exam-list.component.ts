@@ -26,6 +26,7 @@ export class ExamListComponent {
   readonly loading = input.required<boolean>();
   readonly error = input.required<boolean>();
   readonly bookClicked = output<Exam>();
+  readonly cancelClicked = output<Exam>();
 
   readonly lucideAlertTriangle = LucideTriangleAlert;
   readonly iconSearch = LucideSearch;

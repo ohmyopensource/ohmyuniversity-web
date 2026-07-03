@@ -38,6 +38,7 @@ export interface Booking {
   tipoIscrCod: string;
   posizApp?: number;
   numIscritti?: number;
+  dataIns?: string;
 }
 
 export interface BookingsResponse {
