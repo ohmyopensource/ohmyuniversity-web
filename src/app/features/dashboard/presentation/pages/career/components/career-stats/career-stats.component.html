@@ -1,11 +1,15 @@
 <div class="flex flex-col gap-4">
   <!-- CFU Progress Bar -->
-  <app-custom-card padding="md" shadow="sm" radius="md">
+  <app-custom-card
+    [variant]="cfuProgress() >= 100 ? 'success' : 'info'"
+    padding="md"
+    shadow="sm"
+    radius="md">
     <div class="flex flex-wrap items-end justify-between gap-2">
       <div>
         <span
-          class="text-[0.68rem] font-semibold uppercase tracking-wide"
-          style="color: var(--color-neutral-400)">
+          class="text-[0.7rem] font-black uppercase tracking-wide"
+          style="color: var(--color-neutral-900)">
           Avanzamento percorso
         </span>
         <div class="mt-1 flex items-baseline gap-1.5">
@@ -14,24 +18,26 @@
             style="color: var(--color-neutral-900)">
             {{ earnedCfu() }}
           </span>
-          <span class="text-[0.82rem]" style="color: var(--color-neutral-400)">
+          <span class="text-[0.82rem] font-medium" style="color: var(--color-neutral-700)">
             / {{ totalCfu() }} CFU
           </span>
         </div>
       </div>
-      <app-custom-badge [label]="cfuProgress() + '%'" variant="warning" shape="pill" size="md" />
+      <app-custom-badge
+        [label]="cfuProgress() + '%'"
+        [variant]="cfuProgress() >= 100 ? 'success' : 'warning'"
+        shape="pill"
+        size="md" />
     </div>
     <div
       class="mt-4 h-3 w-full overflow-hidden rounded-full"
       style="background: var(--color-neutral-100)">
       <div
         class="h-full rounded-full transition-all duration-700 ease-out"
-        style="
-          background: linear-gradient(
-            to right,
-            var(--color-warning-dark),
-            var(--color-warning-light)
-          );
+        [style.background]="
+          cfuProgress() >= 100
+            ? 'linear-gradient(to right, var(--color-success-dark), var(--color-success-light))'
+            : 'linear-gradient(to right, var(--color-warning-dark), var(--color-warning-light))'
         "
         [style.width.%]="cfuProgress()"></div>
     </div>
@@ -41,63 +47,77 @@
   @if (isSimulation()) {
     <div
       class="flex items-center gap-2 rounded-xl px-4 py-2.5"
-      style="
-        border: 1px dashed var(--color-secondary-dark);
-        background: var(--color-secondary-light);
-      ">
+      style="border: 1px dashed var(--color-warning-dark); background: var(--color-warning-light)">
       <div
         class="h-2 w-2 rounded-full shrink-0"
-        style="background: var(--color-secondary-dark)"></div>
-      <p class="text-[0.78rem] font-medium m-0" style="color: var(--color-secondary-dark)">
-        Simulazione attiva — le medie includono voti ipotetici inseriti manualmente
+        style="background: var(--color-warning-dark)"></div>
+      <p class="text-[0.78rem] font-semibold m-0" style="color: var(--color-neutral-900)">
+        Simulazione attiva - le medie includono voti ipotetici inseriti manualmente
       </p>
     </div>
   }
 
   <!-- Stats grid -->
   <section class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-    <app-card-stat
-      [icon]="iconCalculator"
-      [value]="arithmeticAverage().toString()"
-      suffix="/ 30"
-      label="Media aritmetica"
-      [variant]="isSimulation() ? 'secondary' : 'info'"
-      padding="sm"
-      shadow="sm" />
+    <app-custom-card [variant]="isSimulation() ? 'warning' : 'info'" padding="sm" shadow="sm">
+      <span
+        class="text-[0.7rem] font-black uppercase tracking-wide"
+        style="color: var(--color-neutral-900)">
+        Media aritmetica
+      </span>
+      <div class="mt-1 flex items-baseline gap-1">
+        <span class="text-[1.6rem] font-extrabold" style="color: var(--color-neutral-900)">
+          {{ arithmeticAverage() }}
+        </span>
+        <span class="text-[0.9rem] font-semibold" style="color: var(--color-neutral-500)"
+          >/ 30</span
+        >
+      </div>
+    </app-custom-card>
 
-    <app-card-stat
-      [icon]="iconScale"
-      [value]="weightedAverage().toString()"
-      suffix="/ 30"
-      label="Media ponderata"
-      variant="secondary"
-      padding="sm"
-      shadow="sm" />
+    <app-custom-card [variant]="isSimulation() ? 'warning' : 'info'" padding="sm" shadow="sm">
+      <span
+        class="text-[0.7rem] font-black uppercase tracking-wide"
+        style="color: var(--color-neutral-900)">
+        Media ponderata
+      </span>
+      <div class="mt-1 flex items-baseline gap-1">
+        <span class="text-[1.6rem] font-extrabold" style="color: var(--color-neutral-900)">
+          {{ weightedAverage() }}
+        </span>
+        <span class="text-[0.9rem] font-semibold" style="color: var(--color-neutral-500)"
+          >/ 30</span
+        >
+      </div>
+    </app-custom-card>
 
-    <app-card-stat
-      [icon]="iconGraduation"
-      [value]="graduationBase().toString()"
-      suffix="/ 110"
-      label="Base di laurea"
-      [variant]="isSimulation() ? 'secondary' : 'success'"
-      padding="sm"
-      shadow="sm" />
+    <app-custom-card [variant]="isSimulation() ? 'warning' : 'info'" padding="sm" shadow="sm">
+      <span
+        class="text-[0.7rem] font-black uppercase tracking-wide"
+        style="color: var(--color-neutral-900)">
+        Base di laurea
+      </span>
+      <div class="mt-1 flex items-baseline gap-1">
+        <span class="text-[1.6rem] font-extrabold" style="color: var(--color-neutral-900)">
+          {{ graduationBase() }}
+        </span>
+        <span class="text-[0.9rem] font-semibold" style="color: var(--color-neutral-500)"
+          >/ 110</span
+        >
+      </div>
+    </app-custom-card>
 
-    <app-card-stat
-      [icon]="iconSparkles"
-      [value]="laudeCount().toString()"
-      suffix="lodi"
-      label="Lodi ottenute"
-      variant="warning"
-      padding="sm"
-      shadow="sm" />
+    <app-custom-card variant="info" padding="sm" shadow="sm">
+      <span
+        class="text-[0.7rem] font-black uppercase tracking-wide"
+        style="color: var(--color-neutral-900)">
+        Lodi ottenute
+      </span>
+      <div class="mt-1 flex items-baseline gap-1">
+        <span class="text-[1.6rem] font-extrabold" style="color: var(--color-neutral-900)">
+          {{ laudeCount() }}
+        </span>
+      </div>
+    </app-custom-card>
   </section>
-
-  <!-- Info note -->
-  <app-card-status
-    statusVariant="info"
-    [icon]="iconInfo"
-    description="La media ponderata considera i CFU di ogni esame; la base di laurea è (media ponderata / 30) × 110. Le lodi (30L) contano come 30 nella media ma vengono conteggiate separatamente per eventuali bonus."
-    padding="md"
-    shadow="none" />
 </div>

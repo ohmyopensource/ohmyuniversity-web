@@ -85,7 +85,7 @@ export function mergeToExams(righe: StudyPlanRow[], libretto: TranscriptRow[]): 
 
 /**
  * Adds exams from the Cineca Course Catalogue plan that are not yet present
- * in the student's own libretto/study-plan — i.e. future-year activities the
+ * in the student's own libretto/study-plan - i.e. future-year activities the
  * student has not reached yet. These are marked with status 'FUTURE' and are
  * never gradable or bookable.
  */

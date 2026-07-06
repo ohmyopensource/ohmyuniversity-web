@@ -68,7 +68,7 @@
             <!-- Div interno: impone l'altezza reale alla card -->
             <div [style.height.px]="group.height">
               @if (group.events.length === 1) {
-                <!-- Single event — normal card -->
+                <!-- Single event - normal card -->
                 <app-agenda-event-card
                   [event]="group.events[0]"
                   [compact]="group.height < 72"

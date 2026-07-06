@@ -28,7 +28,7 @@
         {{ event().title }}
       </p>
 
-      <!-- Time range — always visible -->
+      <!-- Time range - always visible -->
       <p
         appText
         variant="caption"
@@ -37,7 +37,7 @@
         {{ timeRange() }}
       </p>
 
-      <!-- Location — only when not compact and enough space -->
+      <!-- Location - only when not compact and enough space -->
       @if (!compact() && event().location) {
         <div class="hidden sm:flex items-center gap-1 mt-0.5">
           <svg
@@ -52,7 +52,7 @@
         </div>
       }
 
-      <!-- URL — only on desktop and not compact -->
+      <!-- URL - only on desktop and not compact -->
       @if (!compact() && event().url) {
         <div
           class="hidden sm:block mt-0.5"
@@ -68,7 +68,7 @@
       }
     </div>
 
-    <!-- Duration badge — hidden on very compact cards -->
+    <!-- Duration badge - hidden on very compact cards -->
     @if (durationLabel() && !compact()) {
       <app-custom-badge
         [label]="durationLabel()"

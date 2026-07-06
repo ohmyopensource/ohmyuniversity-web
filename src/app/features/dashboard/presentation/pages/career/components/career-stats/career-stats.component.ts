@@ -7,28 +7,18 @@
  */
 
 import { Component, input } from '@angular/core';
-import {
-  LucideCalculator,
-  LucideScale,
-  LucideGraduationCap,
-  LucideSparkles,
-  LucideInfo,
-} from '@lucide/angular';
+import { LucideInfo } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
-import { CardStatComponent, CardStatusComponent } from '@ui/custom-card/card-variants.component';
+import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
 
 @Component({
   selector: 'app-career-stats',
   standalone: true,
-  imports: [CustomCardComponent, CustomBadgeComponent, CardStatComponent, CardStatusComponent],
+  imports: [CustomCardComponent, CustomBadgeComponent, CardStatusComponent],
   templateUrl: './career-stats.component.html',
 })
 export class CareerStatsComponent {
-  readonly iconCalculator = LucideCalculator;
-  readonly iconScale = LucideScale;
-  readonly iconGraduation = LucideGraduationCap;
-  readonly iconSparkles = LucideSparkles;
   readonly iconInfo = LucideInfo;
 
   readonly arithmeticAverage = input.required<number>();
