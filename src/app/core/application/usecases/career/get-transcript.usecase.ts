@@ -1,17 +1,31 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, catchError, of } from 'rxjs';
 import { CareerRepository } from '../../../domain/repositories/career.repository';
+import { CourseCatalogueRepository } from '../../../domain/repositories/course-catalogue.repository';
 import { Exam } from '@shared/types/dashboard/dashboard-career.types';
-import { mergeToExams } from 'src/app/core/application/mappers/carriera.mapper';
+import {
+  mergeToExams,
+  mergeWithFuturePlan,
+} from 'src/app/core/application/mappers/carriera.mapper';
+import { CoursePlanResponse } from 'src/app/core/domain/models/career/course-plan.model';
 
 @Injectable()
 export class GetTranscriptUseCase {
-  private readonly repo = inject(CareerRepository);
+  private readonly careerRepo = inject(CareerRepository);
+  private readonly catalogueRepo = inject(CourseCatalogueRepository);
 
   execute(): Observable<Exam[]> {
     return forkJoin({
-      piano: this.repo.getStudyPlan(),
-      libretto: this.repo.getTranscript(),
-    }).pipe(map(({ piano, libretto }) => mergeToExams(piano.righe ?? [], libretto.righe ?? [])));
+      piano: this.careerRepo.getStudyPlan(),
+      libretto: this.careerRepo.getTranscript(),
+      coursePlan: this.catalogueRepo
+        .getCoursePlan()
+        .pipe(catchError(() => of<CoursePlanResponse>({ exams: [] }))),
+    }).pipe(
+      map(({ piano, libretto, coursePlan }) => {
+        const baseExams = mergeToExams(piano.righe ?? [], libretto.righe ?? []);
+        return mergeWithFuturePlan(baseExams, coursePlan.exams ?? []);
+      }),
+    );
   }
 }

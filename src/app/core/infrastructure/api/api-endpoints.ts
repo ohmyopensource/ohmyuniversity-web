@@ -23,6 +23,10 @@ export const API = {
     examHistory: `${BASE}/v1/career/exam-history`,
     recommendations: `${BASE}/v1/career/recommendations`,
   },
+  courseCatalogue: {
+    plan: `${BASE}/v1/course-catalogue/plan`,
+    syllabus: `${BASE}/v1/course-catalogue/syllabus`,
+  },
   exams: {
     sessions: `${BASE}/v1/exams/sessions`,
     bookable: `${BASE}/v1/exams/bookable`,

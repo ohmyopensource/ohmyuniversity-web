@@ -19,6 +19,7 @@ import { AgendaApiRepository } from './core/infrastructure/api/agenda-api.reposi
 import { TimetableApiRepository } from './core/infrastructure/api/timetable-api.repository';
 import { ProfileApiRepository } from './core/infrastructure/api/profile-api.repository';
 import { CareerApiRepository } from './core/infrastructure/api/career-api.repository';
+import { CourseCatalogueApiRepository } from './core/infrastructure/api/course-catalogue-api.repository';
 import { ExamsApiRepository } from './core/infrastructure/api/exams-api.repository';
 import { FeesApiRepository } from './core/infrastructure/api/fees-api.repository';
 import { InternshipsRepository } from './core/domain/repositories/internships.repository';
@@ -50,6 +51,9 @@ import { GetGradesUseCase } from './core/application/usecases/career/get-grades.
 import { GetStudyPlanUseCase } from './core/application/usecases/career/get-study-plan.usecase';
 import { GetExamHistoryUseCase } from './core/application/usecases/career/get-exam-history.usecase';
 import { GetRecommendationsUseCase } from './core/application/usecases/career/get-recommendations.usecase';
+import { GetCourseDetailUseCase } from './core/application/usecases/career/get-course-detail.usecase';
+import { CourseCatalogueRepository } from './core/domain/repositories/course-catalogue.repository';
+import { GetCourseSyllabusUseCase } from './core/application/usecases/career/get-course-syllabus.usecase';
 
 // Exams usecases
 import { GetBookableSessionsUseCase } from './core/application/usecases/exams/get-bookable-sessions.usecase';
@@ -154,7 +158,6 @@ import {
   LucideHourglass,
   LucideLibrary,
 } from '@lucide/angular';
-import { GetCourseDetailUseCase } from './core/application/usecases/career/get-course-detail.usecase';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -168,6 +171,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TimetableRepository, useClass: TimetableApiRepository },
     { provide: ProfileRepository, useClass: ProfileApiRepository },
     { provide: CareerRepository, useClass: CareerApiRepository },
+    { provide: CourseCatalogueRepository, useClass: CourseCatalogueApiRepository },
     { provide: ExamsRepository, useClass: ExamsApiRepository },
     { provide: FeesRepository, useClass: FeesApiRepository },
     { provide: InternshipsRepository, useClass: InternshipsApiRepository },
@@ -198,6 +202,7 @@ export const appConfig: ApplicationConfig = {
     GetExamHistoryUseCase,
     GetRecommendationsUseCase,
     GetCourseDetailUseCase,
+    GetCourseSyllabusUseCase,
 
     // Exams
     GetBookableSessionsUseCase,

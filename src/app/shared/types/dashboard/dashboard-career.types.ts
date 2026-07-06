@@ -1,7 +1,7 @@
 import { OptionBase } from '@shared/types';
 
 /** Represents whether a student has passed an exam or still needs to take it. */
-export type ExamStatus = 'PASSED' | 'TO_TAKE';
+export type ExamStatus = 'PASSED' | 'TO_TAKE' | 'FUTURE';
 
 /** Distinguishes between mandatory curriculum exams and freely chosen electives. */
 export type ExamCategory = 'MANDATORY' | 'ELECTIVE';

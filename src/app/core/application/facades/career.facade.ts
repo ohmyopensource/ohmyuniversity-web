@@ -52,6 +52,8 @@ import { GetSurveyPageUseCase } from '../usecases/exams/get-survey-page.usecase'
 import { GetSurveyUnitsUseCase } from '../usecases/exams/get-survey-units.usecase';
 import { GetCourseDetailUseCase } from '../usecases/career/get-course-detail.usecase';
 import { CourseDetailResponse } from '../../domain/models/career/course-detail.model';
+import { CourseSyllabusResponse } from '../../domain/models/career/course-syllabus.model';
+import { GetCourseSyllabusUseCase } from '../usecases/career/get-course-syllabus.usecase';
 
 @Injectable()
 export class CareerFacade {
@@ -78,6 +80,7 @@ export class CareerFacade {
   private readonly getSurveyPageUseCase = inject(GetSurveyPageUseCase);
   private readonly getSurveySummaryUseCase = inject(GetSurveySummaryUseCase);
   private readonly getCourseDetailUseCase = inject(GetCourseDetailUseCase);
+  private readonly getCourseSyllabusUseCase = inject(GetCourseSyllabusUseCase);
 
   getTranscript(): Observable<Exam[]> {
     return this.getTranscriptUseCase.execute();
@@ -174,5 +177,9 @@ export class CareerFacade {
     cdsOffId?: number,
   ): Observable<CourseDetailResponse> {
     return this.getCourseDetailUseCase.execute(adCod, cdsCod, aaOffId, cdsOffId);
+  }
+
+  getCourseSyllabus(adCod: string): Observable<CourseSyllabusResponse> {
+    return this.getCourseSyllabusUseCase.execute(adCod);
   }
 }

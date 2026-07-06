@@ -18,6 +18,7 @@ import {
   LucideCalendarClock,
   LucideLock,
   LucidePencil,
+  LucideExternalLink,
 } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
@@ -30,6 +31,7 @@ import { Exam, ExamFilter, ExamGroup, FilterOption, TeachingPeriod, AttendanceTy
 import { GradeSimulatorPopupComponent } from '../grade-simulator-popup/grade-simulator-popup.component';
 import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 import { CourseDetailResponse } from 'src/app/core/domain/models/career/course-detail.model';
+import { CourseSyllabusResponse } from 'src/app/core/domain/models/career/course-syllabus.model';
 
 interface PopupState {
   courseCode: string;
@@ -55,6 +57,7 @@ export class CareerExamsComponent {
   readonly iconChevron = LucideChevronDown;
   readonly iconCheck = LucideCheck;
   readonly iconBooking = LucideCalendarClock;
+  readonly iconExternalLink = LucideExternalLink;
   readonly iconLock = LucideLock;
   readonly iconPencil = LucidePencil;
 
@@ -76,6 +79,9 @@ export class CareerExamsComponent {
   readonly courseDetails = signal<Record<string, CourseDetailResponse>>({});
   readonly loadingDetails = signal<Record<string, boolean>>({});
   readonly errorDetails = signal<Record<string, boolean>>({});
+  readonly courseSyllabuses = signal<Record<string, CourseSyllabusResponse>>({});
+  readonly loadingSyllabuses = signal<Record<string, boolean>>({});
+  readonly errorSyllabuses = signal<Record<string, boolean>>({});
   activePopup: PopupState | null = null;
 
   get selectedYearModel(): string {
@@ -97,7 +103,10 @@ export class CareerExamsComponent {
       return;
     }
     this.openExamCodes.add(courseCode);
-    this.loadCourseDetail(exam);
+    this.loadCourseSyllabus(exam);
+    if (exam.status !== 'FUTURE') {
+      this.loadCourseDetail(exam);
+    }
   }
 
   isOpen(courseCode: string): boolean {
@@ -114,6 +123,47 @@ export class CareerExamsComponent {
 
   isDetailError(courseCode: string): boolean {
     return !!this.errorDetails()[courseCode];
+  }
+
+  courseSyllabus(courseCode: string): CourseSyllabusResponse | undefined {
+    return this.courseSyllabuses()[courseCode];
+  }
+
+  isSyllabusLoading(courseCode: string): boolean {
+    return !!this.loadingSyllabuses()[courseCode];
+  }
+
+  isSyllabusError(courseCode: string): boolean {
+    return !!this.errorSyllabuses()[courseCode];
+  }
+
+  private loadCourseSyllabus(exam: Exam): void {
+    const courseCode = exam.courseCode;
+    if (this.courseSyllabuses()[courseCode] || this.loadingSyllabuses()[courseCode]) {
+      return;
+    }
+    this.loadingSyllabuses.update(m => ({ ...m, [courseCode]: true }));
+    this.errorSyllabuses.update(m => {
+      const { [courseCode]: _, ...rest } = m;
+      return rest;
+    });
+
+    this.careerFacade.getCourseSyllabus(courseCode).subscribe({
+      next: syllabus => {
+        this.loadingSyllabuses.update(m => {
+          const { [courseCode]: _, ...rest } = m;
+          return rest;
+        });
+        this.courseSyllabuses.update(m => ({ ...m, [courseCode]: syllabus }));
+      },
+      error: () => {
+        this.loadingSyllabuses.update(m => {
+          const { [courseCode]: _, ...rest } = m;
+          return rest;
+        });
+        this.errorSyllabuses.update(m => ({ ...m, [courseCode]: true }));
+      },
+    });
   }
 
   private loadCourseDetail(exam: Exam): void {
@@ -171,5 +221,12 @@ export class CareerExamsComponent {
 
   attendanceLabel(attendance: AttendanceType): string {
     return ATTENDANCE_LABELS[attendance];
+  }
+
+  yearGroupVariant(group: ExamGroup): 'success' | 'warning' | 'info' {
+    if (group.exams.length === 0) return 'info';
+    if (group.passedCount === group.exams.length) return 'success';
+    if (group.passedCount > 0) return 'warning';
+    return 'info';
   }
 }

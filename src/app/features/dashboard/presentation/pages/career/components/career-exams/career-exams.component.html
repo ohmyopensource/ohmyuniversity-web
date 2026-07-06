@@ -46,9 +46,16 @@
           <!-- Year label -->
           <span
             class="text-[0.68rem] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md self-start"
-            style="background: var(--color-neutral-200); color: var(--color-neutral-500)">
+            [style.background]="
+              yearGroupVariant(group) === 'success'
+                ? 'var(--color-success-light)'
+                : yearGroupVariant(group) === 'warning'
+                  ? 'var(--color-warning-light)'
+                  : 'var(--color-info-light)'
+            "
+            style="color: var(--color-neutral-800)">
             {{ group.yearLabel }}
-            <span style="color: var(--color-neutral-400)">
+            <span class="font-normal" style="color: var(--color-neutral-600)">
               · {{ group.passedCount }}/{{ group.exams.length }} superati
             </span>
           </span>
@@ -98,7 +105,13 @@
                         size="xs"
                         [icon]="iconLock" />
                     }
-                    @if (exam.status === 'PASSED') {
+                    @if (exam.status === 'FUTURE') {
+                      <app-custom-badge
+                        label="Anno futuro"
+                        variant="neutral"
+                        shape="rounded"
+                        size="xs" />
+                    } @else if (exam.status === 'PASSED') {
                       <app-custom-badge
                         [label]="exam.grade"
                         variant="success"
@@ -229,13 +242,95 @@
                         <div class="mt-4">
                           <app-custom-button
                             label="Vedi scheda completa"
-                            [icon]="iconBooking"
+                            [icon]="iconExternalLink"
                             mode="link-external"
                             [href]="detail?.coursePageUrl ?? ''"
+                            target="_blank"
                             variant="ghost"
                             size="sm" />
                         </div>
                       }
+
+                      <!-- Syllabus (Course Catalogue)-->
+                      <div class="mt-4 pt-4" style="border-top: 1px solid var(--color-neutral-100)">
+                        @if (isSyllabusLoading(exam.courseCode)) {
+                          <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                            Caricamento propedeuticità e programma...
+                          </p>
+                        } @else if (isSyllabusError(exam.courseCode)) {
+                          <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                            Propedeuticità e programma non disponibili al momento.
+                          </p>
+                        } @else {
+                          @let syllabus = courseSyllabus(exam.courseCode);
+                          <div class="flex flex-col gap-3">
+                            <div>
+                              <p
+                                class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-1"
+                                style="color: var(--color-neutral-400)">
+                                Propedeuticità
+                              </p>
+                              <p class="text-[0.82rem] m-0" style="color: var(--color-neutral-700)">
+                                {{
+                                  syllabus?.prerequisites ?? 'Nessuna propedeuticità risultante.'
+                                }}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p
+                                class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-2"
+                                style="color: var(--color-neutral-400)">
+                                Programma per CFU
+                              </p>
+                              @if (syllabus?.cfuBreakdown && syllabus!.cfuBreakdown!.length > 0) {
+                                <div class="flex flex-col gap-2.5">
+                                  @for (item of syllabus!.cfuBreakdown!; track item.moduleName) {
+                                    <div
+                                      class="rounded-lg px-3 py-2"
+                                      style="background: var(--color-neutral-50)">
+                                      <div class="flex items-baseline justify-between gap-2">
+                                        <span
+                                          class="text-[0.8rem] font-semibold"
+                                          style="color: var(--color-neutral-900)">
+                                          {{ item.moduleName }}
+                                        </span>
+                                        @if (item.cfu !== null) {
+                                          <span
+                                            class="text-[0.72rem] shrink-0"
+                                            style="color: var(--color-neutral-400)">
+                                            {{ item.cfu }} CFU
+                                          </span>
+                                        }
+                                      </div>
+                                      @if (item.professors.length > 0) {
+                                        <p
+                                          class="text-[0.72rem] m-0 mt-0.5"
+                                          style="color: var(--color-neutral-500)">
+                                          {{ item.professors.join(', ') }}
+                                        </p>
+                                      }
+                                      @if (item.content) {
+                                        <p
+                                          class="text-[0.78rem] m-0 mt-1.5"
+                                          style="color: var(--color-neutral-600)">
+                                          {{ item.content }}
+                                        </p>
+                                      }
+                                    </div>
+                                  }
+                                </div>
+                              } @else {
+                                <p
+                                  class="text-[0.82rem] m-0"
+                                  style="color: var(--color-neutral-400)">
+                                  Programma non disponibile.
+                                </p>
+                              }
+                            </div>
+                          </div>
+                        }
+                      </div>
                     }
 
                     @if (exam.prerequisites.length > 0) {
@@ -253,7 +348,7 @@
                       </div>
                     }
 
-                    @if (exam.status !== 'PASSED') {
+                    @if (exam.status !== 'PASSED' && exam.status !== 'FUTURE') {
                       <div class="mt-4">
                         <app-custom-button
                           label="Vai alle prenotazioni"
@@ -280,7 +375,7 @@
     </div>
   </app-custom-card>
 
-  <!-- Esami a scelta -->
+  <!-- ADE Exams -->
   @if (electiveExams().length > 0) {
     <app-custom-card padding="md" shadow="sm" radius="md">
       <h2 class="m-0 font-bold text-[0.95rem]" style="color: var(--color-neutral-800)">
@@ -449,13 +544,91 @@
                     <div class="mt-4">
                       <app-custom-button
                         label="Vedi scheda completa"
-                        [icon]="iconBooking"
+                        [icon]="iconExternalLink"
                         mode="link-external"
                         [href]="detail?.coursePageUrl ?? ''"
+                        target="_blank"
                         variant="ghost"
                         size="sm" />
                     </div>
                   }
+
+                  <!-- Syllabus (Course Catalogue) -->
+                  <div class="mt-4 pt-4" style="border-top: 1px solid var(--color-neutral-100)">
+                    @if (isSyllabusLoading(exam.courseCode)) {
+                      <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                        Caricamento propedeuticità e programma...
+                      </p>
+                    } @else if (isSyllabusError(exam.courseCode)) {
+                      <p class="text-[0.78rem] m-0" style="color: var(--color-neutral-400)">
+                        Propedeuticità e programma non disponibili al momento.
+                      </p>
+                    } @else {
+                      @let syllabus = courseSyllabus(exam.courseCode);
+                      <div class="flex flex-col gap-3">
+                        <div>
+                          <p
+                            class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-1"
+                            style="color: var(--color-neutral-400)">
+                            Propedeuticità
+                          </p>
+                          <p class="text-[0.82rem] m-0" style="color: var(--color-neutral-700)">
+                            {{ syllabus?.prerequisites ?? 'Nessuna propedeuticità risultante.' }}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p
+                            class="text-[0.65rem] font-bold uppercase tracking-widest m-0 mb-2"
+                            style="color: var(--color-neutral-400)">
+                            Programma per CFU
+                          </p>
+                          @if (syllabus?.cfuBreakdown && syllabus!.cfuBreakdown!.length > 0) {
+                            <div class="flex flex-col gap-2.5">
+                              @for (item of syllabus!.cfuBreakdown!; track item.moduleName) {
+                                <div
+                                  class="rounded-lg px-3 py-2"
+                                  style="background: var(--color-neutral-50)">
+                                  <div class="flex items-baseline justify-between gap-2">
+                                    <span
+                                      class="text-[0.8rem] font-semibold"
+                                      style="color: var(--color-neutral-900)">
+                                      {{ item.moduleName }}
+                                    </span>
+                                    @if (item.cfu !== null) {
+                                      <span
+                                        class="text-[0.72rem] shrink-0"
+                                        style="color: var(--color-neutral-400)">
+                                        {{ item.cfu }} CFU
+                                      </span>
+                                    }
+                                  </div>
+                                  @if (item.professors.length > 0) {
+                                    <p
+                                      class="text-[0.72rem] m-0 mt-0.5"
+                                      style="color: var(--color-neutral-500)">
+                                      {{ item.professors.join(', ') }}
+                                    </p>
+                                  }
+                                  @if (item.content) {
+                                    <p
+                                      class="text-[0.78rem] m-0 mt-1.5"
+                                      style="color: var(--color-neutral-600)">
+                                      {{ item.content }}
+                                    </p>
+                                  }
+                                </div>
+                              }
+                            </div>
+                          } @else {
+                            <p class="text-[0.82rem] m-0" style="color: var(--color-neutral-400)">
+                              Programma non disponibile.
+                            </p>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
                 }
               </div>
             }
