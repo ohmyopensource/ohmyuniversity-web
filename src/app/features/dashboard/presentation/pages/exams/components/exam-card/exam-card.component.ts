@@ -45,6 +45,7 @@ export class ExamCardComponent {
       open: 'Aperto',
       closing: 'In chiusura',
       closed: 'Chiuso',
+      upcoming: 'In arrivo',
       booked: 'Prenotato',
       'no-exam': 'Nessun appello',
     };
@@ -59,6 +60,7 @@ export class ExamCardComponent {
         open: 'success',
         closing: 'warning',
         closed: 'error',
+        upcoming: 'primary',
         booked: 'primary',
         'no-exam': 'neutral',
       };
@@ -70,6 +72,7 @@ export class ExamCardComponent {
       open: 'Prenota',
       closing: 'Prenota',
       closed: 'Chiuso',
+      upcoming: 'Non ancora aperto',
       booked: 'Prenotato',
       'no-exam': 'Nessun appello',
     };
@@ -81,6 +84,7 @@ export class ExamCardComponent {
       open: 'primary',
       closing: 'primary',
       closed: 'ghost',
+      upcoming: 'ghost',
       booked: 'success',
       'no-exam': 'ghost',
     };
@@ -88,14 +92,16 @@ export class ExamCardComponent {
   }
 
   deadlineColor(status: BookingExamStatus): string {
-    if (status === 'closed' || status === 'no-exam') return 'var(--color-neutral-400)';
+    if (status === 'closed' || status === 'no-exam' || status === 'upcoming')
+      return 'var(--color-neutral-400)';
     if (status === 'closing') return 'var(--color-warning-dark)';
     if (status === 'booked') return 'var(--color-info-dark)';
     return 'var(--color-success-dark)';
   }
 
   deadlineBackground(status: BookingExamStatus): string {
-    if (status === 'closed' || status === 'no-exam') return 'var(--color-neutral-100)';
+    if (status === 'closed' || status === 'no-exam' || status === 'upcoming')
+      return 'var(--color-neutral-100)';
     if (status === 'closing') return 'var(--color-warning-light)';
     if (status === 'booked') return 'var(--color-info-light)';
     return 'var(--color-success-light)';

@@ -395,7 +395,7 @@ export class ExamsPage implements OnInit {
       if (dataFineIscr && dataFineIscr < oggi) {
         status = 'closed';
       } else if (dataInizioIscr && dataInizioIscr > oggi) {
-        status = 'closed';
+        status = 'upcoming';
       } else if (dataFineIscr) {
         const diff = dataFineIscr.getTime() - oggi.getTime();
         status = diff / (1000 * 60 * 60 * 24) <= 3 ? 'closing' : 'open';

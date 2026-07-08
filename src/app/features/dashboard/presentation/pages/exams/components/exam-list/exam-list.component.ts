@@ -7,7 +7,7 @@ import { ExamCardComponent } from '../exam-card/exam-card.component';
 import { Exam } from '@shared/types/dashboard/dashboard-exams.types';
 import { LucideTriangleAlert } from '@lucide/angular';
 
-type ExamFilter = 'open' | 'booked' | 'closed';
+type ExamFilter = 'open' | 'booked' | 'upcoming' | 'closed';
 
 @Component({
   selector: 'app-exam-list',
@@ -42,6 +42,9 @@ export class ExamListComponent {
   private readonly countBooked = computed(
     () => this.exams().filter(e => e.status === 'booked').length,
   );
+  private readonly countUpcoming = computed(
+    () => this.exams().filter(e => e.status === 'upcoming').length,
+  );
   private readonly countClosed = computed(
     () => this.exams().filter(e => e.status === 'closed').length,
   );
@@ -49,6 +52,7 @@ export class ExamListComponent {
   readonly tabs = computed<TabItem[]>(() => [
     { id: 'open', label: 'Disponibili', badge: this.countOpen() },
     { id: 'booked', label: 'Prenotati', badge: this.countBooked() },
+    { id: 'upcoming', label: 'In arrivo', badge: this.countUpcoming() },
     { id: 'closed', label: 'Chiusi', badge: this.countClosed() },
   ]);
 
@@ -60,6 +64,8 @@ export class ExamListComponent {
       list = list.filter(e => e.status === 'open' || e.status === 'closing');
     } else if (this.activeFilter() === 'booked') {
       list = list.filter(e => e.status === 'booked');
+    } else if (this.activeFilter() === 'upcoming') {
+      list = list.filter(e => e.status === 'upcoming');
     } else if (this.activeFilter() === 'closed') {
       list = list.filter(e => e.status === 'closed');
     }

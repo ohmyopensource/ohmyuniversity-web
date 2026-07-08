@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    @if (countdownDays() !== null && exam().status === 'closed') {
+    @if (countdownDays() !== null && exam().status === 'upcoming') {
       <div
         class="flex items-center gap-2 px-3 py-2 rounded-lg"
         style="background: var(--color-primary-light)">
@@ -222,7 +222,11 @@
             [label]="bookLabel(exam().status)"
             size="md"
             [fullWidth]="true"
-            [disabled]="exam().status === 'closed' || exam().status === 'no-exam'"
+            [disabled]="
+              exam().status === 'closed' ||
+              exam().status === 'no-exam' ||
+              exam().status === 'upcoming'
+            "
             (clicked)="bookClicked.emit(exam())" />
         </div>
       }
