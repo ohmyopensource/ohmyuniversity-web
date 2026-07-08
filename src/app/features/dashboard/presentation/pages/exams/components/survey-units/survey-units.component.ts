@@ -74,7 +74,7 @@ export class SurveyUnitsPage implements OnInit {
     this.loading.set(true);
     this.carriera.getSurveyUnits(this.adsceId).subscribe({
       next: res => {
-        this.data.set(res);
+        this.data.set(this.applyOptimisticConfirmation(res));
         this.loading.set(false);
       },
       error: () => {
@@ -82,6 +82,27 @@ export class SurveyUnitsPage implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  /**
+   * Marks the just-confirmed module as done client-side, regardless of what
+   * Cineca's own read endpoint currently reports. Cineca can take a brief
+   * moment to reflect a "conferma" on this same read path, and without this
+   * override the module would still show as pending right after returning
+   * from the compilation wizard, only "fixing itself" a navigation or two
+   * later. The navigation state is only present on the single navigation
+   * that follows a successful confirm, so this never masks a genuinely
+   * pending module on a normal visit to this page.
+   */
+  private applyOptimisticConfirmation(res: SurveyUnitsResponse): SurveyUnitsResponse {
+    const confirmedTags = (history.state as { justConfirmedTags?: string })?.justConfirmedTags;
+    if (!confirmedTags) {
+      return res;
+    }
+    return {
+      ...res,
+      moduli: res.moduli.map(m => (m.tags === confirmedTags ? { ...m, statoLink: 1 } : m)),
+    };
   }
 
   isDone(m: SurveyModule): boolean {

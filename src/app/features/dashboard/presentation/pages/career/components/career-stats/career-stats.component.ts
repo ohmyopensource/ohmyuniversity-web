@@ -10,12 +10,11 @@ import { Component, input } from '@angular/core';
 import { LucideInfo } from '@lucide/angular';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomBadgeComponent } from '@ui/custom-badge/custom-badge.component';
-import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
 
 @Component({
   selector: 'app-career-stats',
   standalone: true,
-  imports: [CustomCardComponent, CustomBadgeComponent, CardStatusComponent],
+  imports: [CustomCardComponent, CustomBadgeComponent],
   templateUrl: './career-stats.component.html',
 })
 export class CareerStatsComponent {

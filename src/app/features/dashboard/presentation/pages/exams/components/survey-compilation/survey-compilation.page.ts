@@ -75,6 +75,7 @@ export class SurveyCompilationPage implements OnInit {
   private questCompId = 0;
   private questConfigId = 0;
   private userCompId = 0;
+  private confirmedTags?: string;
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -123,6 +124,7 @@ export class SurveyCompilationPage implements OnInit {
     }
 
     const tags = this.route.snapshot.queryParamMap.get('tags') ?? undefined;
+    this.confirmedTags = tags;
     this.carriera.startSurvey(this.adsceId, tags).subscribe({
       next: res => {
         this.questionarioId = res.questionarioId;
@@ -472,7 +474,9 @@ export class SurveyCompilationPage implements OnInit {
           this.toast.success('Questionario compilato e confermato con successo.', {
             duration: 5000,
           });
-          this.router.navigate(['/dashboard/appelli/questionari', this.adsceId]);
+          this.router.navigate(['/dashboard/appelli/questionari', this.adsceId], {
+            state: { justConfirmedTags: this.confirmedTags },
+          });
         },
         error: err => {
           this.confirming.set(false);

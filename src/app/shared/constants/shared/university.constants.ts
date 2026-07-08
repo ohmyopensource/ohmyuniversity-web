@@ -509,7 +509,7 @@ export const UNIVERSITIES: University[] = [
     id: 'unife',
     name: 'Università degli Studi di Ferrara',
     shortName: 'UniFe',
-    emailDomains: ['unife.it'],
+    emailDomains: ['unife.it', 'edu.unife.it'],
     city: 'Ferrara',
     type: 'statale',
     campuses: [
