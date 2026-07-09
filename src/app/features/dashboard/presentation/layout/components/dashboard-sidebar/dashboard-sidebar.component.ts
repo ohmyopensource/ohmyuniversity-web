@@ -124,22 +124,26 @@ export class DashboardSidebarComponent implements OnInit {
     );
 
     const currentUniId = (this.auth.getUniversityId() ?? '').toUpperCase();
+    const activeStuId = this.auth.getActiveStuId();
 
-    const tuttiAccounts: AccountEntry[] = profiliUnici.map(p => ({
-      id: String(p.stuId),
-      name: this.auth.getNomeCompleto(),
-      email: '',
-      courseLabel: p.corsoNome ?? '',
-      courseAcronym: this.tipoCorsoAcronym(p.tipoCorsoCod),
-      universityLabel: this.universityLabel(p.universityId),
-      status:
-        p.universityId.toUpperCase() === currentUniId
+    const tuttiAccounts: AccountEntry[] = profiliUnici.map(p => {
+      const isSameUni = p.universityId.toUpperCase() === currentUniId;
+      const isCurrent = isSameUni && p.stuId === activeStuId;
+      return {
+        id: String(p.stuId),
+        name: this.auth.getNomeCompleto(),
+        email: '',
+        courseLabel: p.corsoNome ?? '',
+        courseAcronym: this.tipoCorsoAcronym(p.tipoCorsoCod),
+        universityLabel: this.universityLabel(p.universityId),
+        status: isSameUni
           ? p.attivo
             ? 'active'
             : 'withdrawn'
           : ((p.attivo || p.laureato ? 'graduated' : 'withdrawn') as AccountStatus),
-      isCurrent: p.universityId.toUpperCase() === currentUniId,
-    }));
+        isCurrent,
+      };
+    });
 
     const defaultAccount: AccountEntry = {
       id: 'current',
@@ -171,7 +175,7 @@ export class DashboardSidebarComponent implements OnInit {
         this.fotoUrl.set(fotoUrl);
 
         const currentProfilo = profiliUnici.find(
-          p => p.universityId.toUpperCase() === currentUniId,
+          p => p.universityId.toUpperCase() === currentUniId && p.stuId === activeStuId,
         );
         const isCurrentCessato = currentProfilo ? !currentProfilo.attivo : false;
         const isCurrentLaureato = currentProfilo?.laureato ?? false;
@@ -180,9 +184,11 @@ export class DashboardSidebarComponent implements OnInit {
             ? 'graduated'
             : this.statusFromSemaforo(tasse?.semaforo, isCurrentCessato);
 
+        const currentUniLabel = this.universityLabel(this.auth.getUniversityId());
+
         const updated = this.accounts().map(a => ({
           ...a,
-          avatarSrc: a.isCurrent ? fotoUrl : a.avatarSrc,
+          avatarSrc: a.universityLabel === currentUniLabel ? fotoUrl : a.avatarSrc,
           email: a.isCurrent ? (profilo.emailAte ?? '') : '',
           status: a.isCurrent ? currentStatus : a.status,
         }));

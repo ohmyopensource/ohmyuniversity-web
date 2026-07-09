@@ -96,6 +96,17 @@ export class AuthFacade {
     }
   }
 
+  getActiveStuId(): number | null {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return typeof payload.stuId === 'number' ? payload.stuId : null;
+    } catch {
+      return null;
+    }
+  }
+
   switchCarriera(profilo: ProfiloCarriera): Observable<{ accessToken: string }> {
     return this.switchCarrieraUseCase.execute(profilo);
   }
