@@ -1,0 +1,26 @@
+<!--
+@file custom-skeleton.component.html
+@description Template for CustomSkeletonComponent, rendering either a group
+of shaped placeholders or a rotating spinner indicator. No visible loading
+text is ever rendered; state is exposed only via ARIA attributes.
+-->
+
+<div
+  [ngClass]="groupClasses"
+  [style.gap]="gap"
+  role="status"
+  aria-busy="true"
+  [attr.aria-label]="ariaLabel">
+  @if (isSpinner) {
+    <span
+      class="skeleton-spinner"
+      [class.skeleton-spinner--dark]="darkTheme"
+      [class]="'skeleton-spinner--size-' + size"
+      [ngStyle]="itemStyle(0)">
+    </span>
+  } @else {
+    @for (i of items; track i) {
+      <span [ngClass]="itemClasses" [ngStyle]="itemStyle(i)"></span>
+    }
+  }
+</div>

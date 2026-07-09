@@ -1,0 +1,253 @@
+/**
+ * @file custom-skeleton.component.css
+ * @description Styles for CustomSkeletonComponent including shape variants,
+ * sizing presets, animation styles (shimmer, pulse, wave, spinner),
+ * dark theme support, and reduced-motion handling.
+ */
+
+/* Group wrapper */
+.skeleton-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.skeleton-group--inline {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Base shape */
+.skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-neutral-200);
+  flex-shrink: 0;
+}
+.skeleton-group--dark .skeleton {
+  background: var(--color-neutral-600);
+}
+
+/* Shapes */
+.skeleton--text {
+  height: 0.9em;
+  width: 100%;
+  border-radius: var(--radius-sm, 4px);
+}
+.skeleton--circle {
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+}
+.skeleton--rect {
+  width: 100%;
+}
+.skeleton--button {
+  height: 42px;
+  min-width: 96px;
+}
+.skeleton--badge {
+  height: 22px;
+  min-width: 56px;
+}
+
+/* Rounded (skipped for circle) */
+.skeleton--rounded-none {
+  border-radius: 0;
+}
+.skeleton--rounded-sm {
+  border-radius: var(--radius-sm, 4px);
+}
+.skeleton--rounded-md {
+  border-radius: var(--radius-md, 10px);
+}
+.skeleton--rounded-lg {
+  border-radius: var(--radius-lg, 16px);
+}
+.skeleton--rounded-full {
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* Size presets (used when width/height not explicitly set) */
+.skeleton--circle.skeleton--size-sm {
+  width: 28px;
+}
+.skeleton--circle.skeleton--size-md {
+  width: 44px;
+}
+.skeleton--circle.skeleton--size-lg {
+  width: 64px;
+}
+.skeleton--circle.skeleton--size-full {
+  width: 100%;
+}
+
+.skeleton--rect.skeleton--size-sm {
+  height: 80px;
+}
+.skeleton--rect.skeleton--size-md {
+  height: 160px;
+}
+.skeleton--rect.skeleton--size-lg {
+  height: 260px;
+}
+.skeleton--rect.skeleton--size-full {
+  height: 100%;
+}
+
+.skeleton--button.skeleton--size-sm {
+  height: 34px;
+  min-width: 72px;
+}
+.skeleton--button.skeleton--size-md {
+  height: 42px;
+  min-width: 96px;
+}
+.skeleton--button.skeleton--size-lg {
+  height: 52px;
+  min-width: 128px;
+}
+.skeleton--button.skeleton--size-full {
+  width: 100%;
+}
+
+.skeleton--text.skeleton--size-sm {
+  height: 0.7em;
+}
+.skeleton--text.skeleton--size-md {
+  height: 0.9em;
+}
+.skeleton--text.skeleton--size-lg {
+  height: 1.2em;
+}
+
+/* Animations */
+.skeleton--anim-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-neutral-200) 30%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 70%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-group--dark .skeleton--anim-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-neutral-600) 30%,
+    var(--color-neutral-500) 50%,
+    var(--color-neutral-600) 70%
+  );
+  background-size: 200% 100%;
+}
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton--anim-pulse {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.skeleton--anim-wave {
+  background: linear-gradient(
+    115deg,
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 40%,
+    var(--color-neutral-100) 60%,
+    var(--color-neutral-200) 75%
+  );
+  background-size: 250% 100%;
+  animation: skeleton-wave 1.8s linear infinite;
+}
+.skeleton-group--dark .skeleton--anim-wave {
+  background: linear-gradient(
+    115deg,
+    var(--color-neutral-600) 25%,
+    var(--color-neutral-500) 40%,
+    var(--color-neutral-500) 60%,
+    var(--color-neutral-600) 75%
+  );
+  background-size: 250% 100%;
+}
+@keyframes skeleton-wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton--anim-none {
+  animation: none;
+}
+
+/* Spinner */
+.skeleton-spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 3px solid var(--color-neutral-200);
+  border-top-color: var(--color-primary-dark);
+  animation: skeleton-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+.skeleton-spinner--dark {
+  border-color: var(--color-neutral-600);
+  border-top-color: var(--color-primary-light);
+}
+.skeleton-spinner--size-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+.skeleton-spinner--size-md {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+.skeleton-spinner--size-lg {
+  width: 36px;
+  height: 36px;
+  border-width: 4px;
+}
+.skeleton-spinner--size-full {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+@keyframes skeleton-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion: keep only a very subtle pulse, drop shimmer/wave/spin sweep */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton--anim-shimmer,
+  .skeleton--anim-wave {
+    animation: skeleton-pulse 1.8s ease-in-out infinite;
+    background: var(--color-neutral-200);
+  }
+  .skeleton-group--dark .skeleton--anim-shimmer,
+  .skeleton-group--dark .skeleton--anim-wave {
+    background: var(--color-neutral-600);
+  }
+  .skeleton-spinner {
+    animation-duration: 1.6s;
+  }
+}
