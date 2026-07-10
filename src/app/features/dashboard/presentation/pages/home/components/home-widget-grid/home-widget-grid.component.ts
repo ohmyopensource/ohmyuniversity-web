@@ -22,6 +22,8 @@ import { SecretariatOverviewWidgetComponent } from '../../../../widgets/secretar
 import { SecretariatTaxesWidgetComponent } from '../../../../widgets/secretariat/secretariat-taxes/secretariat-taxes.widget';
 import { AgendaMonthlyWidgetComponent } from '../../../../widgets/agenda/agenda-monthly/agenda-monthly.widget';
 import { AgendaTodayWidgetComponent } from '../../../../widgets/agenda/agenda-today/agenda-today.widget';
+import { ExamsUpcomingWidgetComponent } from '../../../../widgets/exams/exams-upcoming/exams-upcoming.widget';
+import { ExamsAvailableWidgetComponent } from '../../../../widgets/exams/exams-available/exams-available.widget';
 
 @Component({
   selector: 'app-home-widget-grid',
@@ -48,6 +50,8 @@ import { AgendaTodayWidgetComponent } from '../../../../widgets/agenda/agenda-to
     SecretariatOverviewWidgetComponent,
     AgendaTodayWidgetComponent,
     AgendaMonthlyWidgetComponent,
+    ExamsUpcomingWidgetComponent,
+    ExamsAvailableWidgetComponent,
   ],
   templateUrl: './home-widget-grid.component.html',
 })

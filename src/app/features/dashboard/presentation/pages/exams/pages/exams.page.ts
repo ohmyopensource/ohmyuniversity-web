@@ -22,6 +22,13 @@ import { CareerFacade } from 'src/app/core/application/facades/career.facade';
 import { CustomModalComponent } from '@ui/custom-modal/custom-modal.component';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { CustomInputComponent } from '@ui/custom-input/custom-input.component';
+import {
+  buildPianoMap,
+  buildInfoByAdsce,
+  bookingKey,
+  mapAppello,
+  mapIscrizione,
+} from '@shared/utils/exams-mapping.utils';
 
 @Component({
   selector: 'app-exams',
@@ -105,38 +112,27 @@ export class ExamsPage implements OnInit {
     }).subscribe({
       next: ({ appelli, prenotazioni, piano, suggeriti, info }) => {
         this.userEmail.set(info.emailAte ?? info.email ?? 'N/D');
-        const pianoMap = new Map<string, { cfu: number; annoCorso: number }>();
-        for (const riga of piano.righe ?? []) {
-          if (riga.adCod)
-            pianoMap.set(riga.adCod, { cfu: riga.cfu ?? 0, annoCorso: riga.annoCorso ?? 0 });
-        }
-
-        const infoByAdsce = new Map<number, { cfu: number; annoCorso: number }>();
-        for (const p of prenotazioni.prenotazioni ?? []) {
-          const info = pianoMap.get(p.adStuCod);
-          if (info) infoByAdsce.set(p.adsceId, info);
-        }
+        const pianoMap = buildPianoMap(piano);
+        const infoByAdsce = buildInfoByAdsce(prenotazioni.prenotazioni ?? [], pianoMap);
 
         const prenotatiKeys = new Set(
-          prenotazioni.prenotazioni.map(p => this.bookingKey(p.adsceId, p.appId)),
+          prenotazioni.prenotazioni.map(p => bookingKey(p.adsceId, p.appId)),
         );
         const prenotazioniMap = new Map(
-          prenotazioni.prenotazioni.map(p => [this.bookingKey(p.adsceId, p.appId), p]),
+          prenotazioni.prenotazioni.map(p => [bookingKey(p.adsceId, p.appId), p]),
         );
 
         const mapAppelli = appelli.appelli.map(a =>
-          this.mapAppello(a, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce),
+          mapAppello(a, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce),
         );
 
-        const keysGiaPresenti = new Set(
-          appelli.appelli.map(a => this.bookingKey(a.adsceId, a.appId)),
-        );
+        const keysGiaPresenti = new Set(appelli.appelli.map(a => bookingKey(a.adsceId, a.appId)));
         const docenteByAdsce = new Map(
           appelli.appelli.filter(a => a.docente).map(a => [a.adsceId, a.docente]),
         );
         const prenotatiExtra = prenotazioni.prenotazioni
-          .filter(p => !keysGiaPresenti.has(this.bookingKey(p.adsceId, p.appId)))
-          .map(p => this.mapIscrizione(p, pianoMap, docenteByAdsce));
+          .filter(p => !keysGiaPresenti.has(bookingKey(p.adsceId, p.appId)))
+          .map(p => mapIscrizione(p, pianoMap, docenteByAdsce));
 
         this.exams.set([...mapAppelli, ...prenotatiExtra]);
         this.examsLoading.set(false);
@@ -149,7 +145,7 @@ export class ExamsPage implements OnInit {
         const suggested = (suggeriti.esami ?? []).map(s => {
           const appello = appelliMap.get(s.adCod);
           if (appello) {
-            return this.mapAppello(appello, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce);
+            return mapAppello(appello, pianoMap, prenotazioniMap, prenotatiKeys, infoByAdsce);
           }
           return {
             id: s.adCod,
@@ -355,125 +351,5 @@ export class ExamsPage implements OnInit {
           this.toast.error(msg, { duration: 7000 });
         },
       });
-  }
-
-  private mapAppello(
-    a: BookableSession,
-    pianoMap: Map<string, { cfu: number; annoCorso: number }>,
-    prenotazioniMap: Map<string, Booking>,
-    prenotatiKeys: Set<string>,
-    infoByAdsce: Map<number, { cfu: number; annoCorso: number }>,
-  ): Exam {
-    const oggi = new Date();
-    const parseData = (s: string | null): Date | null => {
-      if (!s) return null;
-      const parts = s.split(' ')[0].split('/');
-      if (parts.length !== 3) return null;
-      return new Date(+parts[2], +parts[1] - 1, +parts[0]);
-    };
-
-    const dataFineIscr = parseData(a.dataFineIscr);
-    const dataInizioIscr = parseData(a.dataInizioIscr);
-    const isPrenotato = prenotatiKeys.has(this.bookingKey(a.adsceId, a.appId));
-    const prenotazione = prenotazioniMap.get(this.bookingKey(a.adsceId, a.appId));
-    const pianoInfo = infoByAdsce.get(a.adsceId) ??
-      pianoMap.get(a.adCod) ?? { cfu: 0, annoCorso: 0 };
-
-    let ora = 'N/D';
-    if (prenotazione?.dataOraTurno?.includes(' ')) {
-      ora = prenotazione.dataOraTurno.split(' ')[1].substring(0, 5);
-    } else if (a.oraEsa?.includes(' ')) {
-      ora = a.oraEsa.split(' ')[1].substring(0, 5);
-    }
-
-    let status: BookingExamStatus;
-    if (isPrenotato) {
-      status = 'booked';
-    } else if (a.stato === 'S') {
-      status = 'closed';
-    } else if (a.stato === 'P' || a.stato === 'I') {
-      if (dataFineIscr && dataFineIscr < oggi) {
-        status = 'closed';
-      } else if (dataInizioIscr && dataInizioIscr > oggi) {
-        status = 'upcoming';
-      } else if (dataFineIscr) {
-        const diff = dataFineIscr.getTime() - oggi.getTime();
-        status = diff / (1000 * 60 * 60 * 24) <= 3 ? 'closing' : 'open';
-      } else {
-        status = 'open';
-      }
-    } else {
-      status = 'closed';
-    }
-
-    return {
-      id: String(a.appelloId ?? a.appId),
-      courseName: a.adDes ?? a.desApp ?? 'N/D',
-      courseAcronym: a.adCod ?? 'N/D',
-      cfu: pianoInfo.cfu,
-      year: pianoInfo.annoCorso,
-      date: this.formatData(prenotazione?.dataOraTurno ?? a.dataInizioApp),
-      time: ora,
-      location: prenotazione?.aulaDes ?? 'N/D',
-      building: 'N/D',
-      professor: a.docente ?? 'N/D',
-      enrollDeadline: this.formatData(a.dataFineIscr),
-      spotsLeft: prenotazione?.numIscritti ?? a.numIscritti ?? 0,
-      spotsTotal: 0,
-      position: prenotazione?.posizApp,
-      bookingDate: prenotazione?.dataIns ? this.formatData(prenotazione.dataIns) : undefined,
-      status,
-      dataInizioIscr: this.formatData(a.dataInizioIscr),
-      cdsId: a.cdsId,
-      adId: a.adId,
-      appId: a.appId,
-      adsceId: a.adsceId,
-    } as any;
-  }
-
-  private mapIscrizione(
-    p: Booking,
-    pianoMap: Map<string, { cfu: number; annoCorso: number }>,
-    docenteByAdsce: Map<number, string>,
-  ): Exam {
-    const pianoInfo = pianoMap.get(p.adStuCod) ?? { cfu: 0, annoCorso: 0 };
-    const ora = p.dataOraTurno?.includes(' ')
-      ? p.dataOraTurno.split(' ')[1].substring(0, 5)
-      : 'N/D';
-
-    return {
-      id: String(p.applistaId),
-      courseName: p.adStuDes ?? 'N/D',
-      courseAcronym: p.adStuCod ?? 'N/D',
-      cfu: pianoInfo.cfu,
-      year: pianoInfo.annoCorso,
-      date: this.formatData(p.dataOraTurno),
-      time: ora,
-      location: p.aulaDes ?? 'N/D',
-      building: 'N/D',
-      professor: docenteByAdsce.get(p.adsceId) ?? 'N/D',
-      enrollDeadline: this.formatData(p.dataFineIscr),
-      spotsLeft: p.numIscritti ?? 0,
-      spotsTotal: 0,
-      position: p.posizApp,
-      bookingDate: p.dataIns ? this.formatData(p.dataIns) : undefined,
-      status: 'booked' as BookingExamStatus,
-      dataInizioIscr: this.formatData(p.dataInizioIscr),
-      cdsId: p.cdsId,
-      adId: p.adId,
-      appId: p.appId,
-      adsceId: p.adsceId,
-    } as any;
-  }
-
-  private formatData(s: string | null): string {
-    if (!s) return 'N/D';
-    const parts = s.split(' ')[0].split('/');
-    if (parts.length !== 3) return s;
-    return `${parts[0]}/${parts[1]}/${parts[2]}`;
-  }
-
-  private bookingKey(adsceId: number, appId: number): string {
-    return `${adsceId}:${appId}`;
   }
 }

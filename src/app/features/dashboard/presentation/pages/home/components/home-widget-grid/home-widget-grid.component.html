@@ -70,6 +70,12 @@
         @case ('agenda-monthly') {
           <app-agenda-monthly-widget [size]="widget.size" />
         }
+        @case ('exams-upcoming') {
+          <app-exams-upcoming-widget [size]="widget.size" />
+        }
+        @case ('exams-available') {
+          <app-exams-available-widget [size]="widget.size" />
+        }
         @default {
           <div
             class="flex items-center justify-center h-full rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
