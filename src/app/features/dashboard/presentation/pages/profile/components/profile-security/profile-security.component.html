@@ -1,10 +1,4 @@
 <div class="flex flex-col gap-4">
-  <app-card-status
-    statusVariant="info"
-    [icon]="iconShield"
-    title="Gestione sessioni in arrivo"
-    description="La visualizzazione e revoca delle sessioni attive sarà disponibile a breve." />
-
   <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
     <div class="flex items-center gap-3 mb-4">
       <div
@@ -21,18 +15,60 @@
         <p appText variant="caption" color="muted" class="m-0">Dispositivi attualmente connessi</p>
       </div>
     </div>
-    <app-custom-card variant="success" padding="sm" shadow="none" [bordered]="true">
-      <div class="flex items-center justify-between gap-3">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-[0.82rem] font-semibold" style="color: var(--color-neutral-900)">
-              Sessione corrente
-            </span>
-            <app-custom-badge label="Attiva" variant="success" size="xs" shape="pill" />
-          </div>
-          <p class="text-[0.72rem] m-0" style="color: var(--color-neutral-400)">Accesso in corso</p>
-        </div>
+
+    @if (loading()) {
+      <p appText variant="body-sm" color="muted">Caricamento sessioni...</p>
+    } @else if (error()) {
+      <app-card-status
+        statusVariant="error"
+        [icon]="iconAlertTriangle"
+        title="Errore nel caricamento"
+        description="Impossibile recuperare le sessioni attive. Riprova più tardi." />
+    } @else if (sessions().length === 0) {
+      <p appText variant="body-sm" color="muted">Nessuna sessione attiva.</p>
+    } @else {
+      <div class="flex flex-col gap-2">
+        @for (session of sessions(); track session.sessionId) {
+          <app-custom-card
+            [variant]="session.current ? 'success' : 'default'"
+            padding="sm"
+            shadow="none"
+            [bordered]="true">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span
+                    class="text-[0.82rem] font-semibold"
+                    style="color: var(--color-neutral-900)">
+                    {{ deviceLabel(session) }}
+                  </span>
+                  @if (session.current) {
+                    <app-custom-badge
+                      label="Sessione corrente"
+                      variant="success"
+                      size="xs"
+                      shape="pill" />
+                  }
+                </div>
+                <p class="text-[0.72rem] m-0" style="color: var(--color-neutral-400)">
+                  {{ session.ipAddress || 'IP sconosciuto' }} · ultimo accesso
+                  {{ session.lastUsedAt | date: 'dd/MM/yyyy HH:mm' }}
+                </p>
+              </div>
+
+              @if (!session.current) {
+                <app-custom-button
+                  variant="outline-error"
+                  size="sm"
+                  label="Disconnetti"
+                  [icon]="iconLogOut"
+                  [loading]="revokingId() === session.sessionId"
+                  (clicked)="revoke(session)" />
+              }
+            </div>
+          </app-custom-card>
+        }
       </div>
-    </app-custom-card>
+    }
   </app-custom-card>
 </div>

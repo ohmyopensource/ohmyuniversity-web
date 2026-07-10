@@ -14,7 +14,6 @@ import { HomeGreetingComponent } from '../components/home-greeting/home-greeting
 import { HomeWidgetPanelComponent } from '../components/home-widget-panel/home-widget-panel.component';
 import { HomePlacingGridComponent } from '../components/home-placing-grid/home-placing-grid.component';
 import { HomeWidgetGridComponent } from '../components/home-widget-grid/home-widget-grid.component';
-import { CardStatusComponent } from '@ui/custom-card/card-variants.component';
 import { AuthFacade } from 'src/app/core/application/facades/auth.facade';
 import { cryptoRandInt } from '@shared/utils/crypto-rand';
 
@@ -30,7 +29,6 @@ export type DashboardStep = 'idle' | 'selecting-size' | 'placing';
     HomeWidgetPanelComponent,
     HomePlacingGridComponent,
     HomeWidgetGridComponent,
-    CardStatusComponent,
   ],
   templateUrl: './home.page.html',
 })

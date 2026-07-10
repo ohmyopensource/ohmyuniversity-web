@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { AuthTokens } from '../models/auth/auth-tokens.model';
 import { LoginRequest } from '../models/auth/login-request.model';
+import { AuthSession } from '../models/auth/auth-session.model';
 
 export abstract class AuthRepository {
   abstract login(request: LoginRequest): Observable<AuthTokens>;
@@ -10,4 +11,6 @@ export abstract class AuthRepository {
     targetUniversityId: string,
     refreshToken: string,
   ): Observable<{ accessToken: string }>;
+  abstract getSessions(): Observable<AuthSession[]>;
+  abstract revokeSession(sessionId: string): Observable<void>;
 }

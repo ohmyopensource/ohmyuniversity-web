@@ -9,6 +9,8 @@ export const API = {
     logout: `${BASE}/v1/auth/logout`,
     switchCarriera: `${BASE}/v1/auth/switch-carriera`,
     switchUniversity: `${BASE}/v1/auth/switch-university`,
+    sessions: `${BASE}/v1/auth/sessions`,
+    revokeSession: (sessionId: string) => `${BASE}/v1/auth/sessions/${sessionId}`,
   },
   profile: {
     persona: `${BASE}/v1/profile/persona`,

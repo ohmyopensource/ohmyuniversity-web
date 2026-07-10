@@ -5,6 +5,7 @@ import { AuthRepository } from '../../domain/repositories/auth.repository';
 import { AuthTokens } from '../../domain/models/auth/auth-tokens.model';
 import { LoginRequest } from '../../domain/models/auth/login-request.model';
 import { API } from '@shared/constants';
+import { AuthSession } from '../../domain/models/auth/auth-session.model';
 
 @Injectable()
 export class AuthApiRepository extends AuthRepository {
@@ -35,5 +36,13 @@ export class AuthApiRepository extends AuthRepository {
     return this.http.post<{ accessToken: string }>(API.auth.switchUniversity, null, {
       params: { targetUniversityId, refreshToken },
     });
+  }
+
+  getSessions(): Observable<AuthSession[]> {
+    return this.http.get<AuthSession[]>(API.auth.sessions);
+  }
+
+  revokeSession(sessionId: string): Observable<void> {
+    return this.http.delete<void>(API.auth.revokeSession(sessionId));
   }
 }

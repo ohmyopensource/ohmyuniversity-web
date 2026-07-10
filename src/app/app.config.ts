@@ -38,6 +38,8 @@ import { LoginUseCase } from './core/application/usecases/auth/login.usecase';
 import { LogoutUseCase } from './core/application/usecases/auth/logout.usecase';
 import { RefreshTokenUseCase } from './core/application/usecases/auth/refresh-token.usecase';
 import { SwitchCarrieraUseCase } from './core/application/usecases/career/switch-carriera.usecase';
+import { GetSessionsUseCase } from './core/application/usecases/auth/get-sessions.usecase';
+import { RevokeSessionUseCase } from './core/application/usecases/auth/revoke-session.usecase';
 
 // Profile usecases
 import { GetPersonaUseCase } from './core/application/usecases/profile/get-persona.usecase';
@@ -188,6 +190,8 @@ export const appConfig: ApplicationConfig = {
     LogoutUseCase,
     RefreshTokenUseCase,
     SwitchCarrieraUseCase,
+    GetSessionsUseCase,
+    RevokeSessionUseCase,
 
     // Profile
     GetPersonaUseCase,

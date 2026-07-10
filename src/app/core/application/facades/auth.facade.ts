@@ -13,6 +13,9 @@ import {
   PROFILI_KEY,
 } from '../usecases/auth/login.usecase';
 import { SwitchCarrieraUseCase } from '../usecases/career/switch-carriera.usecase';
+import { GetSessionsUseCase } from '../usecases/auth/get-sessions.usecase';
+import { RevokeSessionUseCase } from '../usecases/auth/revoke-session.usecase';
+import { AuthSession } from 'src/app/core/domain/models/auth/auth-session.model';
 
 @Injectable()
 export class AuthFacade {
@@ -20,6 +23,8 @@ export class AuthFacade {
   private readonly logoutUseCase = inject(LogoutUseCase);
   private readonly refreshTokenUseCase = inject(RefreshTokenUseCase);
   private readonly switchCarrieraUseCase = inject(SwitchCarrieraUseCase);
+  private readonly getSessionsUseCase = inject(GetSessionsUseCase);
+  private readonly revokeSessionUseCase = inject(RevokeSessionUseCase);
 
   login(request: LoginRequest): Observable<AuthTokens> {
     return this.loginUseCase.execute(request);
@@ -109,5 +114,13 @@ export class AuthFacade {
 
   switchCarriera(profilo: ProfiloCarriera): Observable<{ accessToken: string }> {
     return this.switchCarrieraUseCase.execute(profilo);
+  }
+
+  getSessions(): Observable<AuthSession[]> {
+    return this.getSessionsUseCase.execute();
+  }
+
+  revokeSession(sessionId: string): Observable<void> {
+    return this.revokeSessionUseCase.execute(sessionId);
   }
 }
