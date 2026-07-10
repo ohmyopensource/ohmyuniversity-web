@@ -11,19 +11,25 @@
         <div class="grid grid-cols-2 gap-2 flex-1">
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media aritm.</p>
-            <p appText variant="h5" weight="bold" color="primary">{{ data.arithmeticAvg }}</p>
+            <p appText variant="h5" weight="bold" color="primary">
+              {{ stats()?.arithmeticAvg ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media pond.</p>
-            <p appText variant="h5" weight="bold" color="primary">{{ data.weightedAvg }}</p>
+            <p appText variant="h5" weight="bold" color="primary">
+              {{ stats()?.weightedAvg ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Base laurea</p>
-            <p appText variant="h5" weight="bold" color="primary">{{ data.graduationBase }}</p>
+            <p appText variant="h5" weight="bold" color="primary">
+              {{ stats()?.graduationBase ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Lodi</p>
-            <p appText variant="h5" weight="bold" color="primary">{{ data.honors }}</p>
+            <p appText variant="h5" weight="bold" color="primary">{{ stats()?.honors ?? '—' }}</p>
           </div>
         </div>
       </div>
@@ -35,19 +41,25 @@
         <div class="grid grid-cols-4 gap-2">
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media aritm.</p>
-            <p appText variant="body" weight="bold" color="primary">{{ data.arithmeticAvg }}</p>
+            <p appText variant="body" weight="bold" color="primary">
+              {{ stats()?.arithmeticAvg ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media pond.</p>
-            <p appText variant="body" weight="bold" color="primary">{{ data.weightedAvg }}</p>
+            <p appText variant="body" weight="bold" color="primary">
+              {{ stats()?.weightedAvg ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Base laurea</p>
-            <p appText variant="body" weight="bold" color="primary">{{ data.graduationBase }}</p>
+            <p appText variant="body" weight="bold" color="primary">
+              {{ stats()?.graduationBase ?? '—' }}
+            </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Lodi</p>
-            <p appText variant="body" weight="bold" color="primary">{{ data.honors }}</p>
+            <p appText variant="body" weight="bold" color="primary">{{ stats()?.honors ?? '—' }}</p>
           </div>
         </div>
 
@@ -55,15 +67,15 @@
         <div class="flex flex-col gap-1.5 flex-1 overflow-hidden">
           <p appText variant="caption" color="muted">Piano di studi - semestre corrente</p>
           <div class="flex flex-col gap-1 overflow-y-auto">
-            @for (exam of data.currentSemesterExams; track exam.name) {
+            @for (exam of stats()?.currentYearExams ?? []; track exam.courseCode) {
               <div
                 class="flex items-center justify-between gap-2 py-1 border-b border-gray-100 last:border-0">
-                <p appText variant="caption" class="truncate flex-1">{{ exam.name }}</p>
+                <p appText variant="caption" class="truncate flex-1">{{ exam.courseName }}</p>
                 <div class="flex items-center gap-2 shrink-0">
                   <span class="text-[10px] text-gray-400">{{ exam.cfu }} CFU</span>
                   <app-custom-badge
-                    [label]="exam.passed ? 'Superato' : 'Da sostenere'"
-                    [variant]="exam.passed ? 'success' : 'warning'"
+                    [label]="exam.status === 'PASSED' ? 'Superato' : 'Da sostenere'"
+                    [variant]="exam.status === 'PASSED' ? 'success' : 'warning'"
                     size="sm" />
                 </div>
               </div>

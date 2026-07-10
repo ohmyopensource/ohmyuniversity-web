@@ -6,7 +6,7 @@
   color="career">
   <div class="flex items-center justify-center h-full">
     <div class="flex items-baseline gap-1">
-      <p appText variant="h2" weight="bold" color="primary">{{ data.graduationBase }}</p>
+      <p appText variant="h2" weight="bold" color="primary">{{ stats()?.graduationBase ?? '—' }}</p>
       <p appText variant="body-sm" color="muted">/ 110</p>
     </div>
   </div>

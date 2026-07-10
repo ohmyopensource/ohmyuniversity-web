@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { DashboardWidgetCardComponent } from '@ui/dashboard-widget-card/dashboard-widget-card.component';
 import { LucideChartLine } from '@lucide/angular';
 import { WidgetSize } from '@shared/types';
-import { MOCK_CAREER_DATA } from '@shared/data/mock/widget-career.mock';
 import { CustomLinkComponent } from '@ui/custom-link/custom-link.component';
+import { DashboardCareerStatsService } from 'src/app/features/dashboard/services/dashboard-career-stats.service';
 
 @Component({
   selector: 'app-career-arithmetic-avg-widget',
@@ -14,6 +15,8 @@ import { CustomLinkComponent } from '@ui/custom-link/custom-link.component';
 })
 export class CareerArithmeticAvgWidgetComponent {
   @Input() size: WidgetSize = 'small';
-  readonly data = MOCK_CAREER_DATA;
+  private readonly careerStats = inject(DashboardCareerStatsService);
+
+  readonly stats = toSignal(this.careerStats.stats$);
   readonly lucideChart = LucideChartLine;
 }
