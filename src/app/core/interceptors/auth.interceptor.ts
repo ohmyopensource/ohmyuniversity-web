@@ -23,11 +23,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       const universityId = localStorage.getItem('omu_university_id') ?? '';
 
       return auth.refresh(universityId).pipe(
-        switchMap(newToken => next(addBearer(req, newToken))),
         catchError(refreshError => {
           auth.logout().subscribe();
           return throwError(() => refreshError);
         }),
+        switchMap(newToken =>
+          next(addBearer(req, newToken)).pipe(
+            catchError(retryError => {
+              return throwError(() => retryError);
+            }),
+          ),
+        ),
       );
     }),
   );
