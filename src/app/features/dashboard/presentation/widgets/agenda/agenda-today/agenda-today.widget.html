@@ -3,31 +3,15 @@
   [sectionIcon]="lucideCalendar"
   sectionLabel="Agenda"
   [widgetLabel]="todayLabel"
-  [badgeLabel]="todayDay.toString()"
-  badgeVariant="primary"
   color="agenda">
-  <div class="flex flex-col h-full overflow-y-auto py-1 gap-1">
-    @if (todayEvents.length === 0) {
+  <div class="flex flex-col h-full overflow-y-auto gap-1.5">
+    @if (todayEvents().length === 0) {
       <div class="flex items-center justify-center h-full">
         <p appText variant="caption" color="muted">Nessun evento oggi</p>
       </div>
     } @else {
-      @for (event of todayEvents; track event.title) {
-        <div
-          class="flex items-start gap-2 p-2 rounded-xl hover:bg-white/60 transition-all border-b border-gray-100 last:border-0">
-          <div
-            class="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
-            [style.background]="getEventColor(event.type)"></div>
-          <div class="flex flex-col gap-0.5 flex-1 min-w-0">
-            <p appText variant="caption" weight="semibold" class="truncate">{{ event.title }}</p>
-            <p appText variant="caption" color="muted" class="text-[10px]">{{ event.time }}</p>
-            @if (event.location) {
-              <p appText variant="caption" color="muted" class="text-[10px]">
-                {{ event.location }}
-              </p>
-            }
-          </div>
-        </div>
+      @for (event of todayEvents(); track event.id) {
+        <app-agenda-event-card [event]="event" [compact]="true" />
       }
     }
   </div>

@@ -4,32 +4,41 @@
   sectionLabel="Agenda"
   [widgetLabel]="currentMonth"
   color="agenda">
-  <div class="flex flex-col h-full gap-2 py-1">
+  <div class="flex flex-col h-full gap-1.5 py-1">
     <!-- Intestazione giorni -->
     <div class="grid grid-cols-7 gap-0.5">
-      @for (day of ['L', 'M', 'M', 'G', 'V', 'S', 'D']; track $index) {
-        <div class="text-center text-[9px] font-bold text-gray-400 py-0.5">{{ day }}</div>
+      @for (label of weekdayInitials; track $index) {
+        <p appText variant="caption" color="subtle" weight="bold" class="text-center text-[9px]">
+          {{ label }}
+        </p>
       }
     </div>
 
     <!-- Griglia calendario -->
     <div class="grid grid-cols-7 gap-0.5 flex-1">
-      @for (offset of [].constructor(calendarData().offset); track $index) {
+      @for (offset of [].constructor(leadingOffset()); track $index) {
         <div></div>
       }
-      @for (day of [].constructor(calendarData().totalDays); track $index) {
-        <div
-          class="flex flex-col items-center justify-start pt-0.5 rounded-lg text-[10px] font-medium transition-all h-7"
-          [class.text-white]="isToday($index + 1)"
-          [class.text-gray-700]="!isToday($index + 1)"
-          [style.background]="isToday($index + 1) ? 'var(--color-agenda-dark)' : 'transparent'">
-          <span>{{ $index + 1 }}</span>
-          @if (hasEvent($index + 1)) {
-            <div
-              class="w-1 h-1 rounded-full mt-0.5"
-              [style.background]="isToday($index + 1) ? 'white' : 'var(--color-agenda-dark)'"></div>
-          }
-        </div>
+      @for (cell of monthCells(); track cell.date.getTime()) {
+        <app-custom-card
+          [variant]="cell.isToday ? 'info' : 'default'"
+          padding="none"
+          shadow="none"
+          radius="sm"
+          [bordered]="true">
+          <div class="flex h-7 flex-col items-center justify-start gap-0.5 pt-0.5">
+            <p appText variant="caption" weight="bold" class="text-[10px]">
+              {{ cell.dayNumber }}
+            </p>
+            @if (cell.eventDotColors.length > 0) {
+              <div class="flex items-center gap-0.5">
+                @for (color of cell.eventDotColors; track color) {
+                  <div class="h-1.5 w-1.5 rounded-full" [style.background]="color"></div>
+                }
+              </div>
+            }
+          </div>
+        </app-custom-card>
       }
     </div>
   </div>

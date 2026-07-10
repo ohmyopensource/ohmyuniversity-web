@@ -1,35 +1,44 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AgendaEventCardComponent } from '../../../pages/agenda/components/agenda-event-card/agenda-event-card.component';
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { CustomLinkComponent } from '@ui/custom-link/custom-link.component';
 import { DashboardWidgetCardComponent } from '@ui/dashboard-widget-card/dashboard-widget-card.component';
 import { LucideCalendarDays } from '@lucide/angular';
 import { WidgetSize } from '@shared/types';
-import { MOCK_TODAY_EVENTS, EVENT_TYPE_COLOR } from '@shared/data/mock/dashboard-agenda.mock';
+import { AgendaEventsService } from 'src/app/features/dashboard/services/agenda-events.service';
+import { calendarIsSameDay } from '@shared/utils/calendar.utils';
 
 @Component({
   selector: 'app-agenda-today-widget',
   standalone: true,
-  imports: [CustomTextComponent, CustomLinkComponent, DashboardWidgetCardComponent],
+  imports: [
+    AgendaEventCardComponent,
+    CustomTextComponent,
+    CustomLinkComponent,
+    DashboardWidgetCardComponent,
+  ],
   templateUrl: './agenda-today.widget.html',
 })
 export class AgendaTodayWidgetComponent {
   @Input() size: WidgetSize = 'medium';
 
+  private readonly agendaEvents = inject(AgendaEventsService);
+  private readonly monthEvents = toSignal(this.agendaEvents.monthEvents$);
+
   readonly lucideCalendar = LucideCalendarDays;
-  readonly todayEvents = MOCK_TODAY_EVENTS;
-  readonly eventTypeColor = EVENT_TYPE_COLOR;
 
   readonly today = new Date();
-  readonly todayDay = this.today.getDate();
   readonly todayLabel = this.today.toLocaleDateString('it-IT', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   });
 
-  getEventColor(type: string): string {
-    return (
-      this.eventTypeColor[type as keyof typeof this.eventTypeColor] ?? 'var(--color-neutral-400)'
-    );
-  }
+  readonly todayEvents = computed(() => {
+    const events = this.monthEvents() ?? [];
+    return events
+      .filter(event => calendarIsSameDay(event.startDate, this.today))
+      .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  });
 }
