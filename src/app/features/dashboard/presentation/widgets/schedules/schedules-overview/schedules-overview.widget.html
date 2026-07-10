@@ -1,29 +1,55 @@
 <app-dashboard-widget-card
   [size]="size"
   [sectionIcon]="lucideSchedule"
-  [sectionLabel]="'Orario Lezioni'"
-  [widgetLabel]="mockCourseLabel"
+  sectionLabel="Orario Lezioni"
+  widgetLabel="I miei orari"
   color="schedules">
-  <div class="flex items-center justify-center h-full gap-2">
-    <app-custom-button
-      label="Visualizza"
-      variant="outline"
-      size="sm"
-      mode="link-external"
-      [href]="mockPdfUrl"
-      target="_blank"
-      [icon]="LucideExternalLink"
-      iconPosition="right" />
-    <app-custom-button
-      label="Scarica"
-      variant="ghost"
-      size="sm"
-      mode="link-external"
-      [href]="mockPdfUrl"
-      target="_blank"
-      [icon]="lucideDownload"
-      iconPosition="right" />
-  </div>
+  @if (schedules(); as list) {
+    @if (list.length > 0) {
+      <div class="flex flex-col gap-1 h-full overflow-y-auto">
+        @for (schedule of list; track schedule.id) {
+          <div class="flex items-center justify-between gap-1.5 py-1 px-1.5 rounded-lg bg-white/60">
+            <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+              <p appText variant="caption" weight="bold" [truncate]="true">
+                {{ schedule.label ?? courseNameFromUrl(schedule.timetablePageUrl) }}
+              </p>
+              <app-custom-badge
+                [label]="degreeTypeLabel(schedule.degreeType)"
+                variant="primary"
+                size="xs"
+                shape="rounded" />
+            </div>
+            <div class="flex items-center gap-0.5 shrink-0">
+              <app-custom-button
+                variant="ghost"
+                size="xs"
+                [iconOnly]="true"
+                [icon]="lucideDownload"
+                ariaLabel="Scarica orario"
+                (clicked)="downloadFile(schedule.pdfUrl)" />
+              <app-custom-button
+                variant="ghost"
+                size="xs"
+                [iconOnly]="true"
+                [icon]="lucideExternalLink"
+                ariaLabel="Visualizza orario"
+                mode="link-external"
+                [href]="schedule.pdfUrl"
+                target="_blank" />
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="flex items-center justify-center h-full">
+        <p appText variant="caption" color="muted">Nessun orario disponibile</p>
+      </div>
+    }
+  } @else {
+    <div class="flex items-center justify-center h-full">
+      <p appText variant="caption" color="muted">Caricamento...</p>
+    </div>
+  }
 
   <div footer>
     <app-custom-link
