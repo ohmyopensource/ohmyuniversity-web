@@ -18,7 +18,7 @@ import {
   calendarEventTimeRange,
   calendarEventTypeIcon,
   calendarEventTypeVariant,
-  formatDateLabel,
+  formatDate,
   type AgendaEventVariant,
 } from '@shared/utils/calendar.utils';
 import { getLabelColorClass } from '@shared/utils/orientation.utils';
@@ -59,7 +59,7 @@ export class AgendaEventDetailComponent {
 
   readonly dateLabel = computed(() => {
     const current = this.event();
-    return current ? formatDateLabel(current.startDate) : '';
+    return current ? formatDate(current.startDate) : '';
   });
 
   readonly timeRangeLabel = computed(() => {

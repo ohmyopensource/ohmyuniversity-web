@@ -60,17 +60,10 @@ export function calendarHourLabel(hour: number): string {
   return `${hour.toString().padStart(2, '0')}:00`;
 }
 
-/** Precise 24h time (e.g. "09:30"), used on individual event cards */
-export function calendarPreciseTime(date: Date): string {
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
-}
-
 /** Time range label for an event (e.g. "09:30-11:00"), falls back to a single time if no endDate */
 export function calendarEventTimeRange(event: AgendaEvent): string {
-  if (!event.endDate) return calendarPreciseTime(event.startDate);
-  return `${calendarPreciseTime(event.startDate)}-${calendarPreciseTime(event.endDate)}`;
+  if (!event.endDate) return formatTime(event.startDate);
+  return `${formatTime(event.startDate)}-${formatTime(event.endDate)}`;
 }
 
 /** Duration label for an event (e.g. "1h 30m", "45m"), empty string if no endDate */
@@ -313,12 +306,6 @@ export function calendarTimelineHours(): number[] {
     hours.push(hour);
   }
   return hours;
-}
-
-export function formatDateLabel(date: Date): string {
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  return `${day}/${month}/${date.getFullYear()}`;
 }
 
 export function addMinutesToTime(value: string, minutesToAdd: number): string {
