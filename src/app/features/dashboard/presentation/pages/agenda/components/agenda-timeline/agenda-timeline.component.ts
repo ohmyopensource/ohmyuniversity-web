@@ -26,6 +26,7 @@ import {
   calendarHourTop as hourTopFn,
   calendarEventTimeRange,
   calendarEventTypeVariant,
+  calendarIsSameDay,
 } from '@shared/utils/calendar.utils';
 import { LANE_GAP_PX } from '@shared/constants';
 
@@ -62,10 +63,14 @@ export class AgendaTimelineComponent {
   readonly iconCalendar = LucideCalendarDays;
   readonly iconClose = LucideX;
 
+  readonly focusedDate = input.required<Date>();
+
   readonly currentTimePx = computed(() => {
     const now = new Date();
     return hourTopFn(now.getHours()) + (now.getMinutes() / 60) * CALENDAR_TIMELINE.hourHeight;
   });
+
+  readonly isToday = computed(() => calendarIsSameDay(this.focusedDate(), new Date()));
 
   constructor() {
     afterNextRender(() => {

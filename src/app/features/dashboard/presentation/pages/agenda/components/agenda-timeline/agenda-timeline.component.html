@@ -19,17 +19,19 @@
     }
 
     <!-- Current time red line -->
-    <div
-      class="absolute left-0 right-0 z-10 flex items-center"
-      [style.top.px]="currentTimePx() + 12">
+    @if (isToday()) {
       <div
-        class="shrink-0 rounded-full"
-        [style.width.px]="8"
-        [style.height.px]="8"
-        [style.margin-left.px]="leftGutter - 4"
-        style="background: var(--color-error-dark)"></div>
-      <div class="flex-1 h-px" style="background: var(--color-error-dark)"></div>
-    </div>
+        class="absolute left-0 right-0 z-10 flex items-center"
+        [style.top.px]="currentTimePx() + 12">
+        <div
+          class="shrink-0 rounded-full"
+          [style.width.px]="8"
+          [style.height.px]="8"
+          [style.margin-left.px]="leftGutter - 4"
+          style="background: var(--color-error-dark)"></div>
+        <div class="flex-1 h-px" style="background: var(--color-error-dark)"></div>
+      </div>
+    }
 
     <!-- Events area -->
     <div

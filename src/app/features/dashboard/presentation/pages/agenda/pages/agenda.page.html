@@ -20,6 +20,7 @@
 
       <div class="mt-2">
         <app-agenda-timeline
+          [focusedDate]="focusedDate()"
           [eventLayouts]="eventLayouts()"
           (eventSelected)="onEventSelected($event)" />
       </div>
