@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { LucideChevronLeft } from '@lucide/angular';
 import { calendarMonthLabel } from '@shared/utils/calendar.utils';
-import { CalendarViewMode } from '@shared/types';
+import { AgendaViewMode } from '@shared/types';
 
 @Component({
   selector: 'app-agenda-view-header',
@@ -12,7 +12,7 @@ import { CalendarViewMode } from '@shared/types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgendaViewHeaderComponent {
-  readonly currentView = input.required<CalendarViewMode>();
+  readonly currentView = input.required<AgendaViewMode>();
   readonly focusedDate = input.required<Date>();
 
   readonly back = output<void>();

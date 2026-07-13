@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import type { CalendarEvent, UniversityEvent } from '@shared/types';
-import { CalendarRepository } from '../../domain/repositories/calendar.repository';
-import { CalendarEventResponse } from '../../domain/models/agenda/calendar.model';
+import type { AgendaEvent, UniversityEvent } from '@shared/types';
+import { AgendaRepository } from '../../domain/repositories/agenda.repository';
+import { AgendaEventResponse } from '../../domain/models/agenda/agenda.model';
 
 @Injectable()
-export class CalendarFacade {
-  private readonly repo = inject(CalendarRepository);
+export class AgendaFacade {
+  private readonly repo = inject(AgendaRepository);
 
-  getEvents(from?: Date, to?: Date): Observable<CalendarEvent[]> {
+  getEvents(from?: Date, to?: Date): Observable<AgendaEvent[]> {
     return this.repo
       .getEvents(from?.toISOString(), to?.toISOString())
       .pipe(map(events => events.map(this.mapEvent)));
@@ -34,9 +34,7 @@ export class CalendarFacade {
     );
   }
 
-  createEvent(
-    event: Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Observable<CalendarEvent> {
+  createEvent(event: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>): Observable<AgendaEvent> {
     return this.repo
       .createEvent({
         title: event.title,
@@ -53,7 +51,7 @@ export class CalendarFacade {
       .pipe(map(this.mapEvent));
   }
 
-  updateEvent(id: string, partial: Partial<CalendarEvent>): Observable<CalendarEvent> {
+  updateEvent(id: string, partial: Partial<AgendaEvent>): Observable<AgendaEvent> {
     return this.repo
       .updateEvent(id, {
         title: partial.title ?? '',
@@ -78,7 +76,7 @@ export class CalendarFacade {
     return this.repo.importUniversityEvent(id);
   }
 
-  private mapEvent(e: CalendarEventResponse): CalendarEvent {
+  private mapEvent(e: AgendaEventResponse): AgendaEvent {
     return {
       id: e.id,
       title: e.title,
@@ -86,7 +84,7 @@ export class CalendarFacade {
       startDate: new Date(e.startDate),
       endDate: e.endDate ? new Date(e.endDate) : null,
       allDay: e.allDay,
-      type: e.type as CalendarEvent['type'],
+      type: e.type as AgendaEvent['type'],
       color: e.color,
       url: e.url,
       notes: e.notes,

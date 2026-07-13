@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
-import { CalendarFacade } from 'src/app/core/application/facades/calendar.facade';
-import type { CalendarEvent } from '@shared/types';
+import { AgendaFacade } from 'src/app/core/application/facades/agenda.facade';
+import type { AgendaEvent } from '@shared/types';
 
 /**
  * Provides the current month's calendar events to dashboard agenda widgets.
@@ -11,13 +11,13 @@ import type { CalendarEvent } from '@shared/types';
  */
 @Injectable({ providedIn: 'root' })
 export class AgendaEventsService {
-  private readonly calendar = inject(CalendarFacade);
+  private readonly calendar = inject(AgendaFacade);
 
-  readonly monthEvents$: Observable<CalendarEvent[]> = this.loadCurrentMonthEvents().pipe(
+  readonly monthEvents$: Observable<AgendaEvent[]> = this.loadCurrentMonthEvents().pipe(
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  private loadCurrentMonthEvents(): Observable<CalendarEvent[]> {
+  private loadCurrentMonthEvents(): Observable<AgendaEvent[]> {
     const today = new Date();
     const from = new Date(today.getFullYear(), today.getMonth(), 1);
     const to = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59);

@@ -1,4 +1,4 @@
-import { CalendarFormEventType, CalendarEventType } from '@shared/types';
+import { AgendaFormEventType, AgendaEventType } from '@shared/types';
 import { SelectOption } from '@ui/custom-input/custom-input.component';
 
 export const FORM_TYPE_OPTIONS: SelectOption[] = [
@@ -7,13 +7,13 @@ export const FORM_TYPE_OPTIONS: SelectOption[] = [
   { value: 'EVENTO', label: 'Evento' },
 ];
 
-export const FORM_TYPE_TO_EVENT_TYPE: Record<CalendarFormEventType, CalendarEventType> = {
+export const FORM_TYPE_TO_EVENT_TYPE: Record<AgendaFormEventType, AgendaEventType> = {
   ESAME: 'EXAM',
   PROMEMORIA: 'REMINDER',
   EVENTO: 'PERSONAL',
 };
 
-export const EVENT_TYPE_TO_FORM_TYPE: Record<CalendarEventType, CalendarFormEventType> = {
+export const EVENT_TYPE_TO_FORM_TYPE: Record<AgendaEventType, AgendaFormEventType> = {
   EXAM: 'ESAME',
   REMINDER: 'PROMEMORIA',
   PERSONAL: 'EVENTO',

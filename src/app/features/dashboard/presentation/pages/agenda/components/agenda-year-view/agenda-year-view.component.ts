@@ -3,7 +3,7 @@ import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
-import type { CalendarEvent, CalendarYearMonth } from '@shared/types';
+import type { AgendaEvent, AgendaYearMonth } from '@shared/types';
 import {
   calendarEventTypeVariant,
   calendarIsSameDay,
@@ -20,7 +20,7 @@ import {
 })
 export class AgendaYearViewComponent {
   readonly focusedDate = input.required<Date>();
-  readonly events = input.required<CalendarEvent[]>();
+  readonly events = input.required<AgendaEvent[]>();
 
   readonly monthSelected = output<Date>();
   readonly yearChanged = output<Date>();
@@ -30,7 +30,7 @@ export class AgendaYearViewComponent {
 
   readonly yearLabel = computed(() => String(this.focusedDate().getFullYear()));
 
-  readonly months = computed<CalendarYearMonth[]>(() => {
+  readonly months = computed<AgendaYearMonth[]>(() => {
     const year = this.focusedDate().getFullYear();
     const today = new Date();
     const allEvents = this.events();

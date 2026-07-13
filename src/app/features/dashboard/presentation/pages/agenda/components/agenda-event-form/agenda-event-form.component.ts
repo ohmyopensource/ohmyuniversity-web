@@ -19,7 +19,7 @@ import {
   LucideChevronUp,
   LucideDynamicIcon,
 } from '@lucide/angular';
-import type { CalendarEvent, CalendarFormEventType } from '@shared/types';
+import type { AgendaEvent, AgendaFormEventType } from '@shared/types';
 import {
   addMinutesToTime,
   autoFormatDateInput,
@@ -60,13 +60,13 @@ export class AgendaEventFormComponent {
   readonly isOpen = input<boolean>(false);
 
   /** Event being edited, or null when creating a new one */
-  readonly event = input<CalendarEvent | null>(null);
+  readonly event = input<AgendaEvent | null>(null);
 
   /** Day to default the start time on, when creating a new event */
   readonly defaultDate = input<Date>(new Date());
 
-  readonly created = output<Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>>();
-  readonly updated = output<{ id: string; partial: Partial<CalendarEvent> }>();
+  readonly created = output<Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>>();
+  readonly updated = output<{ id: string; partial: Partial<AgendaEvent> }>();
   readonly cancelled = output<void>();
 
   private readonly modal = viewChild.required(CustomModalComponent);
@@ -96,7 +96,7 @@ export class AgendaEventFormComponent {
     return `${minutes}m`;
   });
 
-  readonly activeFormType = signal<CalendarFormEventType>('EVENTO');
+  readonly activeFormType = signal<AgendaFormEventType>('EVENTO');
   readonly title = signal('');
   readonly description = signal('');
   readonly eventDate = signal('');
@@ -186,7 +186,7 @@ export class AgendaEventFormComponent {
   }
 
   onTypeChange(formType: string): void {
-    this.activeFormType.set(formType as CalendarFormEventType);
+    this.activeFormType.set(formType as AgendaFormEventType);
   }
 
   onSave(): void {

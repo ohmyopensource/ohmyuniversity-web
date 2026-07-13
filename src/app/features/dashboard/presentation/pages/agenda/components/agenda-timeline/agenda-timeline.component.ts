@@ -14,7 +14,7 @@ import { AgendaEventCardComponent } from '../agenda-event-card/agenda-event-card
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { CustomCardComponent } from '@ui/custom-card/custom-card.component';
 import { LucideDynamicIcon, LucideCalendarDays, LucideX } from '@lucide/angular';
-import type { CalendarEvent, CalendarEventLayout, PositionedEventLayout } from '@shared/types';
+import type { AgendaEvent, AgendaEventLayout, PositionedEventLayout } from '@shared/types';
 import {
   CALENDAR_TIMELINE,
   calendarEventHeight,
@@ -32,7 +32,7 @@ import { LANE_GAP_PX } from '@shared/constants';
 export interface EventGroup {
   top: number;
   height: number;
-  events: CalendarEvent[];
+  events: AgendaEvent[];
   variant: 'error' | 'secondary' | 'warning';
 }
 
@@ -46,8 +46,8 @@ export interface EventGroup {
 export class AgendaTimelineComponent {
   private readonly el = inject(ElementRef);
 
-  readonly eventLayouts = input.required<CalendarEventLayout[]>();
-  readonly eventSelected = output<CalendarEvent>();
+  readonly eventLayouts = input.required<AgendaEventLayout[]>();
+  readonly eventSelected = output<AgendaEvent>();
 
   readonly hours = calendarTimelineHours();
   readonly leftGutter = CALENDAR_TIMELINE.leftGutter;
@@ -135,7 +135,7 @@ export class AgendaTimelineComponent {
     return groups;
   });
 
-  onEventClick(event: CalendarEvent): void {
+  onEventClick(event: AgendaEvent): void {
     this.eventSelected.emit(event);
   }
 
@@ -151,16 +151,16 @@ export class AgendaTimelineComponent {
     this.activeGroup.set(null);
   }
 
-  onGroupEventClick(event: CalendarEvent): void {
+  onGroupEventClick(event: AgendaEvent): void {
     this.closeGroup();
     this.eventSelected.emit(event);
   }
 
-  eventTimeRange(event: CalendarEvent): string {
+  eventTimeRange(event: AgendaEvent): string {
     return calendarEventTimeRange(event);
   }
 
-  eventVariant(event: CalendarEvent): string {
+  eventVariant(event: AgendaEvent): string {
     return calendarEventTypeVariant(event.type);
   }
 }

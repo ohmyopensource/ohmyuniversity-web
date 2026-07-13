@@ -12,14 +12,14 @@ import { CustomModalComponent } from '@ui/custom-modal/custom-modal.component';
 import { CustomButtonComponent } from '@ui/custom-button/custom-button.component';
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { LucideDynamicIcon, LucidePencil, LucideTrash2 } from '@lucide/angular';
-import type { CalendarEvent } from '@shared/types/dashboard/dashboard-agenda.types';
+import type { AgendaEvent } from '@shared/types/dashboard/dashboard-agenda.types';
 import {
   calendarEventDurationLabel,
   calendarEventTimeRange,
   calendarEventTypeIcon,
   calendarEventTypeVariant,
   formatDateLabel,
-  type CalendarEventVariant,
+  type AgendaEventVariant,
 } from '@shared/utils/calendar.utils';
 import { getLabelColorClass } from '@shared/utils/orientation.utils';
 
@@ -32,9 +32,9 @@ import { getLabelColorClass } from '@shared/utils/orientation.utils';
 })
 export class AgendaEventDetailComponent {
   readonly isOpen = input<boolean>(false);
-  readonly event = input<CalendarEvent | null>(null);
+  readonly event = input<AgendaEvent | null>(null);
 
-  readonly edit = output<CalendarEvent>();
+  readonly edit = output<AgendaEvent>();
   readonly deleted = output<string>();
   readonly closed = output<void>();
 
@@ -45,7 +45,7 @@ export class AgendaEventDetailComponent {
 
   readonly isConfirmingDelete = signal(false);
 
-  readonly variant = computed<CalendarEventVariant>(() => {
+  readonly variant = computed<AgendaEventVariant>(() => {
     const current = this.event();
     return current ? calendarEventTypeVariant(current.type) : 'warning';
   });

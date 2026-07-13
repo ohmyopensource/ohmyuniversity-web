@@ -9,7 +9,7 @@ import {
   LucideChevronRight,
   LucideDynamicIcon,
 } from '@lucide/angular';
-import type { CalendarEvent, CalendarMonthCell } from '@shared/types';
+import type { AgendaEvent, AgendaMonthCell } from '@shared/types';
 import {
   calendarEventTypeVariant,
   calendarIsSameDay,
@@ -40,7 +40,7 @@ import {
 })
 export class AgendaMonthViewComponent {
   readonly focusedDate = input.required<Date>();
-  readonly events = input.required<CalendarEvent[]>();
+  readonly events = input.required<AgendaEvent[]>();
 
   readonly daySelected = output<Date>();
   readonly monthChanged = output<Date>();
@@ -54,7 +54,7 @@ export class AgendaMonthViewComponent {
 
   readonly monthLabel = computed(() => calendarMonthLabel(this.focusedDate()));
 
-  readonly cells = computed<CalendarMonthCell[]>(() => {
+  readonly cells = computed<AgendaMonthCell[]>(() => {
     const today = new Date();
     const allEvents = this.events();
 

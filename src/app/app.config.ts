@@ -6,7 +6,7 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 // Repositories - domain
 import { AuthRepository } from './core/domain/repositories/auth.repository';
-import { CalendarRepository } from './core/domain/repositories/calendar.repository';
+import { AgendaRepository } from './core/domain/repositories/agenda.repository';
 import { TimetableRepository } from './core/domain/repositories/timetable.repository';
 import { ProfileRepository } from './core/domain/repositories/profile.repository';
 import { CareerRepository } from './core/domain/repositories/career.repository';
@@ -30,7 +30,7 @@ import { AuthFacade } from './core/application/facades/auth.facade';
 import { CareerFacade } from './core/application/facades/career.facade';
 import { FeesFacade } from './core/application/facades/fees.facade';
 import { InternshipsFacade } from './core/application/facades/internships.facade';
-import { CalendarFacade } from './core/application/facades/calendar.facade';
+import { AgendaFacade } from './core/application/facades/agenda.facade';
 import { TimetableFacade } from './core/application/facades/timetable.facade';
 
 // Auth usecases
@@ -169,7 +169,7 @@ export const appConfig: ApplicationConfig = {
 
     // Repository bindings
     { provide: AuthRepository, useClass: AuthApiRepository },
-    { provide: CalendarRepository, useClass: AgendaApiRepository },
+    { provide: AgendaRepository, useClass: AgendaApiRepository },
     { provide: TimetableRepository, useClass: TimetableApiRepository },
     { provide: ProfileRepository, useClass: ProfileApiRepository },
     { provide: CareerRepository, useClass: CareerApiRepository },
@@ -182,7 +182,7 @@ export const appConfig: ApplicationConfig = {
     AuthFacade,
     CareerFacade,
     FeesFacade,
-    CalendarFacade,
+    AgendaFacade,
     TimetableFacade,
 
     // Auth

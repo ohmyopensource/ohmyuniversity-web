@@ -10,9 +10,9 @@ import { AgendaMonthViewComponent } from '../components/agenda-month-view/agenda
 import { AgendaYearViewComponent } from '../components/agenda-year-view/agenda-year-view.component';
 import { AgendaEventFormComponent } from '../components/agenda-event-form/agenda-event-form.component';
 import { AgendaEventDetailComponent } from '../components/agenda-event-detail/agenda-event-detail.component';
-import type { CalendarEvent, CalendarEventLayout, CalendarViewMode } from '@shared/types';
+import type { AgendaEvent, AgendaEventLayout, AgendaViewMode } from '@shared/types';
 import { calculateEventLayouts, calendarIsSameDay } from '@shared/utils/calendar.utils';
-import { CalendarFacade } from 'src/app/core/application/facades/calendar.facade';
+import { AgendaFacade } from 'src/app/core/application/facades/agenda.facade';
 
 @Component({
   selector: 'app-agenda-page',
@@ -32,25 +32,25 @@ import { CalendarFacade } from 'src/app/core/application/facades/calendar.facade
   templateUrl: './agenda.page.html',
 })
 export class AgendaPage implements OnInit {
-  private readonly calendar = inject(CalendarFacade);
+  private readonly agenda = inject(AgendaFacade);
 
-  readonly events = signal<CalendarEvent[]>([]);
+  readonly events = signal<AgendaEvent[]>([]);
   readonly focusedDate = signal<Date>(new Date());
-  readonly currentView = signal<CalendarViewMode>('day');
+  readonly currentView = signal<AgendaViewMode>('day');
   readonly isFormOpen = signal(false);
-  readonly eventBeingEdited = signal<CalendarEvent | null>(null);
+  readonly eventBeingEdited = signal<AgendaEvent | null>(null);
   readonly isDetailOpen = signal(false);
-  readonly eventBeingViewed = signal<CalendarEvent | null>(null);
+  readonly eventBeingViewed = signal<AgendaEvent | null>(null);
   readonly iconAdd = LucidePlus;
 
-  readonly eventsForFocusedDay = computed<CalendarEvent[]>(() => {
+  readonly eventsForFocusedDay = computed<AgendaEvent[]>(() => {
     const day = this.focusedDate();
     return this.events()
       .filter(event => calendarIsSameDay(event.startDate, day))
       .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
   });
 
-  readonly eventLayouts = computed<CalendarEventLayout[]>(() =>
+  readonly eventLayouts = computed<AgendaEventLayout[]>(() =>
     calculateEventLayouts(this.eventsForFocusedDay()),
   );
 
@@ -59,7 +59,7 @@ export class AgendaPage implements OnInit {
   }
 
   private loadEvents(): void {
-    this.calendar.getEvents().subscribe({
+    this.agenda.getEvents().subscribe({
       next: events => this.events.set(events),
       error: () => {},
     });
@@ -69,7 +69,7 @@ export class AgendaPage implements OnInit {
     this.focusedDate.set(date);
   }
 
-  goToView(view: CalendarViewMode, date: Date): void {
+  goToView(view: AgendaViewMode, date: Date): void {
     this.focusedDate.set(date);
     this.currentView.set(view);
   }
@@ -90,11 +90,11 @@ export class AgendaPage implements OnInit {
     }
   }
 
-  onEventSelected(event: CalendarEvent): void {
+  onEventSelected(event: AgendaEvent): void {
     this.openDetail(event);
   }
 
-  openDetail(event: CalendarEvent): void {
+  openDetail(event: AgendaEvent): void {
     this.eventBeingViewed.set(event);
     this.isDetailOpen.set(true);
   }
@@ -104,13 +104,13 @@ export class AgendaPage implements OnInit {
     this.eventBeingViewed.set(null);
   }
 
-  onDetailEditRequested(event: CalendarEvent): void {
+  onDetailEditRequested(event: AgendaEvent): void {
     this.closeDetail();
     this.openEditForm(event);
   }
 
   onDetailDeleteConfirmed(id: string): void {
-    this.calendar.deleteEvent(id).subscribe({
+    this.agenda.deleteEvent(id).subscribe({
       next: () => {
         this.events.update(events => events.filter(e => e.id !== id));
         this.closeDetail();
@@ -124,7 +124,7 @@ export class AgendaPage implements OnInit {
     this.isFormOpen.set(true);
   }
 
-  openEditForm(event: CalendarEvent): void {
+  openEditForm(event: AgendaEvent): void {
     this.eventBeingEdited.set(event);
     this.isFormOpen.set(true);
   }
@@ -134,8 +134,8 @@ export class AgendaPage implements OnInit {
     this.eventBeingEdited.set(null);
   }
 
-  onEventCreated(data: Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>): void {
-    this.calendar.createEvent(data).subscribe({
+  onEventCreated(data: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>): void {
+    this.agenda.createEvent(data).subscribe({
       next: created => {
         this.events.update(events => [...events, created]);
         this.closeForm();
@@ -144,8 +144,8 @@ export class AgendaPage implements OnInit {
     });
   }
 
-  onEventUpdated(payload: { id: string; partial: Partial<CalendarEvent> }): void {
-    this.calendar.updateEvent(payload.id, payload.partial).subscribe({
+  onEventUpdated(payload: { id: string; partial: Partial<AgendaEvent> }): void {
+    this.agenda.updateEvent(payload.id, payload.partial).subscribe({
       next: updated => {
         this.events.update(events => events.map(e => (e.id === payload.id ? updated : e)));
         this.closeForm();

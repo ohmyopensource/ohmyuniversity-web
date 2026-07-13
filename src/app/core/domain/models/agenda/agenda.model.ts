@@ -1,4 +1,4 @@
-export interface CalendarEventResponse {
+export interface AgendaEventResponse {
   id: string;
   title: string;
   description: string | null;
@@ -30,7 +30,7 @@ export interface UniversityEventResponse {
   imported: boolean;
 }
 
-export interface CalendarEventCreateRequest {
+export interface AgendaEventCreateRequest {
   title: string;
   description?: string;
   startDate: string;

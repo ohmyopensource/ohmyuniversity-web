@@ -1,14 +1,14 @@
 import { LucideBell, LucideCalendarDays, LucideGraduationCap } from '@lucide/angular';
 import type {
-  CalendarEvent,
-  CalendarEventLayout,
-  CalendarEventType,
+  AgendaEvent,
+  AgendaEventLayout,
+  AgendaEventType,
   DateParseResult,
   TimeParseResult,
 } from '@shared/types';
 
 /** Italian display label for the event's type, as shown on the form tabs */
-export function calendarEventTypeLabel(type: CalendarEventType): string {
+export function calendarEventTypeLabel(type: AgendaEventType): string {
   switch (type) {
     case 'EXAM':
       return 'Esame';
@@ -21,7 +21,7 @@ export function calendarEventTypeLabel(type: CalendarEventType): string {
 
 /** Lucide icon associated with the event's type, mirrors calendar_event_type_ui.dart */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- matches icon: any used by custom-card/custom-badge inputs
-export function calendarEventTypeIcon(type: CalendarEventType): any {
+export function calendarEventTypeIcon(type: AgendaEventType): any {
   switch (type) {
     case 'EXAM':
       return LucideGraduationCap;
@@ -38,13 +38,13 @@ export function calendarEventTypeIcon(type: CalendarEventType): any {
  * either [variant] input without a type mismatch (BadgeVariant has members like 'ghost'
  * that don't exist on CardVariant, so the full BadgeVariant type isn't assignable to it).
  */
-export type CalendarEventVariant = 'error' | 'secondary' | 'warning';
+export type AgendaEventVariant = 'error' | 'secondary' | 'warning';
 
 /**
  * app-custom-card / app-custom-badge variant for the event's type.
  * Mirrors the Flutter mapping: EXAM=error, REMINDER=secondary, everything else=warning.
  */
-export function calendarEventTypeVariant(type: CalendarEventType): CalendarEventVariant {
+export function calendarEventTypeVariant(type: AgendaEventType): AgendaEventVariant {
   switch (type) {
     case 'EXAM':
       return 'error';
@@ -68,13 +68,13 @@ export function calendarPreciseTime(date: Date): string {
 }
 
 /** Time range label for an event (e.g. "09:30-11:00"), falls back to a single time if no endDate */
-export function calendarEventTimeRange(event: CalendarEvent): string {
+export function calendarEventTimeRange(event: AgendaEvent): string {
   if (!event.endDate) return calendarPreciseTime(event.startDate);
   return `${calendarPreciseTime(event.startDate)}-${calendarPreciseTime(event.endDate)}`;
 }
 
 /** Duration label for an event (e.g. "1h 30m", "45m"), empty string if no endDate */
-export function calendarEventDurationLabel(event: CalendarEvent): string {
+export function calendarEventDurationLabel(event: AgendaEvent): string {
   if (!event.endDate) return '';
   const minutes = Math.round((event.endDate.getTime() - event.startDate.getTime()) / 60000);
   const hours = Math.floor(minutes / 60);
@@ -134,7 +134,7 @@ export function calendarWeekDays(date: Date): Date[] {
   );
 }
 
-export interface CalendarMonthGridDay {
+export interface AgendaMonthGridDay {
   date: Date;
   /** Whether this date falls within the focused month (false for prev/next month spillover) */
   isInMonth: boolean;
@@ -145,7 +145,7 @@ export interface CalendarMonthGridDay {
  * trailing days from the previous/next month needed to fill complete weeks (Monday to Sunday).
  * Always a multiple of 7 (35 or 42 cells, matching what a 5- or 6-row month grid needs).
  */
-export function calendarMonthGridDays(monthDate: Date): CalendarMonthGridDay[] {
+export function calendarMonthGridDays(monthDate: Date): AgendaMonthGridDay[] {
   const year = monthDate.getFullYear();
   const month = monthDate.getMonth();
 
@@ -184,7 +184,7 @@ interface ActiveLane {
  * (which can be `null` for an unsaved event) - safe even if the caller clones events between
  * calls, as long as the array order matches the events passed in.
  */
-export function calculateEventLayouts(sortedEvents: CalendarEvent[]): CalendarEventLayout[] {
+export function calculateEventLayouts(sortedEvents: AgendaEvent[]): AgendaEventLayout[] {
   const active: ActiveLane[] = [];
   const layoutByIndex = new Map<number, { lane: number; laneCount: number }>();
 
@@ -210,7 +210,7 @@ export function calculateEventLayouts(sortedEvents: CalendarEvent[]): CalendarEv
 
 function removeEndedEvents(
   active: ActiveLane[],
-  sortedEvents: CalendarEvent[],
+  sortedEvents: AgendaEvent[],
   newEventStart: Date,
 ): void {
   for (let i = active.length - 1; i >= 0; i--) {
@@ -288,12 +288,12 @@ export function calendarTimeTop(date: Date): number {
 }
 
 /** Top offset in px of an event's card, exactly on the hour gridline */
-export function calendarEventTop(event: CalendarEvent): number {
+export function calendarEventTop(event: AgendaEvent): number {
   return calendarTimeTop(event.startDate);
 }
 
 /** Height in px of an event's card, proportional to its duration, with a 62px minimum */
-export function calendarEventHeight(event: CalendarEvent): number {
+export function calendarEventHeight(event: AgendaEvent): number {
   if (!event.endDate) return 62;
   const durationMinutes = (event.endDate.getTime() - event.startDate.getTime()) / 60000;
   const proportionalHeight = (durationMinutes / 60) * CALENDAR_TIMELINE.hourHeight;

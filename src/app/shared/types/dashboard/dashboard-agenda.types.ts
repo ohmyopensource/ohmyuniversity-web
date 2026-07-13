@@ -1,18 +1,18 @@
-import { CalendarEventVariant, CalendarMonthGridDay } from '@shared/utils/calendar.utils';
+import { AgendaEventVariant, AgendaMonthGridDay } from '@shared/utils/calendar.utils';
 import { TextColor } from '@ui/custom-text/custom-text.component';
 
-/** Classification of a calendar event, mirrors the backend CalendarEventType enum */
-export type CalendarEventType = 'PERSONAL' | 'EXAM' | 'DEADLINE' | 'REMINDER' | 'UNIVERSITY';
+/** Classification of a agenda event, mirrors the backend AgendaEventType enum */
+export type AgendaEventType = 'PERSONAL' | 'EXAM' | 'DEADLINE' | 'REMINDER' | 'UNIVERSITY';
 
-/** A personal calendar event, used throughout the Agenda feature UI */
-export interface CalendarEvent {
+/** A personal agenda event, used throughout the Agenda feature UI */
+export interface AgendaEvent {
   id: string | null;
   title: string;
   description: string | null;
   startDate: Date;
   endDate: Date | null;
   allDay: boolean;
-  type: CalendarEventType;
+  type: AgendaEventType;
   color: string | null;
   url: string | null;
   notes: string | null;
@@ -21,28 +21,28 @@ export interface CalendarEvent {
   updatedAt: Date | null;
 }
 
-/** Payload for creating or updating a personal calendar event (POST/PUT /api/v1/calendar/events) */
-export interface CalendarEventRequest {
+/** Payload for creating or updating a personal agenda event (POST/PUT /api/v1/agenda/events) */
+export interface AgendaEventRequest {
   title: string;
   description?: string;
   startDate: string;
   endDate?: string;
   allDay?: boolean;
-  type?: CalendarEventType;
+  type?: AgendaEventType;
   color?: string;
   url?: string;
   notes?: string;
 }
 
-/** Response shape returned by the personal calendar event endpoints */
-export interface CalendarEventResponse {
+/** Response shape returned by the personal agenda event endpoints */
+export interface AgendaEventResponse {
   id: string;
   title: string;
   description: string | null;
   startDate: string;
   endDate: string | null;
   allDay: boolean;
-  type: CalendarEventType;
+  type: AgendaEventType;
   color: string | null;
   url: string | null;
   notes: string | null;
@@ -50,7 +50,7 @@ export interface CalendarEventResponse {
   updatedAt: string;
 }
 
-/** An event published by a university, optionally importable into the personal calendar */
+/** An event published by a university, optionally importable into the personal agenda */
 export interface UniversityEvent {
   id: string;
   universityId: string;
@@ -66,11 +66,11 @@ export interface UniversityEvent {
 }
 
 /** The 3 event categories selectable from the "new element" form tabs */
-export type CalendarFormEventType = 'ESAME' | 'PROMEMORIA' | 'EVENTO';
+export type AgendaFormEventType = 'ESAME' | 'PROMEMORIA' | 'EVENTO';
 
 /** Lane assignment for one event within an overlapping group, used by the timeline view */
-export interface CalendarEventLayout {
-  event: CalendarEvent;
+export interface AgendaEventLayout {
+  event: AgendaEvent;
   /** 0-based column index among overlapping events */
   lane: number;
   /** Max number of simultaneous lanes within this event's overlap group */
@@ -84,7 +84,7 @@ export interface DayStripDay {
   isToday: boolean;
   weekdayColor: TextColor;
   dayNumberColor: TextColor;
-  dotVariant: CalendarEventVariant | null;
+  dotVariant: AgendaEventVariant | null;
 }
 
 export type DateParseResult =
@@ -95,21 +95,21 @@ export type TimeParseResult =
   | { ok: true; hours: number; minutes: number }
   | { ok: false; message: string };
 
-export interface CalendarMonthCellEvent {
-  event: CalendarEvent;
+export interface AgendaMonthCellEvent {
+  event: AgendaEvent;
   labelMobile: string;
   labelTablet: string;
   labelDesktop: string;
 }
 
-export interface CalendarMonthCell extends CalendarMonthGridDay {
+export interface AgendaMonthCell extends AgendaMonthGridDay {
   isToday: boolean;
-  visibleEvents: CalendarMonthCellEvent[];
+  visibleEvents: AgendaMonthCellEvent[];
   overflowCount: number;
 }
 
 export interface PositionedEventLayout {
-  layout: CalendarEventLayout;
+  layout: AgendaEventLayout;
   top: number;
   height: number;
   widthExpr: string;
@@ -117,16 +117,16 @@ export interface PositionedEventLayout {
   compact: boolean;
 }
 
-export type CalendarViewMode = 'year' | 'month' | 'day';
+export type AgendaViewMode = 'year' | 'month' | 'day';
 
-export interface CalendarYearGridDay extends CalendarMonthGridDay {
+export interface AgendaYearGridDay extends AgendaMonthGridDay {
   isToday: boolean;
   isWeekend: boolean;
-  dotVariant: CalendarEventVariant | null;
+  dotVariant: AgendaEventVariant | null;
 }
 
-export interface CalendarYearMonth {
+export interface AgendaYearMonth {
   date: Date;
   label: string;
-  days: CalendarYearGridDay[];
+  days: AgendaYearGridDay[];
 }

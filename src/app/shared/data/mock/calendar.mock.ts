@@ -1,4 +1,4 @@
-import { CalendarEvent } from '@types';
+import { AgendaEvent } from '@types';
 
 function todayAt(hours: number, minutes: number): Date {
   const date = new Date();
@@ -6,7 +6,7 @@ function todayAt(hours: number, minutes: number): Date {
   return date;
 }
 
-export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
+export const MOCK_CALENDAR_EVENTS: AgendaEvent[] = [
   {
     id: '1',
     title: 'Design Review',
