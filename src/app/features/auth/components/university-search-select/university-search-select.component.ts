@@ -32,7 +32,7 @@ export class UniversitySearchSelectComponent {
   readonly iconSearch = LucideSearch;
   readonly iconCheck = LucideCheck;
 
-  readonly universities = input.required<University[]>();
+  readonly universities = input.required<readonly University[]>();
   readonly selected = input<University | undefined>(undefined);
   readonly selectionChange = output<University>();
 
