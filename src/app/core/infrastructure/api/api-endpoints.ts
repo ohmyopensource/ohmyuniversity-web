@@ -28,6 +28,8 @@ export const API = {
   courseCatalogue: {
     plan: `${BASE}/v1/course-catalogue/plan`,
     syllabus: `${BASE}/v1/course-catalogue/syllabus`,
+    docenti: `${BASE}/v1/course-catalogue/docenti`,
+    docenteDetail: (docenteId: string) => `${BASE}/v1/course-catalogue/docenti/${docenteId}`,
   },
   exams: {
     sessions: `${BASE}/v1/exams/sessions`,
@@ -68,5 +70,9 @@ export const API = {
   },
   fetcher: {
     timetables: `${BASE}/v1/fetcher/timetables`,
+  },
+  struttura: {
+    facolta: `${BASE}/v1/struttura/facolta`,
+    sede: (sedeId: number) => `${BASE}/v1/struttura/sedi/${sedeId}`,
   },
 } as const;

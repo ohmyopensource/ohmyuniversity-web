@@ -10,6 +10,7 @@ import { CalendarRepository } from './core/domain/repositories/calendar.reposito
 import { TimetableRepository } from './core/domain/repositories/timetable.repository';
 import { ProfileRepository } from './core/domain/repositories/profile.repository';
 import { CareerRepository } from './core/domain/repositories/career.repository';
+import { StrutturaRepository } from './core/domain/repositories/struttura.repository';
 import { ExamsRepository } from './core/domain/repositories/exams.repository';
 import { FeesRepository } from './core/domain/repositories/fees.repository';
 
@@ -20,6 +21,7 @@ import { TimetableApiRepository } from './core/infrastructure/api/timetable-api.
 import { ProfileApiRepository } from './core/infrastructure/api/profile-api.repository';
 import { CareerApiRepository } from './core/infrastructure/api/career-api.repository';
 import { CourseCatalogueApiRepository } from './core/infrastructure/api/course-catalogue-api.repository';
+import { StrutturaApiRepository } from './core/infrastructure/api/struttura-api.repository';
 import { ExamsApiRepository } from './core/infrastructure/api/exams-api.repository';
 import { FeesApiRepository } from './core/infrastructure/api/fees-api.repository';
 import { InternshipsRepository } from './core/domain/repositories/internships.repository';
@@ -28,6 +30,7 @@ import { InternshipsApiRepository } from './core/infrastructure/api/internships-
 // Facades
 import { AuthFacade } from './core/application/facades/auth.facade';
 import { CareerFacade } from './core/application/facades/career.facade';
+import { StrutturaFacade } from './core/application/facades/struttura.facade';
 import { FeesFacade } from './core/application/facades/fees.facade';
 import { InternshipsFacade } from './core/application/facades/internships.facade';
 import { CalendarFacade } from './core/application/facades/calendar.facade';
@@ -56,6 +59,8 @@ import { GetRecommendationsUseCase } from './core/application/usecases/career/ge
 import { GetCourseDetailUseCase } from './core/application/usecases/career/get-course-detail.usecase';
 import { CourseCatalogueRepository } from './core/domain/repositories/course-catalogue.repository';
 import { GetCourseSyllabusUseCase } from './core/application/usecases/career/get-course-syllabus.usecase';
+import { GetDocentiUseCase } from './core/application/usecases/career/get-docenti.usecase';
+import { GetDocenteDetailUseCase } from './core/application/usecases/career/get-docente-detail.usecase';
 
 // Exams usecases
 import { GetBookableSessionsUseCase } from './core/application/usecases/exams/get-bookable-sessions.usecase';
@@ -71,6 +76,9 @@ import { ConfirmSurveyUseCase } from './core/application/usecases/exams/confirm-
 import { GetSurveyPageUseCase } from './core/application/usecases/exams/get-survey-page.usecase';
 import { GetSurveySummaryUseCase } from './core/application/usecases/exams/get-survey-summary.usecase';
 import { GetSurveyUnitsUseCase } from './core/application/usecases/exams/get-survey-units.usecase';
+
+// Struttura usecases
+import { GetFacoltaUseCase } from './core/application/usecases/struttura/get-facolta.usecase';
 
 // Fees usecases
 import { GetFeesStatusUseCase } from './core/application/usecases/fees/get-fees-status.usecase';
@@ -174,6 +182,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ProfileRepository, useClass: ProfileApiRepository },
     { provide: CareerRepository, useClass: CareerApiRepository },
     { provide: CourseCatalogueRepository, useClass: CourseCatalogueApiRepository },
+    { provide: StrutturaRepository, useClass: StrutturaApiRepository },
     { provide: ExamsRepository, useClass: ExamsApiRepository },
     { provide: FeesRepository, useClass: FeesApiRepository },
     { provide: InternshipsRepository, useClass: InternshipsApiRepository },
@@ -207,6 +216,12 @@ export const appConfig: ApplicationConfig = {
     GetRecommendationsUseCase,
     GetCourseDetailUseCase,
     GetCourseSyllabusUseCase,
+    GetDocentiUseCase,
+    GetDocenteDetailUseCase,
+
+    // Struttura
+    StrutturaFacade,
+    GetFacoltaUseCase,
 
     // Exams
     GetBookableSessionsUseCase,

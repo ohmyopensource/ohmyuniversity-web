@@ -54,6 +54,12 @@ import { GetCourseDetailUseCase } from '../usecases/career/get-course-detail.use
 import { CourseDetailResponse } from '../../domain/models/career/course-detail.model';
 import { CourseSyllabusResponse } from '../../domain/models/career/course-syllabus.model';
 import { GetCourseSyllabusUseCase } from '../usecases/career/get-course-syllabus.usecase';
+import { GetDocentiUseCase } from '../usecases/career/get-docenti.usecase';
+import { GetDocenteDetailUseCase } from '../usecases/career/get-docente-detail.usecase';
+import {
+  DocentiListResponse,
+  DocenteDetailResponse,
+} from '../../domain/models/career/docenti.model';
 
 @Injectable()
 export class CareerFacade {
@@ -81,6 +87,8 @@ export class CareerFacade {
   private readonly getSurveySummaryUseCase = inject(GetSurveySummaryUseCase);
   private readonly getCourseDetailUseCase = inject(GetCourseDetailUseCase);
   private readonly getCourseSyllabusUseCase = inject(GetCourseSyllabusUseCase);
+  private readonly getDocentiUseCase = inject(GetDocentiUseCase);
+  private readonly getDocenteDetailUseCase = inject(GetDocenteDetailUseCase);
 
   getTranscript(): Observable<Exam[]> {
     return this.getTranscriptUseCase.execute();
@@ -181,5 +189,13 @@ export class CareerFacade {
 
   getCourseSyllabus(adCod: string): Observable<CourseSyllabusResponse> {
     return this.getCourseSyllabusUseCase.execute(adCod);
+  }
+
+  getDocenti(tutti = false): Observable<DocentiListResponse> {
+    return this.getDocentiUseCase.execute(tutti);
+  }
+
+  getDocenteDetail(docenteId: string): Observable<DocenteDetailResponse> {
+    return this.getDocenteDetailUseCase.execute(docenteId);
   }
 }
