@@ -2,21 +2,20 @@
   [size]="size"
   [sectionIcon]="lucideContact"
   sectionLabel="Contatti"
-  widgetLabel="Docenti"
+  widgetLabel="Docenti del tuo corso"
   color="contacts">
   <div class="flex flex-col h-full overflow-y-auto py-1 gap-1">
-    @for (teacher of teachers; track teacher.email) {
-      <div
-        class="flex flex-col gap-0.5 p-2 rounded-xl hover:bg-white/60 transition-all border-b border-gray-100 last:border-0">
-        <p appText variant="caption" weight="semibold" class="truncate">{{ teacher.name }}</p>
-        <p appText variant="caption" color="muted" class="truncate">{{ teacher.subject }}</p>
-        <a
-          [href]="'mailto:' + teacher.email"
-          class="text-[10px] no-underline truncate"
-          style="color: var(--color-contacts-dark)">
-          {{ teacher.email }}
-        </a>
-      </div>
+    @if (loading()) {
+      <p appText variant="caption" color="muted">Caricamento...</p>
+    } @else if (teachers().length === 0) {
+      <p appText variant="caption" color="muted">Nessun docente trovato.</p>
+    } @else {
+      @for (teacher of teachers(); track teacher.id ?? teacher.name) {
+        <div
+          class="flex items-center gap-2 p-2 rounded-xl hover:bg-white/60 transition-all border-b border-gray-100 last:border-0">
+          <p appText variant="caption" weight="semibold" [truncate]="true">{{ teacher.name }}</p>
+        </div>
+      }
     }
   </div>
 

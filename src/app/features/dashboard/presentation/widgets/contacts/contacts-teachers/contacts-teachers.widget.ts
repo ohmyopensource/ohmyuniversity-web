@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CustomTextComponent } from '@ui/custom-text/custom-text.component';
 import { CustomLinkComponent } from '@ui/custom-link/custom-link.component';
 import { DashboardWidgetCardComponent } from '@ui/dashboard-widget-card/dashboard-widget-card.component';
 import { LucideContactRound } from '@lucide/angular';
 import { WidgetSize } from '@shared/types';
-import { MOCK_TEACHERS } from '@shared/data/mock/dashboard-contacts.mock';
+import { UniversityContactsService } from 'src/app/features/dashboard/services/university-contacts.service';
 
 @Component({
   selector: 'app-contacts-teachers-widget',
@@ -14,6 +15,12 @@ import { MOCK_TEACHERS } from '@shared/data/mock/dashboard-contacts.mock';
 })
 export class ContactsTeachersWidgetComponent {
   @Input() size: WidgetSize = 'medium';
-  readonly teachers = MOCK_TEACHERS;
+
+  private readonly contactsService = inject(UniversityContactsService);
+  private readonly docenti = toSignal(this.contactsService.docenti$);
+
+  readonly loading = computed(() => this.docenti() === undefined);
+  readonly teachers = computed(() => this.docenti() ?? []);
+
   readonly lucideContact = LucideContactRound;
 }
