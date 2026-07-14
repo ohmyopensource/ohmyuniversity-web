@@ -11,7 +11,7 @@ import { University } from '@shared/types';
  * available and need manual verification before being usable for login
  * validation.
  */
-export const UNIVERSITIES: University[] = [
+export const UNIVERSITIES = [
   // Public Universities
   {
     id: 'casd',
@@ -2266,4 +2266,6 @@ export const UNIVERSITIES: University[] = [
     // Mercatorum"; numerose altre sedi d'esame decentrate non elencate.
     campuses: [{ id: 'unimercatorum-roma', name: 'Sede legale - Palazzo Costaguti', city: 'Roma' }],
   },
-];
+] as const satisfies readonly University[];
+
+export type UniversityId = (typeof UNIVERSITIES)[number]['id'];

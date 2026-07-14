@@ -9,6 +9,21 @@ export interface University {
   campuses: UniversityCampus[];
 }
 
+/**
+ * Hand-curated institutional contact (centralino, URP, biblioteca, mensa, ecc.)
+ * for a university. Cineca ESSE3 exposes no API for this category of data -
+ * every entry here is maintained manually per university, same as `campuses`.
+ */
+export interface UsefulContact {
+  id: string;
+  name: string;
+  description: string;
+  phone?: string;
+  email?: string;
+  hours?: string;
+  campusId?: string;
+}
+
 /** Represents a single campus/pole (sede) of a university. */
 export interface UniversityCampus {
   id: string;

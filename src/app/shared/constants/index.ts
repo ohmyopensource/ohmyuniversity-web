@@ -32,4 +32,5 @@ export * from './features/user.constants';
 export * from '../../core/infrastructure/api/api-endpoints';
 export * from './shared/common.constants';
 export * from './shared/footer.constants';
+export * from './shared/university-useful-contacts.constants';
 export * from './shared/university.constants';
