@@ -12,24 +12,24 @@
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media aritm.</p>
             <p appText variant="h5" weight="bold" color="primary">
-              {{ stats()?.arithmeticAvg ?? '—' }}
+              {{ stats()?.arithmeticAvg ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media pond.</p>
             <p appText variant="h5" weight="bold" color="primary">
-              {{ stats()?.weightedAvg ?? '—' }}
+              {{ stats()?.weightedAvg ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Base laurea</p>
             <p appText variant="h5" weight="bold" color="primary">
-              {{ stats()?.graduationBase ?? '—' }}
+              {{ stats()?.graduationBase ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Lodi</p>
-            <p appText variant="h5" weight="bold" color="primary">{{ stats()?.honors ?? '—' }}</p>
+            <p appText variant="h5" weight="bold" color="primary">{{ stats()?.honors ?? '-' }}</p>
           </div>
         </div>
       </div>
@@ -42,28 +42,27 @@
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media aritm.</p>
             <p appText variant="body" weight="bold" color="primary">
-              {{ stats()?.arithmeticAvg ?? '—' }}
+              {{ stats()?.arithmeticAvg ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Media pond.</p>
             <p appText variant="body" weight="bold" color="primary">
-              {{ stats()?.weightedAvg ?? '—' }}
+              {{ stats()?.weightedAvg ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Base laurea</p>
             <p appText variant="body" weight="bold" color="primary">
-              {{ stats()?.graduationBase ?? '—' }}
+              {{ stats()?.graduationBase ?? '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-0.5 p-2 rounded-xl bg-white/60">
             <p appText variant="caption" color="muted">Lodi</p>
-            <p appText variant="body" weight="bold" color="primary">{{ stats()?.honors ?? '—' }}</p>
+            <p appText variant="body" weight="bold" color="primary">{{ stats()?.honors ?? '-' }}</p>
           </div>
         </div>
 
-        <!-- Piano di studi semestre corrente -->
         <div class="flex flex-col gap-1.5 flex-1 overflow-hidden">
           <p appText variant="caption" color="muted">Piano di studi - semestre corrente</p>
           <div class="flex flex-col gap-1 overflow-y-auto">

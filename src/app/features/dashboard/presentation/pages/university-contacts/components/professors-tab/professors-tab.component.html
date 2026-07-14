@@ -1,0 +1,139 @@
+<div class="flex flex-col gap-3">
+  <div class="flex items-center gap-2">
+    <div class="shrink-0">
+      <app-custom-button
+        [variant]="scope() === 'own' ? 'primary' : 'ghost'"
+        size="sm"
+        label="Il tuo corso"
+        (clicked)="setScope('own')" />
+    </div>
+    <div class="shrink-0">
+      <app-custom-button
+        [variant]="scope() === 'all' ? 'primary' : 'ghost'"
+        size="sm"
+        label="Tutti i docenti"
+        (clicked)="setScope('all')" />
+    </div>
+  </div>
+
+  <div class="w-full">
+    <app-custom-input
+      placeholder="Cerca docente..."
+      [iconLeft]="iconSearch"
+      size="sm"
+      [fullWidth]="true"
+      [clearable]="true"
+      (inputChange)="onSearchChange($event)"
+      (cleared)="onSearchChange('')" />
+  </div>
+
+  @if (loading()) {
+    <p appText variant="body-sm" color="muted">Caricamento docenti...</p>
+  } @else if (filtered().length === 0) {
+    <div
+      class="flex flex-col items-center justify-center gap-3 py-12"
+      style="border: 1px dashed var(--color-neutral-300); border-radius: 16px">
+      <svg
+        [lucideIcon]="iconSearch"
+        [size]="28"
+        style="color: var(--color-neutral-300)"
+        aria-hidden="true"></svg>
+      <p appText variant="body-sm" color="subtle" class="m-0">
+        Nessun docente trovato per il tuo corso di laurea.
+      </p>
+    </div>
+  } @else {
+    <div class="flex flex-col gap-2">
+      @for (prof of paginated(); track prof.id ?? prof.name) {
+        <app-custom-card variant="default" padding="sm" shadow="sm" [bordered]="true" radius="lg">
+          <button
+            class="w-full flex items-center justify-between gap-3 bg-transparent border-none p-0 text-left"
+            [class.cursor-pointer]="prof.hasDetail"
+            [class.cursor-default]="!prof.hasDetail"
+            (click)="toggle(prof)">
+            <span appText variant="h6" class="m-0 truncate">{{ prof.name }}</span>
+            @if (prof.hasDetail) {
+              <svg
+                [lucideIcon]="iconChevron"
+                [size]="16"
+                style="color: var(--color-neutral-400); transition: transform 0.15s"
+                [style.transform]="
+                  prof.id && isExpanded(prof.id) ? 'rotate(180deg)' : 'rotate(0deg)'
+                "
+                aria-hidden="true"></svg>
+            }
+          </button>
+
+          @if (prof.id && isExpanded(prof.id)) {
+            <div
+              class="flex flex-col gap-3 pt-3 mt-3"
+              style="border-top: 1px solid var(--color-neutral-200)">
+              @if (isLoadingDetail(prof.id)) {
+                <p appText variant="caption" color="muted">Caricamento dettagli...</p>
+              } @else if (detailFor(prof.id); as detail) {
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                  @if (detail.email) {
+                    <a
+                      [href]="'mailto:' + detail.email"
+                      class="flex items-center gap-1.5 no-underline">
+                      <svg
+                        [lucideIcon]="iconMail"
+                        [size]="13"
+                        style="color: var(--color-neutral-400)"
+                        aria-hidden="true"></svg>
+                      <span class="text-[0.78rem]" style="color: var(--color-primary-dark)">{{
+                        detail.email
+                      }}</span>
+                    </a>
+                  }
+                  @if (detail.department) {
+                    <span appText variant="caption" color="muted">{{ detail.department }}</span>
+                  }
+                  @if (detail.profilePageUrl) {
+                    <div class="shrink-0">
+                      <app-custom-link
+                        [href]="detail.profilePageUrl"
+                        label="Vai alla scheda docente"
+                        mode="external"
+                        size="sm" />
+                    </div>
+                  }
+                </div>
+
+                @if (detail.courses.length > 0) {
+                  <div class="flex flex-col gap-1.5">
+                    <p appText variant="caption" color="muted" class="m-0">Insegnamenti</p>
+                    <div class="flex flex-wrap gap-1.5">
+                      @for (course of detail.courses; track course.name) {
+                        <app-custom-badge
+                          [label]="course.name"
+                          [variant]="course.inStudentCareer ? 'primary' : 'ghost'"
+                          size="xs"
+                          shape="rounded" />
+                      }
+                    </div>
+                  </div>
+                }
+              } @else {
+                <p appText variant="caption" color="muted">Impossibile caricare i dettagli.</p>
+              }
+            </div>
+          }
+        </app-custom-card>
+      }
+
+      @if (filtered().length > pageSize()) {
+        <div class="pt-2 flex justify-center">
+          <app-custom-pagination
+            [totalItems]="filtered().length"
+            [pageSize]="pageSize()"
+            [currentPage]="currentPage()"
+            size="sm"
+            [showPageSizeSelector]="false"
+            [showJumpToPage]="false"
+            (pageChange)="onPageChange($event)" />
+        </div>
+      }
+    </div>
+  }
+</div>

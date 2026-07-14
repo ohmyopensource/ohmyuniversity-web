@@ -1,0 +1,105 @@
+<div class="flex flex-col gap-3">
+  <!-- Search -->
+  <div class="w-full">
+    <app-custom-input
+      placeholder="Cerca dipartimento o email..."
+      [iconLeft]="iconSearch"
+      size="sm"
+      [fullWidth]="true"
+      [clearable]="true"
+      (inputChange)="onSearchChange($event)" />
+  </div>
+
+  <!-- Filter -->
+  <div class="flex flex-col gap-2">
+    @for (filter of campusFilters(); track filter.id) {
+      <div class="w-full">
+        <app-custom-button
+          [variant]="activeCampus() === filter.id ? 'primary' : 'ghost'"
+          size="sm"
+          [label]="filter.label"
+          [fullWidth]="true"
+          (clicked)="setCampus(filter.id)" />
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <p appText variant="body-sm" color="muted">Caricamento dipartimenti...</p>
+  } @else if (filtered().length === 0) {
+    <div
+      class="flex flex-col items-center justify-center gap-3 py-12"
+      style="border: 1px dashed var(--color-neutral-300); border-radius: 16px">
+      <svg
+        [lucideIcon]="iconSearch"
+        [size]="28"
+        style="color: var(--color-neutral-300)"
+        aria-hidden="true"></svg>
+      <p appText variant="body-sm" color="subtle" class="m-0">Nessun dipartimento trovato.</p>
+    </div>
+  } @else {
+    @for (dept of filtered(); track dept.facId) {
+      <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-start gap-3">
+            <div
+              class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+              style="background: var(--color-primary-light)">
+              <svg
+                [lucideIcon]="iconBuilding"
+                [size]="15"
+                style="color: var(--color-primary-dark)"
+                aria-hidden="true"></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 appText variant="h6" class="m-0">{{ dept.name }}</h3>
+              @if (dept.city) {
+                <p appText variant="body-sm" color="muted" class="m-0 mt-1">
+                  {{ dept.address }}{{ dept.address ? ',' : '' }} {{ dept.city }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <div
+            class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2"
+            style="border-top: 1px solid var(--color-neutral-200)">
+            @if (dept.email) {
+              <a [href]="'mailto:' + dept.email" class="flex items-center gap-1.5 no-underline">
+                <svg
+                  [lucideIcon]="iconMail"
+                  [size]="13"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <span class="text-[0.78rem]" style="color: var(--color-primary-dark)">{{
+                  dept.email
+                }}</span>
+              </a>
+            }
+            @if (dept.phone) {
+              <a [href]="'tel:' + dept.phone" class="flex items-center gap-1.5 no-underline">
+                <svg
+                  [lucideIcon]="iconPhone"
+                  [size]="13"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <span class="text-[0.78rem]" style="color: var(--color-neutral-700)">{{
+                  dept.phone
+                }}</span>
+              </a>
+            }
+            @if (dept.website) {
+              <div class="shrink-0">
+                <app-custom-link
+                  [href]="dept.website"
+                  label="Vai al sito"
+                  mode="external"
+                  size="sm" />
+              </div>
+            }
+          </div>
+        </div>
+      </app-custom-card>
+    }
+  }
+</div>

@@ -56,7 +56,7 @@ import { PortalsPage } from './features/dashboard/presentation/pages/portals/pag
 
 // =============================================
 import { UniversityPartnerPage } from './features/dashboard/presentation/pages/university-partner/university-partner.page';
-import { UniversityContactsPage } from './features/dashboard/presentation/pages/university-contacts/university-contacts.page';
+import { UniversityContactsPage } from './features/dashboard/presentation/pages/university-contacts/pages/university-contacts.page';
 import { SecretariatPage } from './features/dashboard/presentation/pages/secretariat/pages/secretariat.page';
 import { SettingsPage } from './features/dashboard/presentation/pages/settings/settings.page';
 import { ProfilePage } from './features/dashboard/presentation/pages/profile/pages/profile.page';

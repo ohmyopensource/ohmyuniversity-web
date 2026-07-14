@@ -1,0 +1,26 @@
+<app-dashboard-container>
+  <app-dashboard-header
+    title="Contatti Universitari"
+    description="Dipartimenti, docenti e numeri utili della tua università." />
+
+  <div class="flex flex-1 mx-auto py-2">
+    <app-custom-tabs
+      [tabs]="tabs"
+      [activeTab]="activeTab()"
+      tabStyle="pill"
+      size="md"
+      (tabChange)="onTabChange($event)" />
+  </div>
+
+  @switch (activeTab()) {
+    @case ('departments') {
+      <app-departments-tab />
+    }
+    @case ('professors') {
+      <app-professors-tab />
+    }
+    @case ('useful') {
+      <app-useful-numbers-tab />
+    }
+  }
+</app-dashboard-container>

@@ -1,0 +1,90 @@
+<div class="flex flex-col gap-3">
+  <!-- Search -->
+  <div class="w-full">
+    <app-custom-input
+      placeholder="Cerca contatto..."
+      [iconLeft]="iconSearch"
+      size="sm"
+      [fullWidth]="true"
+      [clearable]="true"
+      (inputChange)="onSearchChange($event)" />
+  </div>
+
+  @if (contacts().length === 0) {
+    <div
+      class="flex flex-col items-center justify-center gap-3 py-12"
+      style="border: 1px dashed var(--color-neutral-300); border-radius: 16px">
+      <svg
+        [lucideIcon]="iconPhone"
+        [size]="28"
+        style="color: var(--color-neutral-300)"
+        aria-hidden="true"></svg>
+      <p appText variant="body-sm" color="subtle" class="m-0">Nessun numero utile trovato.</p>
+    </div>
+  } @else {
+    @for (contact of contacts(); track contact.id) {
+      <app-custom-card variant="default" padding="md" shadow="sm" [bordered]="true" radius="lg">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-start gap-3">
+            <div
+              class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+              style="background: var(--color-primary-light)">
+              <svg
+                [lucideIcon]="iconPhone"
+                [size]="15"
+                style="color: var(--color-primary-dark)"
+                aria-hidden="true"></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 appText variant="h6" class="m-0">{{ contact.name }}</h3>
+              <p appText variant="body-sm" color="muted" class="m-0 mt-1">
+                {{ contact.description }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2"
+            style="border-top: 1px solid var(--color-neutral-200)">
+            @if (contact.email) {
+              <a [href]="'mailto:' + contact.email" class="flex items-center gap-1.5 no-underline">
+                <svg
+                  [lucideIcon]="iconMail"
+                  [size]="13"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <span class="text-[0.78rem]" style="color: var(--color-primary-dark)">{{
+                  contact.email
+                }}</span>
+              </a>
+            }
+            @if (contact.phone) {
+              <a [href]="'tel:' + contact.phone" class="flex items-center gap-1.5 no-underline">
+                <svg
+                  [lucideIcon]="iconPhone"
+                  [size]="13"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <span class="text-[0.78rem]" style="color: var(--color-neutral-700)">{{
+                  contact.phone
+                }}</span>
+              </a>
+            }
+            @if (contact.hours) {
+              <div class="flex items-center gap-1.5">
+                <svg
+                  [lucideIcon]="iconClock"
+                  [size]="13"
+                  style="color: var(--color-neutral-400)"
+                  aria-hidden="true"></svg>
+                <span class="text-[0.75rem]" style="color: var(--color-neutral-500)">{{
+                  contact.hours
+                }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </app-custom-card>
+    }
+  }
+</div>

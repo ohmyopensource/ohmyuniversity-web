@@ -1,37 +1,32 @@
-import { Identifiable, PersonBase } from '@shared/types';
+import { Identifiable } from '@shared/types';
 
-/** Campuses where a contact or office can be reached */
-export type ContactCampus = 'all' | 'campobasso' | 'termoli' | 'pesche';
-
-/** Administrative office contact with reachability details */
-export interface SecretariatContact {
-  id: string;
-  office: string;
-  description: string;
-  email: string;
-  phone?: string;
-  hours?: string;
-  campus: ContactCampus;
-  website?: string;
+/**
+ * A department/faculty contact card, backed by real Cineca struttura-service
+ * data (public, no auth required, no student-specific filtering).
+ */
+export interface DepartmentContact {
+  facId: number;
+  name: string;
+  nameEng: string | null;
+  city: string | null;
+  address: string | null;
+  phone: string | null;
+  fax: string | null;
+  email: string | null;
+  website: string | null;
+  sedeIds: number[];
 }
 
-/** Professor contact with teaching department, courses and reachability details */
-export interface ProfessorContact extends Identifiable, PersonBase {
-  department: string;
+/**
+ * A professor contact derived from the student's own exams/courses.
+ */
+export interface ProfessorContact extends Identifiable {
+  name: string;
   courses: string[];
-  email: string;
-  phone?: string;
-  office?: string;
-  hours?: string;
-  campus: ContactCampus;
-  website?: string;
 }
 
-/** Institutional contact (department, body, etc.) with reachability details */
-export interface InstitutionalContact extends Identifiable {
-  description: string;
-  phone?: string;
-  email?: string;
-  hours?: string;
-  campus: ContactCampus;
+/** A single physical location option used to filter department contacts. */
+export interface ContactCampusOption {
+  id: number;
+  label: string;
 }
