@@ -70,6 +70,8 @@ export const API = {
   },
   fetcher: {
     timetables: `${BASE}/v1/fetcher/timetables`,
+    corsiLaureaNazionali: `${BASE}/v1/fetcher/corsi-laurea-nazionali`,
+    magistraliAffini: `${BASE}/v1/fetcher/corsi-laurea-nazionali/magistrali-affini`,
   },
   struttura: {
     facolta: `${BASE}/v1/struttura/facolta`,

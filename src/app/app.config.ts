@@ -27,6 +27,10 @@ import { FeesApiRepository } from './core/infrastructure/api/fees-api.repository
 import { InternshipsRepository } from './core/domain/repositories/internships.repository';
 import { InternshipsApiRepository } from './core/infrastructure/api/internships-api.repository';
 
+// Repositories - roadmap
+import { RoadmapRepository } from './core/domain/repositories/roadmap.repository';
+import { RoadmapApiRepository } from './core/infrastructure/api/roadmap-api.repository';
+
 // Facades
 import { AuthFacade } from './core/application/facades/auth.facade';
 import { CareerFacade } from './core/application/facades/career.facade';
@@ -35,6 +39,7 @@ import { FeesFacade } from './core/application/facades/fees.facade';
 import { InternshipsFacade } from './core/application/facades/internships.facade';
 import { CalendarFacade } from './core/application/facades/calendar.facade';
 import { TimetableFacade } from './core/application/facades/timetable.facade';
+import { RoadmapFacade } from './core/application/facades/roadmap.facade';
 
 // Auth usecases
 import { LoginUseCase } from './core/application/usecases/auth/login.usecase';
@@ -87,6 +92,9 @@ import { GetRefundsUseCase } from './core/application/usecases/fees/get-refunds.
 
 // Internships usecases
 import { GetInternshipApplicationsUseCase } from './core/application/usecases/internships/get-internship-applications.usecase';
+
+// Roadmap usecases
+import { GetMagistraliAffiniUseCase } from './core/application/usecases/roadmap/get-magistrali-affini.usecase';
 
 import {
   provideLucideIcons,
@@ -186,6 +194,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ExamsRepository, useClass: ExamsApiRepository },
     { provide: FeesRepository, useClass: FeesApiRepository },
     { provide: InternshipsRepository, useClass: InternshipsApiRepository },
+    { provide: RoadmapRepository, useClass: RoadmapApiRepository },
 
     // Facades
     AuthFacade,
@@ -246,6 +255,10 @@ export const appConfig: ApplicationConfig = {
     // Internships
     InternshipsFacade,
     GetInternshipApplicationsUseCase,
+
+    // Roadmap
+    RoadmapFacade,
+    GetMagistraliAffiniUseCase,
 
     provideLucideIcons(
       LucideLayoutDashboard,
