@@ -12,7 +12,7 @@
  * preserving a consistent user experience.
  */
 
-import { Component, Input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, signal, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideDynamicIcon, LucideChevronDown } from '@lucide/angular';
 
@@ -65,6 +65,15 @@ export class CustomAccordionComponent {
 
   /** If true, multiple panels can stay open at once instead of a single one. */
   @Input() multiple: boolean = false;
+
+  /**
+   * Optional template used to render each panel's body instead of the plain
+   * `item.content` text. When provided, receives the item's index via the
+   * `index` context variable — consumers look up their own domain data by
+   * index. Existing accordion usages (FAQ, plain text lists) are unaffected
+   * since this is opt-in and falls back to the string rendering otherwise.
+   */
+  @Input() contentTemplate: TemplateRef<{ $implicit: AccordionItem; index: number }> | null = null;
 
   private readonly openIndexes = signal<Set<number>>(
     this.defaultOpenIndex >= 0 ? new Set([this.defaultOpenIndex]) : new Set(),

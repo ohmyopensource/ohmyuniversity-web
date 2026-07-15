@@ -22,7 +22,12 @@ data-driven rendering, animated panel expansion, and accessibility features.
 
       <div class="accordion-item__body" [class.accordion-item__body--open]="isOpen(i)">
         <div class="accordion-item__content">
-          <p class="accordion-item__text">{{ item.content }}</p>
+          @if (contentTemplate) {
+            <ng-container
+              *ngTemplateOutlet="contentTemplate; context: { $implicit: item, index: i }" />
+          } @else {
+            <p class="accordion-item__text">{{ item.content }}</p>
+          }
         </div>
       </div>
     </div>

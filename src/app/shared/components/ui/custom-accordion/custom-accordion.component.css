@@ -185,6 +185,7 @@
 
 .accordion-item__body--open {
   max-height: 600px;
+  overflow-y: auto;
 }
 
 /* Content */
