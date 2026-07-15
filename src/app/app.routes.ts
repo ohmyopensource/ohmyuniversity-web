@@ -42,7 +42,7 @@ import { AgendaPage } from './features/dashboard/presentation/pages/agenda/pages
 import { SchedulePage } from './features/dashboard/presentation/pages/schedule/pages/schedule.page';
 
 // =============================================
-import { RoadmapPage } from './features/dashboard/presentation/pages/roadmap/roadmap.page';
+import { RoadmapPage } from './features/dashboard/presentation/pages/roadmap/pages/roadmap.page';
 
 // =============================================
 import { ChatPage } from './features/dashboard/presentation/pages/chat/chat.page';

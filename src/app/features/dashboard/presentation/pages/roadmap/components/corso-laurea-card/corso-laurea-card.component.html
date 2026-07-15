@@ -1,0 +1,59 @@
+<app-custom-card padding="md" shadow="sm" [hoverable]="true">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex min-w-0 flex-col gap-1.5">
+      <span class="text-base font-bold leading-snug text-neutral-900">{{ corso.nomeCorso }}</span>
+
+      <span class="text-sm text-neutral-600">
+        {{ corso.ateneoNome }}
+        @if (corso.comune) {
+          — {{ corso.comune }}
+          @if (corso.provincia) {
+            &nbsp;({{ corso.provincia }})
+          }
+        }
+      </span>
+
+      @if (corso.area || corso.gruppoNome) {
+        <span class="text-xs text-neutral-400">
+          @if (corso.area) {
+            {{ corso.area }}
+          }
+          @if (corso.area && corso.gruppoNome) {
+            ·
+          }
+          @if (corso.gruppoNome) {
+            {{ corso.gruppoNome }}
+          }
+        </span>
+      }
+
+      <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+        @if (corso.accesso) {
+          <span class="flex items-center gap-1.5 text-xs text-neutral-500">
+            Accesso:
+            <app-custom-badge [label]="accessoLabel()" [variant]="accessoVariant()" size="sm" />
+          </span>
+        }
+        @if (corso.didattica) {
+          <span class="flex items-center gap-1.5 text-xs text-neutral-500">
+            Modalità:
+            <app-custom-badge [label]="corso.didattica" variant="neutral" size="sm" />
+          </span>
+        }
+        <app-custom-badge [label]="'a.a. ' + corso.annoAccademico" variant="outline" size="sm" />
+      </div>
+    </div>
+
+    <div class="shrink-0">
+      <app-custom-button
+        label="Cerca requisiti di accesso"
+        variant="outline"
+        size="sm"
+        [icon]="iconSearch"
+        mode="link-external"
+        [href]="corso.linkRicerca"
+        target="_blank"
+        [ariaLabel]="'Cerca requisiti di accesso per ' + corso.nomeCorso" />
+    </div>
+  </div>
+</app-custom-card>

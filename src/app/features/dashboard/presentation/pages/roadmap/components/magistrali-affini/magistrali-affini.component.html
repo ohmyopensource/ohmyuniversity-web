@@ -1,0 +1,61 @@
+<section class="flex flex-col gap-4">
+  <h2 class="text-lg font-bold text-neutral-900">Lauree magistrali nella tua area</h2>
+
+  <app-custom-filter
+    searchPlaceholder="Inserisci la tua classe di laurea, es. L-31"
+    searchLabel="Cerca magistrali"
+    [showActiveCount]="false"
+    (filterChange)="onFilter($event)" />
+
+  @if (searched() && !loading()) {
+    <app-card-status
+      statusVariant="info"
+      [icon]="lucideInfo"
+      title="Come leggere questi risultati"
+      description="Questi corsi condividono la stessa area disciplinare della tua classe di laurea — non è una garanzia di ammissione. Verifica sempre i requisiti curriculari specifici sul regolamento didattico del corso che ti interessa. Il link 'Cerca il corso' apre una ricerca, non sempre porta direttamente alla scheda esatta." />
+  }
+
+  @if (error()) {
+    <app-card-status
+      statusVariant="warning"
+      [icon]="lucideAlertTriangle"
+      title="Nessun risultato"
+      [description]="error()!" />
+  }
+
+  <div *ohmySkeleton="loading(); skeleton: skeletonTpl">
+    @if (searched() && !error()) {
+      @if (groupedResults().length === 0) {
+        <app-card-status
+          statusVariant="neutral"
+          [icon]="lucideInfo"
+          title="Nessuna magistrale trovata"
+          description="Non abbiamo trovato corsi magistrali nella stessa area per questa classe di laurea." />
+      } @else {
+        <app-custom-accordion
+          [items]="accordionItems()"
+          [contentTemplate]="groupContentTpl"
+          variant="primary"
+          size="md" />
+
+        <ng-template #groupContentTpl let-index="index">
+          <div class="flex flex-col gap-3">
+            @for (corso of groupedResults()[index].corsi; track corso.id) {
+              <app-corso-laurea-card [corso]="corso" />
+            }
+          </div>
+        </ng-template>
+      }
+    }
+  </div>
+
+  <ng-template #skeletonTpl>
+    @if (searched()) {
+      <div class="flex flex-col gap-3">
+        @for (i of skeletonItems; track i) {
+          <app-skeleton-card />
+        }
+      </div>
+    }
+  </ng-template>
+</section>
