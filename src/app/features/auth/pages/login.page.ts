@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { LoginMode } from '@types';
 import { RouterLink } from '@angular/router';
 import { CustomTabsComponent } from '@ui/custom-tab/custom-tab.component';
@@ -26,7 +26,7 @@ import {
   ],
   templateUrl: './login.page.html',
 })
-export class LoginPage {
+export class LoginPage implements AfterViewInit, OnDestroy {
   readonly ORGANIZATION = ORGANIZATION;
   readonly APP = APP;
 
@@ -42,6 +42,24 @@ export class LoginPage {
 
   readonly partnerImages = PARTNER_MARQUEE_IMAGES;
   readonly partnerStats = PARTNER_LOGIN_STATS;
+
+  @ViewChild('formContent') formContentRef?: ElementRef<HTMLDivElement>;
+  readonly formHeight = signal<number>(400);
+  private resizeObserver?: ResizeObserver;
+
+  ngAfterViewInit(): void {
+    if (!this.formContentRef) return;
+
+    this.resizeObserver = new ResizeObserver(entries => {
+      const height = entries[0]?.contentRect.height;
+      if (height) this.formHeight.set(height);
+    });
+    this.resizeObserver.observe(this.formContentRef.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+  }
 
   setMode(mode: string): void {
     this.mode.set(mode as LoginMode);

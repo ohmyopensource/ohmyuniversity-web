@@ -11,6 +11,7 @@ import {
   USER_NOME_KEY,
   USER_COGNOME_KEY,
   PROFILI_KEY,
+  HAS_CARRIERA_KEY,
 } from '../usecases/auth/login.usecase';
 import { SwitchCarrieraUseCase } from '../usecases/career/switch-carriera.usecase';
 import { GetSessionsUseCase } from '../usecases/auth/get-sessions.usecase';
@@ -40,6 +41,33 @@ export class AuthFacade {
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem(ACCESS_TOKEN_KEY);
+  }
+
+  /**
+   * Checks whether a token exists AND is not expired, decoding its exp claim.
+   */
+  hasValidSession(): boolean {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiresAtMs = payload.exp * 1000;
+      return Date.now() < expiresAtMs;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Clears all locally-stored session data without calling the backend logout endpoint or redirecting .
+   */
+  clearSession(): void {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(UNIVERSITY_ID_KEY);
+    localStorage.removeItem(USER_NOME_KEY);
+    localStorage.removeItem(USER_COGNOME_KEY);
+    localStorage.removeItem(PROFILI_KEY);
+    localStorage.removeItem(HAS_CARRIERA_KEY);
   }
 
   getAccessToken(): string | null {

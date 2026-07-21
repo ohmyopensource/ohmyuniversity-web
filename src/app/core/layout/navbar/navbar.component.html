@@ -1,4 +1,4 @@
-<nav class="border-b border-gray-200 bg-white">
+<nav class="border-b border-gray-200">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between">
       <!-- Logo -->
@@ -29,14 +29,35 @@
         }
       </div>
 
-      <!-- Login -->
+      <!-- Login / Account -->
       <div class="hidden sm:flex sm:items-center sm:gap-3">
-        <app-custom-button
-          label="Accedi"
-          mode="link-internal"
-          href="/login"
-          variant="primary"
-          size="sm" />
+        @if (isLoggedIn) {
+          <div class="shrink-0">
+            <app-custom-button
+              label="Dashboard"
+              mode="link-internal"
+              href="/dashboard"
+              variant="primary"
+              size="sm"
+              [icon]="iconDashboard" />
+          </div>
+          <div class="shrink-0">
+            <app-custom-button
+              label="Logout"
+              variant="outline-error"
+              size="sm"
+              [icon]="iconLogout"
+              (clicked)="logout()" />
+          </div>
+        } @else {
+          <app-custom-button
+            label="Accedi"
+            mode="link-internal"
+            href="/login"
+            variant="primary"
+            [icon]="iconUserKey"
+            size="sm" />
+        }
       </div>
 
       <!-- Hamburger mobile -->
@@ -72,13 +93,33 @@
       </a>
     }
     <div class="my-2 border-t border-gray-100"></div>
-    <app-custom-button
-      label="Accedi"
-      mode="link-internal"
-      href="/login"
-      variant="primary"
-      size="md"
-      [fullWidth]="true"
-      (clicked)="mobileMenu.close('programmatic')" />
+    @if (isLoggedIn) {
+      <app-custom-button
+        label="Dashboard"
+        mode="link-internal"
+        href="/dashboard"
+        variant="primary"
+        size="md"
+        [fullWidth]="true"
+        [icon]="iconDashboard"
+        (clicked)="mobileMenu.close('programmatic')" />
+      <app-custom-button
+        label="Logout"
+        variant="outline-error"
+        size="md"
+        [fullWidth]="true"
+        [icon]="iconLogout"
+        (clicked)="logout(); mobileMenu.close('programmatic')" />
+    } @else {
+      <app-custom-button
+        label="Accedi"
+        mode="link-internal"
+        href="/login"
+        variant="primary"
+        size="md"
+        [fullWidth]="true"
+        [icon]="iconUserKey"
+        (clicked)="mobileMenu.close('programmatic')" />
+    }
   </div>
 </app-custom-modal>

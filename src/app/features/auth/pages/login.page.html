@@ -1,11 +1,11 @@
-<div class="grid h-screen overflow-hidden lg:grid-cols-2">
+<div class="grid h-full overflow-hidden lg:grid-cols-2">
   @if (mode() === 'university') {
     <app-login-marquee [images]="universityImages" [stats]="universityStats" />
   } @else {
     <app-login-marquee [images]="partnerImages" [stats]="partnerStats" />
   }
 
-  <div class="flex items-center justify-center overflow-y-auto bg-white px-4 py-12 sm:px-6 lg:px-8">
+  <div class="flex items-start justify-center overflow-y-auto px-4 py-12 sm:px-6 lg:px-8">
     <div class="w-full max-w-md">
       <div class="mb-8 flex flex-col items-center text-center">
         <img
@@ -24,12 +24,16 @@
         [fullWidth]="true"
         (tabChange)="setMode($event)" />
 
-      <div class="mt-8">
-        @if (mode() === 'university') {
-          <app-university-login-form />
-        } @else {
-          <app-partner-login-form />
-        }
+      <div
+        class="mt-8 overflow-hidden transition-[height] duration-300 ease-in-out"
+        [style.height.px]="formHeight()">
+        <div #formContent>
+          @if (mode() === 'university') {
+            <app-university-login-form />
+          } @else {
+            <app-partner-login-form />
+          }
+        </div>
       </div>
 
       <p appText class="mt-8 text-center text-xs text-gray-400">

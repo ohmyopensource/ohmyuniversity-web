@@ -29,7 +29,7 @@ export class LoginUseCase {
         localStorage.setItem(USER_NOME_KEY, tokens.nome);
         localStorage.setItem(USER_COGNOME_KEY, tokens.cognome);
 
-        const nuovi = tokens.profili ?? [];
+        const nuovi = tokens.careerTracks ?? [];
         const esistenti: ProfiloCarriera[] = (() => {
           try {
             return JSON.parse(localStorage.getItem(PROFILI_KEY) ?? '[]');

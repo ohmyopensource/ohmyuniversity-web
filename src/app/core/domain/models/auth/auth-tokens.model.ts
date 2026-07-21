@@ -23,5 +23,5 @@ export interface AuthTokens {
   nome: string;
   cognome: string;
   hasCarriera: boolean;
-  profili: ProfiloCarriera[];
+  careerTracks: ProfiloCarriera[];
 }

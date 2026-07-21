@@ -102,6 +102,8 @@ export class UniversityLoginFormComponent {
   submit(): void {
     if (!this.canSubmit || this.isLoading) return;
 
+    this.auth.clearSession();
+
     const username = this.email.split('@')[0];
     this.isLoading = true;
 

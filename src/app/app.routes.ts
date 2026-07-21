@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 // Public
 import { PublicLayoutComponent } from './core/layout/public-layout/public-layout.component';
@@ -73,7 +74,7 @@ export const routes: Routes = [
     path: '',
     component: PublicLayoutComponent,
     children: [
-      // Marketing / Landing
+      // Guest Pages
       {
         path: '',
         component: HomePage,
@@ -95,9 +96,10 @@ export const routes: Routes = [
       {
         path: 'login',
         component: LoginPage,
+        canActivate: [guestGuard],
       },
 
-      // Orientamento (guest)
+      // Orientamento
       {
         path: 'orientamento',
         component: OrientationPage,
@@ -113,7 +115,7 @@ export const routes: Routes = [
         component: FaqBusinessPage,
       },
 
-      // Business (B2B)
+      // Business
       {
         path: 'business/prezzi',
         component: PricingPage,
