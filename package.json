@@ -45,7 +45,7 @@
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^28.1.0",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.23",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.2.4",
